@@ -42,7 +42,7 @@ public struct AppSettings: ModuleSettings {
         self.enabledModules = enabledModules
     }
 
-    public static let `default` = AppSettings(enabledModules: ["snap", "scroll"])
+    public static let `default` = AppSettings(enabledModules: ["snap", "scroll", "uninstall"])
 
     enum CodingKeys: String, CodingKey { case enabledModules }
 

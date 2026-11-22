@@ -150,3 +150,26 @@
 "shelf.settings.unpin" = "Remove";
 "shelf.settings.addFolder" = "Add Folder…";
 "shelf.settings.addFolderPrompt" = "Pin";
+
+/* Uninstall / Desinstalar */
+"module.uninstall.title" = "Uninstall — remove apps completely";
+"module.uninstall.summary" = "Drop an app to find the files it left in your Library. Everything goes to the Trash.";
+"uninstall.menu.open" = "Uninstall an App…";
+"uninstall.window.title" = "Uninstall an App";
+"uninstall.choosePrompt" = "Choose";
+"uninstall.choose" = "Choose an App…";
+"uninstall.dropHint" = "Drop an app here";
+"uninstall.scanning" = "Looking for leftovers…";
+"uninstall.error.notApp" = "That is not an app.";
+"uninstall.error.system" = "Apple and system apps cannot be uninstalled.";
+"uninstall.error.noBundleID" = "This app has no bundle identifier, so its leftovers cannot be found safely.";
+"uninstall.error.self" = "Ligero cannot uninstall itself. Drag it to the Trash after quitting it.";
+"uninstall.running" = "The app is open";
+"uninstall.quit" = "Quit It";
+"uninstall.reveal" = "Show in Finder";
+"uninstall.total" = "Selected: %@";
+"uninstall.cancel" = "Cancel";
+"uninstall.moveToTrash" = "Move to Trash";
+"uninstall.done" = "%ld items moved to the Trash. You can put them back from the Trash.";
+"uninstall.doneFailed" = "%ld items could not be moved (see the log).";
+"uninstall.another" = "Uninstall Another App";

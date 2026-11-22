@@ -150,3 +150,26 @@
 "shelf.settings.unpin" = "Quitar";
 "shelf.settings.addFolder" = "Añadir carpeta…";
 "shelf.settings.addFolderPrompt" = "Fijar";
+
+/* Uninstall / Desinstalar */
+"module.uninstall.title" = "Uninstall — desinstalar apps del todo";
+"module.uninstall.summary" = "Arrastra una app para encontrar los restos que deja en tu Biblioteca. Todo va a la Papelera.";
+"uninstall.menu.open" = "Desinstalar una app…";
+"uninstall.window.title" = "Desinstalar una app";
+"uninstall.choosePrompt" = "Elegir";
+"uninstall.choose" = "Elegir una app…";
+"uninstall.dropHint" = "Arrastra una app aquí";
+"uninstall.scanning" = "Buscando restos…";
+"uninstall.error.notApp" = "Eso no es una app.";
+"uninstall.error.system" = "Las apps de Apple y del sistema no se pueden desinstalar.";
+"uninstall.error.noBundleID" = "Esta app no tiene identificador de paquete, así que sus restos no se pueden buscar con seguridad.";
+"uninstall.error.self" = "Ligero no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
+"uninstall.running" = "La app está abierta";
+"uninstall.quit" = "Salir de la app";
+"uninstall.reveal" = "Mostrar en el Finder";
+"uninstall.total" = "Seleccionado: %@";
+"uninstall.cancel" = "Cancelar";
+"uninstall.moveToTrash" = "Mover a la Papelera";
+"uninstall.done" = "%ld elementos movidos a la Papelera. Puedes recuperarlos desde la Papelera.";
+"uninstall.doneFailed" = "%ld elementos no se pudieron mover (mira el log).";
+"uninstall.another" = "Desinstalar otra app";

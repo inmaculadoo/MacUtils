@@ -8,6 +8,7 @@ enum ModuleCatalog {
             ScrollModule.descriptor,
             DownloadsModule.descriptor,
             ShelfModule.descriptor,
+            UninstallModule.descriptor,
         ]
     }
 }
