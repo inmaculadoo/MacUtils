@@ -1,0 +1,48 @@
+name: build
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core-tests-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: swift-actions/setup-swift@v2
+        if: hashFiles('Package.swift') != ''
+      - name: Test LigeroCore
+        if: hashFiles('Package.swift') != ''
+        run: swift test --filter LigeroCoreTests
+
+  macos-build:
+    needs: core-tests-linux
+    runs-on: macos-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Toolchain
+        if: hashFiles('Package.swift') != ''
+        run: |
+          sudo xcode-select -s "$(ls -d /Applications/Xcode*.app | sort -V | tail -1)"
+          xcodebuild -version
+          swift --version
+      - uses: actions/cache@v4
+        if: hashFiles('Package.swift') != ''
+        with:
+          path: .build
+          key: spm-${{ runner.os }}-${{ hashFiles('Package.swift', 'Package.resolved') }}
+      - name: Build app bundle (ad-hoc signed)
+        if: hashFiles('Package.swift') != ''
+        run: scripts/bundle.sh
+      - uses: actions/upload-artifact@v4
+        if: hashFiles('Package.swift') != ''
+        with:
+          name: Ligero-app
+          path: build/Ligero.app
+          retention-days: 7
