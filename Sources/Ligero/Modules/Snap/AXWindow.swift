@@ -92,9 +92,3 @@ enum ScreenGeometry {
         }
     }
 }
-
-extension LRect {
-    init(_ r: CGRect) {
-        self.init(x: Double(r.origin.x), y: Double(r.origin.y), width: Double(r.width), height: Double(r.height))
-    }
-}
