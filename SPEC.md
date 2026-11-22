@@ -46,7 +46,8 @@ Un módulo que no cumpla este presupuesto no se fusiona en `main`.
 4. **La UI se crea bajo demanda.** El menú de la barra es un `NSMenu`, más barato que un popover SwiftUI. La ventana de ajustes (SwiftUI) se crea al abrirse y se libera al cerrarse. Los paneles (switcher, shelf) se crean una vez y se ocultan, nunca se destruyen y recrean en bucle.
 5. **Cero red y cero dependencias de terceros.** Nada de Sparkle, analíticas ni SPM externos. Solo frameworks de Apple.
 6. **Capturas solo a demanda.** ScreenCaptureKit se usa en modo one-shot (`SCScreenshotManager`). Prohibido mantener un `SCStream` abierto.
-7. **Lógica pura separada.** El target `LigeroCore` no importa AppKit. Contiene la matemática de layouts, el motor de reglas de Descargas, el parser de ajustes, etc. Tiene tests con `swift test` que corren también en Linux.
+7. **Bilingüe (es + en) desde el primer commit.** No hay ni un texto visible escrito a mano en el código. Todo pasa por `String(localized:bundle: .module)` / `LocalizedStringKey`, con `Resources/es.lproj/Localizable.strings` y `Resources/en.lproj/Localizable.strings` (`defaultLocalization: "en"` en `Package.swift`). Se usan `.strings` clásicos y no `.xcstrings`, para que compile igual con `swift build` y con `bundle.sh` sin depender de Xcode. Por defecto, el idioma sigue al sistema. En Ajustes hay un selector "Sistema / Español / English" que escribe `AppleLanguages` para la app y pide reiniciarla. Coste en ejecución: 0.
+8. **Lógica pura separada.** El target `LigeroCore` no importa AppKit. Contiene la matemática de layouts, el motor de reglas de Descargas, el parser de ajustes, etc. Tiene tests con `swift test` que corren también en Linux.
 
 ## 3. Estructura
 

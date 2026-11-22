@@ -24,6 +24,7 @@ Lee `SPEC.md` antes de tocar nada. Esto es un resumen de las reglas que no se ne
 6. La lógica pura va en `LigeroCore` (sin AppKit) y con tests.
 7. Nunca borrar archivos del usuario: `FileManager.trashItem` siempre.
 8. El IOProc de audio es realtime: sin allocs, sin locks y sin async.
+9. App bilingüe es/en: ningún texto visible escrito a mano en el código. Cada clave nueva se añade a la vez a `es.lproj` y `en.lproj`. Un test de `LigeroCore` (o un script en CI) comprueba que los dos `Localizable.strings` tienen exactamente las mismas claves.
 
 ## Antes de dar una fase por terminada
 - CI en verde y `swift test` en verde.
