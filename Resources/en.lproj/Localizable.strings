@@ -274,3 +274,14 @@
 "menubar.settings.shortcut" = "Shortcut to show or hide";
 "menubar.settings.autoHide" = "Hide them again when switching to another app";
 "menubar.settings.alwaysHidden" = "“Always hidden” section (a second divider; ⌥-click the arrow to see it)";
+
+/* Audio (experimental) */
+"module.audio.title" = "Audio — volume per app";
+"module.audio.summary" = "A slider per app from 0 to 150 %, mute, and a different output device per app.";
+"audio.menu.title" = "Audio Mixer";
+"audio.menu.outputFor" = "Output for %@";
+"audio.menu.systemOutput" = "System Output";
+"audio.menu.costNote" = "Active taps: %ld. Each tap costs a little CPU while that app plays; apps at 100 % on the system output have none.";
+"audio.nothingPlaying" = "No app is playing audio";
+"audio.percent" = "%ld %%";
+"audio.mute" = "Mute";

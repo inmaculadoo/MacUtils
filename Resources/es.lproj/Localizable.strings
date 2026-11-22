@@ -274,3 +274,14 @@
 "menubar.settings.shortcut" = "Atajo para mostrar u ocultar";
 "menubar.settings.autoHide" = "Volver a ocultarlos al cambiar de app";
 "menubar.settings.alwaysHidden" = "Sección «siempre oculto» (un segundo separador; ⌥-clic en la flecha para verla)";
+
+/* Audio (experimental) */
+"module.audio.title" = "Audio — volumen por app";
+"module.audio.summary" = "Un deslizador por app de 0 a 150 %, silenciar y una salida de audio distinta por app.";
+"audio.menu.title" = "Mezclador de audio";
+"audio.menu.outputFor" = "Salida de %@";
+"audio.menu.systemOutput" = "Salida del sistema";
+"audio.menu.costNote" = "Taps activos: %ld. Cada tap gasta algo de CPU mientras esa app suena; las apps al 100 % por la salida del sistema no tienen ninguno.";
+"audio.nothingPlaying" = "Ninguna app está reproduciendo audio";
+"audio.percent" = "%ld %%";
+"audio.mute" = "Silenciar";

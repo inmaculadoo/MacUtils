@@ -14,6 +14,7 @@ enum ModuleCatalog {
             SwitcherModule.descriptor,
             DockModule.descriptor,
             MenuBarModule.descriptor,
+            AudioModule.descriptor,
         ]
     }
 }
