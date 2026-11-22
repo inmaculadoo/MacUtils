@@ -229,3 +229,17 @@
 "monitor.settings.menuBarReading" = "Mostrar CPU y RAM en la barra de menús";
 "monitor.settings.interval" = "Actualizar cada %ld s";
 "monitor.settings.menuBarHint" = "Es la única opción de Ligero que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
+
+/* Switcher (experimental) */
+"module.switcher.title" = "Switcher — ventanas con vista previa";
+"module.switcher.summary" = "⌥Tab muestra todas las ventanas del Space actual con miniatura. Escribe para buscar.";
+"switcher.noMatches" = "Ninguna ventana coincide";
+"switcher.hint" = "Escribe para buscar · ⌘W cerrar · ⌘M minimizar · ⌘Q salir de la app · Esc cancelar";
+"settings.tab.switcher" = "Switcher";
+"switcher.settings.experimentalHint" = "Depende del comportamiento de Accesibilidad, que hay que comprobar en el Mac.";
+"switcher.settings.shortcuts" = "Atajos";
+"switcher.settings.open" = "Abrir / siguiente ventana";
+"switcher.settings.reverse" = "Ventana anterior";
+"switcher.settings.thumbnails" = "Miniaturas";
+"switcher.settings.showThumbnails" = "Mostrar miniaturas de las ventanas";
+"switcher.settings.thumbnailsHint" = "Necesita Grabación de pantalla. Las miniaturas se toman una vez al abrir el switcher y se guardan hasta que la ventana cambia. Sin el permiso se muestran los iconos de las apps.";

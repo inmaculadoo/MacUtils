@@ -229,3 +229,17 @@
 "monitor.settings.menuBarReading" = "Show CPU and RAM in the menu bar";
 "monitor.settings.interval" = "Update every %ld s";
 "monitor.settings.menuBarHint" = "This is the only option in Ligero that wakes up on a schedule. It is off by default; the longer the interval, the less battery it uses.";
+
+/* Switcher (experimental) */
+"module.switcher.title" = "Switcher — windows with previews";
+"module.switcher.summary" = "⌥Tab shows every window of the current Space with a thumbnail. Type to search.";
+"switcher.noMatches" = "No windows match";
+"switcher.hint" = "Type to search · ⌘W close · ⌘M minimize · ⌘Q quit app · Esc cancel";
+"settings.tab.switcher" = "Switcher";
+"switcher.settings.experimentalHint" = "Depends on Accessibility behaviour that must be checked on the Mac.";
+"switcher.settings.shortcuts" = "Shortcuts";
+"switcher.settings.open" = "Open / next window";
+"switcher.settings.reverse" = "Previous window";
+"switcher.settings.thumbnails" = "Thumbnails";
+"switcher.settings.showThumbnails" = "Show window thumbnails";
+"switcher.settings.thumbnailsHint" = "Needs Screen Recording. Thumbnails are taken once when the switcher opens and kept until the window changes. Without the permission, app icons are shown.";

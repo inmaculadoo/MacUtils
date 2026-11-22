@@ -11,6 +11,7 @@ enum ModuleCatalog {
             UninstallModule.descriptor,
             CaptureModule.descriptor,
             MonitorModule.descriptor,
+            SwitcherModule.descriptor,
         ]
     }
 }
@@ -32,6 +33,8 @@ enum SettingsPanes {
                          view: AnyView(CaptureSettingsView(model: model))),
             SettingsPane(id: MonitorModule.id, titleKey: "settings.tab.monitor", symbol: "gauge.with.dots.needle.33percent",
                          view: AnyView(MonitorSettingsView(model: model))),
+            SettingsPane(id: SwitcherModule.id, titleKey: "settings.tab.switcher", symbol: "rectangle.on.rectangle",
+                         view: AnyView(SwitcherSettingsView(model: model))),
         ]
     }
 }
