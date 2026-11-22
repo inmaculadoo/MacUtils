@@ -261,3 +261,16 @@
 "dock.settings.clickHint" = "Cualquier opción distinta de «Nada» vigila los clics del ratón con un event tap mientras está activa.";
 
 /* MenuBar (experimental) */
+"module.menubar.title" = "MenuBar — ocultar iconos";
+"module.menubar.summary" = "Un separador que oculta los iconos de la barra de menús que quedan a su izquierda. Haz clic en la flecha para verlos.";
+"menubar.toggleHelp" = "Mostrar u ocultar iconos (⌥-clic: también los siempre ocultos)";
+"menubar.menu.show" = "Mostrar iconos ocultos de la barra";
+"menubar.menu.hide" = "Ocultar iconos de la barra";
+"settings.tab.menubar" = "Barra de menús";
+"menubar.settings.experimentalHint" = "macOS 26 cambió la barra de menús y puede que esto no oculte bien los iconos. Compruébalo en el Mac antes de fiarte.";
+"menubar.settings.howTo" = "Cómo colocarlo";
+"menubar.settings.howToText" = "Mantén ⌘ y arrastra los iconos de la barra de menús. Los que queden a la izquierda del separador fino se ocultan; la flecha de al lado los muestra y los oculta. Deja el icono de Ligero a la derecha del separador.";
+"menubar.settings.behaviour" = "Comportamiento";
+"menubar.settings.shortcut" = "Atajo para mostrar u ocultar";
+"menubar.settings.autoHide" = "Volver a ocultarlos al cambiar de app";
+"menubar.settings.alwaysHidden" = "Sección «siempre oculto» (un segundo separador; ⌥-clic en la flecha para verla)";

@@ -261,3 +261,16 @@
 "dock.settings.clickHint" = "Any option other than “Do nothing” watches mouse clicks with an event tap while it is on.";
 
 /* MenuBar (experimental) */
+"module.menubar.title" = "MenuBar — hide icons";
+"module.menubar.summary" = "A divider that hides the menu bar icons on its left. Click the arrow to show them.";
+"menubar.toggleHelp" = "Show or hide menu bar icons (⌥-click: also the always-hidden ones)";
+"menubar.menu.show" = "Show Hidden Menu Bar Icons";
+"menubar.menu.hide" = "Hide Menu Bar Icons";
+"settings.tab.menubar" = "Menu Bar";
+"menubar.settings.experimentalHint" = "macOS 26 changed the menu bar; this may not hide icons correctly there. Check it on the Mac before relying on it.";
+"menubar.settings.howTo" = "How to arrange it";
+"menubar.settings.howToText" = "Hold ⌘ and drag icons in the menu bar. Icons to the left of the thin divider are hidden; the arrow next to it shows and hides them. Keep the Ligero icon to the right of the divider.";
+"menubar.settings.behaviour" = "Behaviour";
+"menubar.settings.shortcut" = "Shortcut to show or hide";
+"menubar.settings.autoHide" = "Hide them again when switching to another app";
+"menubar.settings.alwaysHidden" = "“Always hidden” section (a second divider; ⌥-click the arrow to see it)";
