@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.2.0] — Fase 1: Snap + Scroll
+
+### Added
+- **Snap** module: Carbon hotkeys → focused window via AX → size/position/size.
+  Rectangle-style defaults (⌃⌥ + arrows/letters, ⌃⌥⌘←/→ between displays,
+  ⌃⌥⌫ restore). Restore remembers the frame before the first snap (up to 50
+  windows, cleared on stop). Screens are read only when a shortcut is pressed. No
+  animation.
+- Snap settings tab: shortcut recorder (local key monitor only while recording;
+  Carbon hotkeys are suspended meanwhile; duplicates are removed automatically),
+  restore defaults, ½→⅔→⅓ cycling toggle and window gap (0–40 pt).
+- **Scroll** module: IOHIDManager watches for external mice (built-in, SPI and
+  trackpad devices are ignored). The CGEventTap for `scrollWheel` and
+  `otherMouseDown/Up` exists only while a mouse is connected, and is not created at
+  all if every option is off. Continuous events (trackpad, Magic Mouse) are never
+  touched. Options: reverse vertical / horizontal wheel, linear scrolling with 1–10
+  lines per notch, side buttons as ⌘[ / ⌘] (optionally swapped). A tap disabled by
+  timeout is re-enabled.
+- Scroll settings tab.
+- `LigeroCore`: `ScrollSettings`, `ScrollTransform`, `MouseButtons`,
+  `HIDDeviceInfo` classification and `KeyCombo.Modifiers(cocoaFlags:)`, with tests.
+
+### Not done (on purpose)
+- Smooth scrolling (SPEC §4.2 marks it optional and off by default): it needs a
+  timer or display link while scrolling, so it is left for later.
+
 ## [0.1.0] — Fase 0: esqueleto
 
 ### Added

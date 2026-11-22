@@ -1,10 +1,21 @@
+import SwiftUI
+
 /// Every module the app knows about, in menu order.
 enum ModuleCatalog {
-    @MainActor static var all: [ModuleDescriptor] { [] }
+    @MainActor static var all: [ModuleDescriptor] {
+        [SnapModule.descriptor, ScrollModule.descriptor]
+    }
 }
 
 /// Settings tabs contributed by modules, after "General".
 @MainActor
 enum SettingsPanes {
-    static func all(model: SettingsModel) -> [SettingsPane] { [] }
+    static func all(model: SettingsModel) -> [SettingsPane] {
+        [
+            SettingsPane(id: SnapModule.id, titleKey: "settings.tab.snap", symbol: "rectangle.split.2x1",
+                         view: AnyView(SnapSettingsView(model: model))),
+            SettingsPane(id: ScrollModule.id, titleKey: "settings.tab.scroll", symbol: "computermouse",
+                         view: AnyView(ScrollSettingsView(model: model))),
+        ]
+    }
 }

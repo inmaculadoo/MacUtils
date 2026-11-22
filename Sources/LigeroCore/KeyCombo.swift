@@ -13,6 +13,16 @@ public struct KeyCombo: Hashable, Codable, Sendable, CustomStringConvertible {
         public static let control = Modifiers(rawValue: 1 << 12)  // controlKey = 4096
 
         public static let all: Modifiers = [.command, .shift, .option, .control]
+
+        /// From `NSEvent.ModifierFlags.rawValue` (device-independent bits).
+        public init(cocoaFlags: UInt) {
+            var m: Modifiers = []
+            if cocoaFlags & (1 << 17) != 0 { m.insert(.shift) }
+            if cocoaFlags & (1 << 18) != 0 { m.insert(.control) }
+            if cocoaFlags & (1 << 19) != 0 { m.insert(.option) }
+            if cocoaFlags & (1 << 20) != 0 { m.insert(.command) }
+            self = m
+        }
     }
 
     public var keyCode: UInt32

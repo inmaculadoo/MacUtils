@@ -63,6 +63,9 @@ final class SettingsTests: XCTestCase {
         XCTAssertEqual(KeyCombo(keyCode: KeyCode.k, modifiers: [.command, .shift, .option, .control]).description, "⌃⌥⇧⌘K")
         XCTAssertFalse(KeyCombo(keyCode: KeyCode.a, modifiers: [.shift]).isValidGlobalShortcut)
         XCTAssertTrue(KeyCombo(keyCode: 0x7A, modifiers: []).isValidGlobalShortcut)
+        // NSEvent.ModifierFlags: shift 1<<17, control 1<<18, option 1<<19, command 1<<20, capsLock 1<<16.
+        XCTAssertEqual(KeyCombo.Modifiers(cocoaFlags: (1 << 18) | (1 << 19) | (1 << 16)), [.control, .option])
+        XCTAssertEqual(KeyCombo.Modifiers(cocoaFlags: (1 << 17) | (1 << 20)), [.shift, .command])
         // Non-modifier bits are dropped.
         XCTAssertEqual(KeyCombo(keyCode: 1, modifiers: .init(rawValue: 0xFFFF)).modifiers, .all)
     }

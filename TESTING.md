@@ -65,3 +65,53 @@ Anota los valores en el PR o en el CHANGELOG. Repite la medición con el ratón 
 
 ### Batería
 - [ ] Medición de reposo con `top` (arriba): CPU 0,0 %, idlew < 1/s, RAM < 60 MB.
+
+## Fase 1 — Snap
+
+Requisito: Accesibilidad concedida. Si no lo está, el menú muestra «Snap — encaje de ventanas (falta permiso)» y el módulo arranca solo en cuanto lo concedes, sin reiniciar.
+
+### Atajos por defecto
+| Acción | Atajo |
+|---|---|
+| Mitad izquierda / derecha / superior / inferior | ⌃⌥← / ⌃⌥→ / ⌃⌥↑ / ⌃⌥↓ |
+| Cuartos: sup. izq. / sup. der. / inf. izq. / inf. der. | ⌃⌥U / ⌃⌥I / ⌃⌥J / ⌃⌥K |
+| Primer / central / último tercio | ⌃⌥D / ⌃⌥F / ⌃⌥G |
+| Dos primeros / dos últimos tercios | ⌃⌥E / ⌃⌥T |
+| Maximizar / maximizar altura / centrar | ⌃⌥↩ / ⌃⌥⇧↑ / ⌃⌥C |
+| Pantalla siguiente / anterior | ⌃⌥⌘→ / ⌃⌥⌘← |
+| Restaurar tamaño anterior | ⌃⌥⌫ |
+
+### Pruebas
+- [ ] Con Safari, Finder, Terminal y una app Electron (VS Code, Slack…), prueba cada atajo de la tabla. La ventana se mueve de golpe, sin animación, y respeta la barra de menús (el notch) y el Dock.
+- [ ] Pulsa ⌃⌥← tres veces seguidas: ½ → ⅔ → ⅓ → ½. Lo mismo con ⌃⌥→ anclado a la derecha. Desactiva «Repetir el atajo…» en Ajustes → Snap: ahora siempre es ½.
+- [ ] Haz dos snaps seguidos y pulsa ⌃⌥⌫: vuelve al tamaño de **antes del primero**. Mueve una ventana a mano tras un snap, haz otro snap y restaura: vuelve a donde la dejaste a mano.
+- [ ] Con el Dock oculto y visible, y con el Dock a un lado: las mitades no quedan debajo del Dock.
+- [ ] Con pantalla externa: ⌃⌥⌘→ pasa la ventana a la otra pantalla conservando su posición relativa (una mitad izquierda sigue siendo mitad izquierda); ⌃⌥⌘← vuelve. Prueba la externa a la izquierda, a la derecha y encima.
+- [ ] Pantalla en vertical (si tienes): los tercios se apilan de arriba abajo.
+- [ ] Ajustes → Snap: separación a 10 pt y comprueba el hueco entre dos mitades y con los bordes.
+- [ ] Grabar atajo: haz clic en el atajo de «Centrar», pulsa ⌃⌥X. Funciona al momento. Asigna a otra acción un atajo ya usado: se quita de la acción anterior. Esc cancela, Borrar lo deja en «Ninguno». Una tecla sin ⌘/⌥/⌃ (por ejemplo, solo ⇧A) suena y no se acepta.
+- [ ] Mientras grabas un atajo, pulsar ⌃⌥← **no** mueve ninguna ventana. Al cerrar la ventana de Ajustes a mitad de grabación, los atajos vuelven a funcionar.
+- [ ] «Restaurar atajos por defecto» los devuelve a la tabla.
+- [ ] Desactiva Snap en el menú: ningún atajo hace nada (y otras apps pueden usar ⌃⌥←). Actívalo: vuelven.
+- [ ] Ventana sin permiso de redimensionado o diálogo modal: no se cuelga; como mucho se mueve sin cambiar de tamaño. Sin ninguna ventana enfocada (escritorio vacío) suena un pitido.
+
+## Fase 1 — Scroll
+
+Requisito: Accesibilidad. Por defecto: rueda vertical **invertida** respecto al sistema (para tener el trackpad «natural» y el ratón «clásico»), scroll lineal desactivado y botones laterales como Atrás/Adelante.
+
+- [ ] **Sin ratón conectado**: `log stream --predicate 'subsystem == "app.allinone" AND category == "scroll"' --level info` no muestra «Event tap installed».
+- [ ] Conecta un ratón USB o Bluetooth: aparece «Mouse connected: <nombre>» y «Event tap installed». Desconéctalo: «Event tap removed».
+- [ ] Con el ratón conectado: la rueda va en sentido contrario al trackpad; el trackpad sigue igual que antes. Si tienes Magic Mouse, comprueba que no cambia (va como el trackpad).
+- [ ] Desactiva «Invertir la rueda vertical» en Ajustes → Scroll: la rueda vuelve al sentido del sistema al instante.
+- [ ] Scroll horizontal (rueda inclinable o ⇧ + rueda) con «Invertir el scroll horizontal».
+- [ ] Scroll lineal: con 3 líneas, girar rápido o lento avanza siempre lo mismo por paso. Cambia a 1 y a 10.
+- [ ] Botones laterales: en Safari, Chrome y Finder, el botón trasero va Atrás y el delantero Adelante. **Prueba con el teclado en español** (⌘[ / ⌘] se envían con el carácter explícito; si alguna app no responde, apúntala). «Intercambiar Atrás y Adelante» los invierte. Con la opción desactivada, los botones vuelven a su función original.
+- [ ] Clic izquierdo, derecho y central no cambian.
+- [ ] Desactiva todas las opciones de Scroll: el log no muestra la tap ni con el ratón conectado.
+- [ ] Desactiva el módulo Scroll en el menú con el ratón conectado: «Event tap removed», y todo vuelve al comportamiento del sistema.
+
+### Batería (Fase 1)
+- [ ] `top -l 30 -s 2 -stats pid,command,cpu,idlew,power -pid $(pgrep Ligero)` con Snap y Scroll activos, en reposo, **sin** ratón: CPU 0,0 %, idlew < 1/s.
+- [ ] Lo mismo **con** ratón conectado y sin tocarlo: CPU 0,0 %, idlew < 1/s.
+- [ ] Mientras haces scroll con el ratón, la CPU de Ligero sube solo unas décimas y vuelve a 0,0 al parar.
+- [ ] RAM < 60 MB con la ventana de Ajustes cerrada.

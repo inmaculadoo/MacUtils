@@ -60,3 +60,35 @@
 "snap.action.nextDisplay" = "Pantalla siguiente";
 "snap.action.previousDisplay" = "Pantalla anterior";
 "snap.action.restore" = "Restaurar tamaño anterior";
+
+/* Módulos */
+"module.snap.title" = "Snap — encaje de ventanas";
+"module.snap.summary" = "Atajos para mitades, tercios, cuartos, maximizar, centrar y mover ventanas entre pantallas.";
+"module.scroll.title" = "Scroll — ratón";
+"module.scroll.summary" = "Dirección de la rueda del ratón independiente del trackpad, scroll lineal y botones laterales como Atrás/Adelante.";
+
+/* Ajustes de Snap */
+"settings.tab.snap" = "Snap";
+"settings.snap.shortcuts" = "Atajos";
+"settings.snap.shortcutsHint" = "Haz clic en un atajo y pulsa la nueva combinación. Esc cancela y Borrar lo quita.";
+"settings.snap.resetShortcuts" = "Restaurar atajos por defecto";
+"settings.snap.behaviour" = "Comportamiento";
+"settings.snap.cycleHalves" = "Repetir el atajo de una mitad cambia entre ½ → ⅔ → ⅓";
+"settings.snap.gap" = "Separación entre ventanas";
+"settings.snap.gapValue" = "%ld pt";
+"settings.shortcut.recording" = "Pulsa las teclas…";
+"settings.shortcut.none" = "Ninguno";
+
+/* Ajustes de Scroll */
+"settings.tab.scroll" = "Scroll";
+"settings.scroll.direction" = "Dirección";
+"settings.scroll.invertVertical" = "Invertir la rueda vertical del ratón";
+"settings.scroll.invertHorizontal" = "Invertir el scroll horizontal del ratón";
+"settings.scroll.directionHint" = "Solo afecta a ratones con rueda. El trackpad y el Magic Mouse siguen el ajuste de desplazamiento natural del sistema.";
+"settings.scroll.speed" = "Velocidad";
+"settings.scroll.linear" = "Scroll lineal (sin aceleración)";
+"settings.scroll.linesPerTick" = "Líneas por paso de rueda: %ld";
+"settings.scroll.buttons" = "Botones";
+"settings.scroll.sideButtons" = "Botones laterales como Atrás / Adelante (⌘[ / ⌘])";
+"settings.scroll.swapSideButtons" = "Intercambiar Atrás y Adelante";
+"settings.scroll.costHint" = "Sin ratón externo conectado, este módulo no hace nada. Con ratón, solo mira los eventos de scroll y de los botones laterales.";

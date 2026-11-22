@@ -41,7 +41,6 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
-        model?.windowWillClose()
         window?.contentViewController = nil
         window = nil
         model = nil
@@ -64,10 +63,6 @@ final class SettingsModel: ObservableObject {
     /// Bumped when module settings change so that panes re-read them.
     @Published private(set) var revision = 0
 
-    /// Pane-specific cleanup (for example, a shortcut recorder) registered
-    /// by the views.
-    var onClose: [@MainActor () -> Void] = []
-
     init(registry: ModuleRegistry, permissions: PermissionCenter, store: SettingsStore) {
         self.registry = registry
         self.permissions = permissions
@@ -84,11 +79,6 @@ final class SettingsModel: ObservableObject {
         for p in Permission.allCases { g[p] = permissions.isGranted(p) }
         granted = g
         enabled = store.app.enabledModules
-    }
-
-    func windowWillClose() {
-        for f in onClose { f() }
-        onClose.removeAll()
     }
 
     // MARK: General

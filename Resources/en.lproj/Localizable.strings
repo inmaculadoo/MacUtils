@@ -60,3 +60,35 @@
 "snap.action.nextDisplay" = "Next Display";
 "snap.action.previousDisplay" = "Previous Display";
 "snap.action.restore" = "Restore Previous Size";
+
+/* Modules */
+"module.snap.title" = "Snap — window snapping";
+"module.snap.summary" = "Keyboard shortcuts for halves, thirds, quarters, maximize, center and moving windows between displays.";
+"module.scroll.title" = "Scroll — mouse";
+"module.scroll.summary" = "Mouse wheel direction independent of the trackpad, linear scrolling and side buttons as Back/Forward.";
+
+/* Snap settings */
+"settings.tab.snap" = "Snap";
+"settings.snap.shortcuts" = "Shortcuts";
+"settings.snap.shortcutsHint" = "Click a shortcut and press the new key combination. Esc cancels, Delete removes it.";
+"settings.snap.resetShortcuts" = "Restore Default Shortcuts";
+"settings.snap.behaviour" = "Behaviour";
+"settings.snap.cycleHalves" = "Pressing a half shortcut again cycles ½ → ⅔ → ⅓";
+"settings.snap.gap" = "Gap between windows";
+"settings.snap.gapValue" = "%ld pt";
+"settings.shortcut.recording" = "Press keys…";
+"settings.shortcut.none" = "None";
+
+/* Scroll settings */
+"settings.tab.scroll" = "Scroll";
+"settings.scroll.direction" = "Direction";
+"settings.scroll.invertVertical" = "Reverse vertical mouse wheel";
+"settings.scroll.invertHorizontal" = "Reverse horizontal mouse scrolling";
+"settings.scroll.directionHint" = "Only mice with a wheel are affected. The trackpad and the Magic Mouse keep the system's natural scrolling setting.";
+"settings.scroll.speed" = "Speed";
+"settings.scroll.linear" = "Linear scrolling (no acceleration)";
+"settings.scroll.linesPerTick" = "Lines per wheel notch: %ld";
+"settings.scroll.buttons" = "Buttons";
+"settings.scroll.sideButtons" = "Side buttons go Back / Forward (⌘[ / ⌘])";
+"settings.scroll.swapSideButtons" = "Swap Back and Forward";
+"settings.scroll.costHint" = "With no external mouse connected this module does nothing. With a mouse connected it only looks at scroll and side-button events.";
