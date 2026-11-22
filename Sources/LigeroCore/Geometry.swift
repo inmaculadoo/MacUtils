@@ -54,8 +54,11 @@ public struct LRect: Equatable, Hashable, Codable, Sendable, CustomStringConvert
 
     /// True when every edge is within `tolerance` points of `other`.
     public func isClose(to other: LRect, tolerance: Double = 2) -> Bool {
-        abs(x - other.x) <= tolerance && abs(y - other.y) <= tolerance
-            && abs(width - other.width) <= tolerance && abs(height - other.height) <= tolerance
+        let dx: Double = abs(x - other.x)
+        let dy: Double = abs(y - other.y)
+        let dw: Double = abs(width - other.width)
+        let dh: Double = abs(height - other.height)
+        return max(max(dx, dy), max(dw, dh)) <= tolerance
     }
 
     public var description: String { "(\(x), \(y), \(width)×\(height))" }

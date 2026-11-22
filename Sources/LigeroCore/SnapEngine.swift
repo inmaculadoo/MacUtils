@@ -50,10 +50,7 @@ public enum SnapEngine {
             let x = min(max(window.x, area.minX), area.maxX - w)
             return LRect(x: x, y: area.y, width: w, height: area.height).integral
         case .leftHalf, .rightHalf:
-            let left = action == .leftHalf
-            let cycle: [(Double, Double)] = left
-                ? [(0, 1.0 / 2), (0, 2.0 / 3), (0, 1.0 / 3)]
-                : [(1.0 / 2, 1), (1.0 / 3, 1), (2.0 / 3, 1)]
+            let cycle = action == .leftHalf ? Self.leftCycle : Self.rightCycle
             var choice = cycle[0]
             if options.cycleHalves {
                 let frames = cycle.map { column($0.0, $0.1, in: area, gap: options.gap) }
@@ -86,6 +83,10 @@ public enum SnapEngine {
             return third(1.0 / 3, 1, in: area, gap: options.gap)
         }
     }
+
+    /// Column spans (as fractions of the width) the half shortcuts cycle through.
+    static let leftCycle: [(Double, Double)] = [(0.0, 0.5), (0.0, 2.0 / 3.0), (0.0, 1.0 / 3.0)]
+    static let rightCycle: [(Double, Double)] = [(0.5, 1.0), (1.0 / 3.0, 1.0), (2.0 / 3.0, 1.0)]
 
     // MARK: - Screens
 
@@ -128,8 +129,11 @@ public enum SnapEngine {
     /// fractions `a` and `b`, leaving half a gap on each inner edge so that two
     /// neighbouring spans are exactly `gap` apart.
     static func span(_ a: Double, _ b: Double, origin: Double, length: Double, gap: Double) -> (Double, Double) {
-        let start = origin + a * length + (a > 0.0001 ? gap / 2 : 0)
-        let end = origin + b * length - (b < 0.9999 ? gap / 2 : 0)
+        let half: Double = gap / 2
+        let leading: Double = a > 0.0001 ? half : 0
+        let trailing: Double = b < 0.9999 ? half : 0
+        let start: Double = origin + a * length + leading
+        let end: Double = origin + b * length - trailing
         return (start, max(start, end))
     }
 
