@@ -9,6 +9,7 @@ enum ModuleCatalog {
             DownloadsModule.descriptor,
             ShelfModule.descriptor,
             UninstallModule.descriptor,
+            CaptureModule.descriptor,
         ]
     }
 }
@@ -26,6 +27,8 @@ enum SettingsPanes {
                          view: AnyView(DownloadsSettingsView(model: model))),
             SettingsPane(id: ShelfModule.id, titleKey: "settings.tab.shelf", symbol: "tray",
                          view: AnyView(ShelfSettingsView(model: model))),
+            SettingsPane(id: CaptureModule.id, titleKey: "settings.tab.capture", symbol: "camera.viewfinder",
+                         view: AnyView(CaptureSettingsView(model: model))),
         ]
     }
 }

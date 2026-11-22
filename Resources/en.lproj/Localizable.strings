@@ -173,3 +173,18 @@
 "uninstall.done" = "%ld items moved to the Trash. You can put them back from the Trash.";
 "uninstall.doneFailed" = "%ld items could not be moved (see the log).";
 "uninstall.another" = "Uninstall Another App";
+
+/* Capture / Captura */
+"module.capture.title" = "Capture — screenshots and text";
+"module.capture.summary" = "Capture a region to the clipboard, copy the text in it (OCR) or pin it on screen. Only on demand.";
+"capture.menu.region" = "Capture Region";
+"capture.menu.text" = "Copy Text from Region";
+"capture.menu.pin" = "Capture and Pin";
+"capture.menu.withShortcut" = "%1$@ (%2$@)";
+"capture.fileName" = "Screenshot %@";
+"settings.tab.capture" = "Capture";
+"capture.settings.shortcuts" = "Shortcuts";
+"capture.settings.output" = "Captured images";
+"capture.settings.clipboard" = "Copy to the clipboard";
+"capture.settings.desktop" = "Save a PNG on the Desktop";
+"capture.settings.hint" = "Drag to select a region; Esc or a right click cancels. Text recognition works offline, in Spanish and English. A pinned capture closes with Esc or a double click.";

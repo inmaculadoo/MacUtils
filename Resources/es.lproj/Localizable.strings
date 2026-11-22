@@ -173,3 +173,18 @@
 "uninstall.done" = "%ld elementos movidos a la Papelera. Puedes recuperarlos desde la Papelera.";
 "uninstall.doneFailed" = "%ld elementos no se pudieron mover (mira el log).";
 "uninstall.another" = "Desinstalar otra app";
+
+/* Capture / Captura */
+"module.capture.title" = "Capture — capturas y texto";
+"module.capture.summary" = "Captura una región al portapapeles, copia el texto que contiene (OCR) o déjala fijada en pantalla. Solo a demanda.";
+"capture.menu.region" = "Capturar región";
+"capture.menu.text" = "Copiar texto de una región";
+"capture.menu.pin" = "Capturar y fijar";
+"capture.menu.withShortcut" = "%1$@ (%2$@)";
+"capture.fileName" = "Captura %@";
+"settings.tab.capture" = "Captura";
+"capture.settings.shortcuts" = "Atajos";
+"capture.settings.output" = "Imágenes capturadas";
+"capture.settings.clipboard" = "Copiar al portapapeles";
+"capture.settings.desktop" = "Guardar un PNG en el Escritorio";
+"capture.settings.hint" = "Arrastra para elegir la región; Esc o clic derecho cancela. El reconocimiento de texto funciona sin conexión, en español e inglés. Una captura fijada se cierra con Esc o doble clic.";
