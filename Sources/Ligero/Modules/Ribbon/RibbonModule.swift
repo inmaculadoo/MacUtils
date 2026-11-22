@@ -154,7 +154,7 @@ final class RibbonModule: LigeroModule, MenuContributing {
 
     private func focusedWindowID(_ pid: pid_t) -> CGWindowID? {
         var value: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(AXUIElementCreateApplication(pid), kAXFocusedWindowAttribute as CFString, &value) == .success,
+        guard AXUIElementCopyAttributeValue(WindowService.appElement(pid), kAXFocusedWindowAttribute as CFString, &value) == .success,
               let value, CFGetTypeID(value) == AXUIElementGetTypeID() else { return nil }
         return WindowService.windowID(value as! AXUIElement)
     }

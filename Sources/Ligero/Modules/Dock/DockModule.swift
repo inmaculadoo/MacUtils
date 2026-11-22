@@ -75,7 +75,7 @@ final class DockModule: LigeroModule {
         detachFromDock()
         guard let dock = NSRunningApplication.runningApplications(withBundleIdentifier: Self.dockBundleID).first else { return }
         let pid = dock.processIdentifier
-        let app = AXUIElementCreateApplication(pid)
+        let app = WindowService.appElement(pid)
         var children: CFTypeRef?
         guard AXUIElementCopyAttributeValue(app, kAXChildrenAttribute as CFString, &children) == .success,
               let elements = children as? [AXUIElement],

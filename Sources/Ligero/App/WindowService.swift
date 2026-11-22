@@ -48,7 +48,18 @@ final class WindowService {
     private var workspaceTokens: [NSObjectProtocol] = []
     private var cache: [pid_t: [WindowInfo]] = [:]
     private var mru = MRUList<CGWindowID>()
-    private(set) var thumbnails = LRUCache<CGWindowID, CGImage>(capacity: 40)
+    /// ~30 × 320×200 px × 4 B ≈ 8 MB at most (RAM budget: 60 MB in total).
+    private(set) var thumbnails = LRUCache<CGWindowID, CGImage>(capacity: 30)
+
+    /// AX calls block until the target app answers; a hung app must not
+    /// freeze Ligero's main thread for the default 6 s.
+    static let messagingTimeout: Float = 0.25
+
+    static func appElement(_ pid: pid_t) -> AXUIElement {
+        let e = AXUIElementCreateApplication(pid)
+        AXUIElementSetMessagingTimeout(e, messagingTimeout)
+        return e
+    }
 
     private static let appNotifications = [
         kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification, kAXMainWindowChangedNotification,
@@ -116,7 +127,7 @@ final class WindowService {
         guard observers[pid] == nil, pid != ProcessInfo.processInfo.processIdentifier else { return }
         var observer: AXObserver?
         guard AXObserverCreate(pid, windowServiceCallback, &observer) == .success, let observer else { return }
-        let app = AXUIElementCreateApplication(pid)
+        let app = Self.appElement(pid)
         let refcon = Unmanaged.passUnretained(self).toOpaque()
         for n in Self.appNotifications {
             AXObserverAddNotification(observer, app, n as CFString, refcon)
@@ -205,7 +216,7 @@ final class WindowService {
     }
 
     private func loadWindows(_ app: NSRunningApplication) -> [WindowInfo] {
-        let element = AXUIElementCreateApplication(app.processIdentifier)
+        let element = Self.appElement(app.processIdentifier)
         let name = app.localizedName ?? ""
         return axWindows(of: element).compactMap { w in
             guard Self.isStandardWindow(w), let id = Self.windowID(w) else { return nil }
@@ -227,7 +238,7 @@ final class WindowService {
     }
 
     private func focusedWindowID(_ pid: pid_t) -> CGWindowID? {
-        let app = AXUIElementCreateApplication(pid)
+        let app = Self.appElement(pid)
         var value: CFTypeRef?
         guard AXUIElementCopyAttributeValue(app, kAXFocusedWindowAttribute as CFString, &value) == .success,
               let value, CFGetTypeID(value) == AXUIElementGetTypeID() else { return nil }
@@ -358,7 +369,7 @@ final class WindowService {
                     let config = SCStreamConfiguration()
                     let w = max(1.0, Double(window.frame.width))
                     let h = max(1.0, Double(window.frame.height))
-                    let scale = min(1.0, Double(request.maxWidth) * 2 / w)
+                    let scale = min(1.0, Double(request.maxWidth) / w)
                     config.width = max(1, Int(w * scale))
                     config.height = max(1, Int(h * scale))
                     config.showsCursor = false

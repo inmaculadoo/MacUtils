@@ -15,6 +15,8 @@ struct AXWindow {
         guard let app = NSWorkspace.shared.frontmostApplication else { return nil }
         let pid = app.processIdentifier
         let appElement = AXUIElementCreateApplication(pid)
+        // A hung app must not block the main thread for the default 6 s.
+        AXUIElementSetMessagingTimeout(appElement, 0.5)
         var value: CFTypeRef?
         let err = AXUIElementCopyAttributeValue(appElement, kAXFocusedWindowAttribute as CFString, &value)
         guard err == .success, let value, CFGetTypeID(value) == AXUIElementGetTypeID() else {

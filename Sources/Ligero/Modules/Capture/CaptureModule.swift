@@ -66,7 +66,10 @@ final class CaptureModule: LigeroModule, MenuContributing {
 
     func begin(_ mode: Mode) {
         guard overlay == nil else { return }
+        // The overlay activates Ligero to get Esc; give focus back afterwards.
+        let previous = NSWorkspace.shared.frontmostApplication
         let overlay = SelectionOverlay { [weak self] selection in
+            if previous?.processIdentifier != ProcessInfo.processInfo.processIdentifier { previous?.activate() }
             guard let self else { return }
             self.overlay = nil
             guard let selection else { return }
