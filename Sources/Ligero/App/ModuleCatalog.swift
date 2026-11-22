@@ -10,6 +10,7 @@ enum ModuleCatalog {
             ShelfModule.descriptor,
             UninstallModule.descriptor,
             CaptureModule.descriptor,
+            MonitorModule.descriptor,
         ]
     }
 }
@@ -29,6 +30,8 @@ enum SettingsPanes {
                          view: AnyView(ShelfSettingsView(model: model))),
             SettingsPane(id: CaptureModule.id, titleKey: "settings.tab.capture", symbol: "camera.viewfinder",
                          view: AnyView(CaptureSettingsView(model: model))),
+            SettingsPane(id: MonitorModule.id, titleKey: "settings.tab.monitor", symbol: "gauge.with.dots.needle.33percent",
+                         view: AnyView(MonitorSettingsView(model: model))),
         ]
     }
 }
