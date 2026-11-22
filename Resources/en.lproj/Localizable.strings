@@ -1,0 +1,62 @@
+/* Ligero — English. Every key here must also exist in es.lproj (checked by LocalizationTests). */
+
+"app.name" = "Ligero";
+
+/* Menu bar menu */
+"menu.modules" = "Modules";
+"menu.modules.none" = "No modules yet";
+"menu.module.needsPermission" = "%@ (needs permission)";
+"menu.permissions" = "Permissions";
+"menu.permission.row" = "%1$@: %2$@";
+"menu.launchAtLogin" = "Open at Login";
+"menu.settings" = "Settings…";
+"menu.quit" = "Quit Ligero";
+
+/* Permissions */
+"permission.accessibility.title" = "Accessibility";
+"permission.accessibility.explanation" = "Lets Ligero move and resize windows and change how the mouse scrolls. Ligero never reads what you type.";
+"permission.screenRecording.title" = "Screen Recording";
+"permission.screenRecording.explanation" = "Lets Ligero take one-off screenshots for window previews and captures. It never records video.";
+"permission.status.granted" = "granted";
+"permission.status.missing" = "not granted";
+"permission.alert.title" = "Ligero needs %@ permission";
+"permission.alert.neededBy" = "Needed by: %@. Turn Ligero on in the list in System Settings. If it is not listed, add it with the + button.";
+"permission.alert.open" = "Open System Settings";
+"permission.alert.later" = "Not Now";
+
+/* Settings window */
+"settings.window.title" = "Ligero Settings";
+"settings.tab.general" = "General";
+"settings.language" = "Language";
+"settings.language.system" = "System";
+"settings.language.es" = "Español";
+"settings.language.en" = "English";
+"settings.language.restartHint" = "The new language is used after restarting Ligero.";
+"settings.language.restartNow" = "Restart Now";
+"settings.startup" = "Startup";
+"settings.launchAtLogin" = "Open Ligero at login";
+"settings.launchAtLogin.needsApproval" = "macOS needs you to allow it in Login Items.";
+"settings.openSystemSettings" = "Open System Settings";
+"settings.modules" = "Modules";
+"settings.permissions" = "Permissions";
+
+/* Snap actions */
+"snap.action.leftHalf" = "Left Half";
+"snap.action.rightHalf" = "Right Half";
+"snap.action.topHalf" = "Top Half";
+"snap.action.bottomHalf" = "Bottom Half";
+"snap.action.topLeft" = "Top Left Quarter";
+"snap.action.topRight" = "Top Right Quarter";
+"snap.action.bottomLeft" = "Bottom Left Quarter";
+"snap.action.bottomRight" = "Bottom Right Quarter";
+"snap.action.firstThird" = "First Third";
+"snap.action.centerThird" = "Center Third";
+"snap.action.lastThird" = "Last Third";
+"snap.action.firstTwoThirds" = "First Two Thirds";
+"snap.action.lastTwoThirds" = "Last Two Thirds";
+"snap.action.maximize" = "Maximize";
+"snap.action.maximizeHeight" = "Maximize Height";
+"snap.action.center" = "Center";
+"snap.action.nextDisplay" = "Next Display";
+"snap.action.previousDisplay" = "Previous Display";
+"snap.action.restore" = "Restore Previous Size";

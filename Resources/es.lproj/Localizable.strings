@@ -1,0 +1,62 @@
+/* Ligero — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
+
+"app.name" = "Ligero";
+
+/* Menú de la barra */
+"menu.modules" = "Módulos";
+"menu.modules.none" = "Todavía no hay módulos";
+"menu.module.needsPermission" = "%@ (falta permiso)";
+"menu.permissions" = "Permisos";
+"menu.permission.row" = "%1$@: %2$@";
+"menu.launchAtLogin" = "Abrir al iniciar sesión";
+"menu.settings" = "Ajustes…";
+"menu.quit" = "Salir de Ligero";
+
+/* Permisos */
+"permission.accessibility.title" = "Accesibilidad";
+"permission.accessibility.explanation" = "Permite a Ligero mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. Ligero nunca lee lo que escribes.";
+"permission.screenRecording.title" = "Grabación de pantalla";
+"permission.screenRecording.explanation" = "Permite a Ligero hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
+"permission.status.granted" = "concedido";
+"permission.status.missing" = "no concedido";
+"permission.alert.title" = "Ligero necesita el permiso de %@";
+"permission.alert.neededBy" = "Lo necesita: %@. Activa Ligero en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
+"permission.alert.open" = "Abrir Ajustes del Sistema";
+"permission.alert.later" = "Ahora no";
+
+/* Ventana de ajustes */
+"settings.window.title" = "Ajustes de Ligero";
+"settings.tab.general" = "General";
+"settings.language" = "Idioma";
+"settings.language.system" = "Sistema";
+"settings.language.es" = "Español";
+"settings.language.en" = "English";
+"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar Ligero.";
+"settings.language.restartNow" = "Reiniciar ahora";
+"settings.startup" = "Arranque";
+"settings.launchAtLogin" = "Abrir Ligero al iniciar sesión";
+"settings.launchAtLogin.needsApproval" = "macOS pide que lo permitas en Elementos de inicio.";
+"settings.openSystemSettings" = "Abrir Ajustes del Sistema";
+"settings.modules" = "Módulos";
+"settings.permissions" = "Permisos";
+
+/* Acciones de Snap */
+"snap.action.leftHalf" = "Mitad izquierda";
+"snap.action.rightHalf" = "Mitad derecha";
+"snap.action.topHalf" = "Mitad superior";
+"snap.action.bottomHalf" = "Mitad inferior";
+"snap.action.topLeft" = "Cuarto superior izquierdo";
+"snap.action.topRight" = "Cuarto superior derecho";
+"snap.action.bottomLeft" = "Cuarto inferior izquierdo";
+"snap.action.bottomRight" = "Cuarto inferior derecho";
+"snap.action.firstThird" = "Primer tercio";
+"snap.action.centerThird" = "Tercio central";
+"snap.action.lastThird" = "Último tercio";
+"snap.action.firstTwoThirds" = "Dos primeros tercios";
+"snap.action.lastTwoThirds" = "Dos últimos tercios";
+"snap.action.maximize" = "Maximizar";
+"snap.action.maximizeHeight" = "Maximizar altura";
+"snap.action.center" = "Centrar";
+"snap.action.nextDisplay" = "Pantalla siguiente";
+"snap.action.previousDisplay" = "Pantalla anterior";
+"snap.action.restore" = "Restaurar tamaño anterior";
