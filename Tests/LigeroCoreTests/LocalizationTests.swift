@@ -26,6 +26,35 @@ final class LocalizationTests: XCTestCase {
         XCTAssertEqual(Set(es.keys).subtracting(en.keys).sorted(), [], "missing in en.lproj")
     }
 
+    /// Every .strings table (Localizable, InfoPlist…) exists in both languages
+    /// with the same keys, and InfoPlist.strings covers the usage strings of
+    /// Info.plist.
+    func testAllTablesMatch() throws {
+        let fm = FileManager.default
+        let enDir = Self.root.appendingPathComponent("Resources/en.lproj")
+        let esDir = Self.root.appendingPathComponent("Resources/es.lproj")
+        let enFiles = try fm.contentsOfDirectory(atPath: enDir.path).filter { $0.hasSuffix(".strings") }.sorted()
+        let esFiles = try fm.contentsOfDirectory(atPath: esDir.path).filter { $0.hasSuffix(".strings") }.sorted()
+        XCTAssertEqual(enFiles, esFiles)
+        for file in enFiles {
+            let en = try StringsFile.parse(String(contentsOf: enDir.appendingPathComponent(file), encoding: .utf8))
+            let es = try StringsFile.parse(String(contentsOf: esDir.appendingPathComponent(file), encoding: .utf8))
+            XCTAssertEqual(Set(en.keys), Set(es.keys), file)
+        }
+        let plist = try String(contentsOf: Self.root.appendingPathComponent("Resources/Info.plist"), encoding: .utf8)
+        let usage = try NSRegularExpression(pattern: #"<key>(NS[A-Za-z]+UsageDescription)</key>"#)
+        let keys = usage.matches(in: plist, range: NSRange(plist.startIndex..., in: plist)).compactMap {
+            Range($0.range(at: 1), in: plist).map { String(plist[$0]) }
+        }
+        if !keys.isEmpty {
+            for lang in Self.languages {
+                let url = Self.root.appendingPathComponent("Resources/\(lang).lproj/InfoPlist.strings")
+                let t = try StringsFile.parse(String(contentsOf: url, encoding: .utf8))
+                for k in keys { XCTAssertNotNil(t[k], "\(lang) InfoPlist.strings: missing \(k)") }
+            }
+        }
+    }
+
     func testFormatSpecifiersMatch() throws {
         let en = try table("en")
         let es = try table("es")

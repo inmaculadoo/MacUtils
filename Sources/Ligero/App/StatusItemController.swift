@@ -53,7 +53,7 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             case .waitingForPermission:
                 title = L("menu.module.needsPermission", L(d.titleKey))
             case .off, .running:
-                title = L(d.titleKey)
+                title = d.experimental ? L("menu.module.experimental", L(d.titleKey)) : L(d.titleKey)
             }
             let entry = NSMenuItem(title: title, action: #selector(toggleModule(_:)), keyEquivalent: "")
             entry.target = self
@@ -61,6 +61,15 @@ final class StatusItemController: NSObject, NSMenuDelegate {
             entry.state = registry.isEnabled(d.id) ? .on : .off
             entry.toolTip = L(d.summaryKey)
             menu.addItem(entry)
+        }
+
+        // Entries of running modules (Downloads undo, Capture, Monitor…).
+        for module in registry.runningModules {
+            guard let contributor = module as? MenuContributing else { continue }
+            let items = contributor.menuItems()
+            guard !items.isEmpty else { continue }
+            menu.addItem(.separator())
+            for item in items { menu.addItem(item) }
         }
 
         menu.addItem(.separator())

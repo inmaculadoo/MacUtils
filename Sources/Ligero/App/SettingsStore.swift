@@ -19,6 +19,16 @@ final class SettingsStore {
         defaults.set(SettingsCoding.encode(value), forKey: SettingsCoding.key(forModule: id))
     }
 
+    /// Non-settings data a module keeps between launches (e.g. undo history).
+    func loadValue<T: Decodable>(_ type: T.Type, key: String) -> T? {
+        guard let data = defaults.data(forKey: key) else { return nil }
+        return try? JSONDecoder().decode(T.self, from: data)
+    }
+
+    func saveValue<T: Encodable>(_ value: T, key: String) {
+        defaults.set(try? JSONEncoder().encode(value), forKey: key)
+    }
+
     var app: AppSettings {
         get { SettingsCoding.decode(AppSettings.self, from: defaults.data(forKey: Self.appKey)) }
         set { defaults.set(SettingsCoding.encode(newValue), forKey: Self.appKey) }

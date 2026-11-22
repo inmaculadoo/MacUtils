@@ -1,3 +1,4 @@
+import AppKit
 import LigeroCore
 
 /// Contract of every module (SPEC §2.2).
@@ -11,11 +12,27 @@ protocol LigeroModule: AnyObject {
     func stop()
 }
 
+/// A module that adds entries to the menu bar menu while it is running.
+/// Called only when the menu is about to open.
+@MainActor
+protocol MenuContributing: AnyObject {
+    func menuItems() -> [NSMenuItem]
+}
+
+/// App-level actions modules may trigger. Bound late by AppDelegate.
+@MainActor
+final class AppActions {
+    /// Opens Settings, optionally on the tab with that module id.
+    var openSettings: (String?) -> Void = { _ in }
+}
+
 /// Shared services handed to modules when they are created.
 @MainActor
 struct AppContext {
     let settings: SettingsStore
     let hotKeys: HotKeyCenter
+    let permissions: PermissionCenter
+    let actions: AppActions
 }
 
 /// Static description of a module. Holding one costs nothing: the module
@@ -25,6 +42,9 @@ struct ModuleDescriptor: Identifiable {
     let titleKey: String
     let summaryKey: String
     let requiredPermissions: Set<Permission>
+    /// Depends on AX/Tahoe behaviour that could not be verified in CI; shown
+    /// with an "Experimental" badge and off by default.
+    let experimental: Bool
     let make: @MainActor (AppContext) -> any LigeroModule
 
     @MainActor
@@ -32,8 +52,10 @@ struct ModuleDescriptor: Identifiable {
         _ type: M.Type,
         titleKey: String,
         summaryKey: String,
+        experimental: Bool = false,
         make: @escaping @MainActor (AppContext) -> M
     ) {
+        self.experimental = experimental
         self.id = M.id
         self.titleKey = titleKey
         self.summaryKey = summaryKey
@@ -65,6 +87,13 @@ final class ModuleRegistry {
     }
 
     var runningCount: Int { running.count }
+
+    /// Running modules in catalog order.
+    var runningModules: [any LigeroModule] {
+        descriptors.compactMap { running[$0.id] }
+    }
+
+    func module(_ id: String) -> (any LigeroModule)? { running[id] }
 
     func isEnabled(_ id: String) -> Bool {
         context.settings.app.enabledModules.contains(id)

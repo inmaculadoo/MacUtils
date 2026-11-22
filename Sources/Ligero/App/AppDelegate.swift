@@ -11,7 +11,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         let store = SettingsStore()
         let permissions = PermissionCenter()
-        let context = AppContext(settings: store, hotKeys: HotKeyCenter.shared)
+        let actions = AppActions()
+        let context = AppContext(settings: store, hotKeys: HotKeyCenter.shared, permissions: permissions, actions: actions)
         let registry = ModuleRegistry(descriptors: ModuleCatalog.all, context: context, permissions: permissions)
         permissions.onChange = { [weak registry] in registry?.apply() }
 
@@ -21,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             permissions: permissions,
             openSettings: { [weak settingsWindow] in settingsWindow?.show() }
         )
+        actions.openSettings = { [weak settingsWindow] tab in settingsWindow?.show(tab: tab) }
 
         self.registry = registry
         self.permissions = permissions

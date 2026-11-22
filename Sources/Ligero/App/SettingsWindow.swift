@@ -18,7 +18,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
         self.store = store
     }
 
-    func show() {
+    func show(tab: String? = nil) {
         if window == nil {
             let model = SettingsModel(registry: registry, permissions: permissions, store: store)
             let host = NSHostingController(rootView: SettingsView(model: model))
@@ -31,6 +31,7 @@ final class SettingsWindowController: NSObject, NSWindowDelegate {
             self.window = window
             self.model = model
         }
+        if let tab { model?.selectedTab = tab }
         NSApp.activate()
         window?.makeKeyAndOrderFront(nil)
     }
@@ -60,6 +61,10 @@ final class SettingsModel: ObservableObject {
     @Published private(set) var loginNeedsApproval = false
     @Published private(set) var granted: [Permission: Bool] = [:]
     @Published private(set) var enabled: Set<String> = []
+    /// Tab shown in the window ("general" or a module id).
+    @Published var selectedTab = SettingsModel.generalTab
+    static let generalTab = "general"
+
     /// Bumped when module settings change so that panes re-read them.
     @Published private(set) var revision = 0
 
@@ -145,12 +150,14 @@ struct SettingsView: View {
     @ObservedObject var model: SettingsModel
 
     var body: some View {
-        TabView {
+        TabView(selection: $model.selectedTab) {
             GeneralSettingsView(model: model)
                 .tabItem { Label(L("settings.tab.general"), systemImage: "gearshape") }
+                .tag(SettingsModel.generalTab)
             ForEach(SettingsPanes.all(model: model)) { pane in
                 pane.view
                     .tabItem { Label(L(pane.titleKey), systemImage: pane.symbol) }
+                    .tag(pane.id)
             }
         }
         .frame(width: 560)
@@ -215,7 +222,10 @@ struct GeneralSettingsView: View {
                         set: { model.setModule(d.id, enabled: $0) }
                     )) {
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(L(d.titleKey))
+                            HStack(spacing: 6) {
+                                Text(L(d.titleKey))
+                                if d.experimental { ExperimentalBadge() }
+                            }
                             Text(L(d.summaryKey))
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -259,5 +269,18 @@ struct PermissionRow: View {
                 Button(L("settings.openSystemSettings"), action: request)
             }
         }
+    }
+}
+
+/// Small "Experimental" capsule shown next to Block B modules.
+struct ExperimentalBadge: View {
+    var body: some View {
+        Text(L("settings.experimental"))
+            .font(.caption2.weight(.semibold))
+            .padding(.horizontal, 6)
+            .padding(.vertical, 1)
+            .background(Capsule().fill(Color.orange.opacity(0.2)))
+            .foregroundStyle(Color.orange)
+            .help(L("settings.experimental.help"))
     }
 }

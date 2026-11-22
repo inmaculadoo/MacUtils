@@ -92,3 +92,8 @@
 "settings.scroll.sideButtons" = "Side buttons go Back / Forward (⌘[ / ⌘])";
 "settings.scroll.swapSideButtons" = "Swap Back and Forward";
 "settings.scroll.costHint" = "With no external mouse connected this module does nothing. With a mouse connected it only looks at scroll and side-button events.";
+
+/* Infrastructure / Infraestructura */
+"menu.module.experimental" = "%@ (experimental)";
+"settings.experimental" = "Experimental";
+"settings.experimental.help" = "Depends on macOS behaviour that could only be checked on a real Mac. Off by default.";

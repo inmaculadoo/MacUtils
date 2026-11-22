@@ -92,3 +92,8 @@
 "settings.scroll.sideButtons" = "Botones laterales como Atrás / Adelante (⌘[ / ⌘])";
 "settings.scroll.swapSideButtons" = "Intercambiar Atrás y Adelante";
 "settings.scroll.costHint" = "Sin ratón externo conectado, este módulo no hace nada. Con ratón, solo mira los eventos de scroll y de los botones laterales.";
+
+/* Infrastructure / Infraestructura */
+"menu.module.experimental" = "%@ (experimental)";
+"settings.experimental" = "Experimental";
+"settings.experimental.help" = "Depende de comportamientos de macOS que solo se pueden comprobar en un Mac real. Desactivado por defecto.";
