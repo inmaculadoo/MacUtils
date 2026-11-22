@@ -19,6 +19,8 @@ public enum ColumnWidth: String, CaseIterable, Codable, Sendable {
         }
     }
 
+    public var titleKey: String { "ribbon.width.\(rawValue)" }
+
     public func next(backwards: Bool = false) -> ColumnWidth {
         let all = Self.allCases
         let i = all.firstIndex(of: self)!
@@ -334,5 +336,107 @@ public struct RibbonStrip<ID: Hashable> {
 
     static func closestWidth(_ points: Double, in strip: RibbonStrip) -> ColumnWidth {
         ColumnWidth.allCases.min { abs(strip.points(for: $0) - points) < abs(strip.points(for: $1) - points) } ?? .half
+    }
+}
+
+/// Shortcuts of the Ribbon module.
+public enum RibbonAction: String, CaseIterable, Codable, Hashable, Sendable {
+    case toggleMode, focusLeft, focusRight, focusUp, focusDown, moveLeft, moveRight
+    case cycleWidth, cycleWidthBack, stackLeft, expel, sendToNextScreen
+
+    public var localizationKey: String { "ribbon.action.\(rawValue)" }
+}
+
+/// Settings of the Ribbon module (SPEC §4.12).
+public struct RibbonSettings: ModuleSettings {
+    public var shortcuts: [RibbonAction: KeyCombo]
+    public var defaultWidth: ColumnWidth
+    public var gap: Double
+    /// Bundle ids that are never tiled.
+    public var excludedApps: [String]
+    /// ⌥ + two-finger horizontal scroll slides the strip (needs an event tap
+    /// while the mode is on). Off by default.
+    public var gestureScroll: Bool
+
+    public init(shortcuts: [RibbonAction: KeyCombo], defaultWidth: ColumnWidth, gap: Double,
+                excludedApps: [String], gestureScroll: Bool) {
+        self.shortcuts = shortcuts
+        self.defaultWidth = defaultWidth
+        self.gap = gap
+        self.excludedApps = excludedApps
+        self.gestureScroll = gestureScroll
+    }
+
+    public static let defaultShortcuts: [RibbonAction: KeyCombo] = {
+        let m: KeyCombo.Modifiers = [.control, .option, .command]
+        let ms: KeyCombo.Modifiers = [.control, .option, .command, .shift]
+        return [
+            .toggleMode: KeyCombo(keyCode: KeyCode.space, modifiers: m),
+            .focusLeft: KeyCombo(keyCode: KeyCode.h, modifiers: m),
+            .focusRight: KeyCombo(keyCode: KeyCode.l, modifiers: m),
+            .focusUp: KeyCombo(keyCode: KeyCode.k, modifiers: m),
+            .focusDown: KeyCombo(keyCode: KeyCode.j, modifiers: m),
+            .moveLeft: KeyCombo(keyCode: KeyCode.h, modifiers: ms),
+            .moveRight: KeyCombo(keyCode: KeyCode.l, modifiers: ms),
+            .cycleWidth: KeyCombo(keyCode: KeyCode.r, modifiers: m),
+            .cycleWidthBack: KeyCombo(keyCode: KeyCode.r, modifiers: ms),
+            .stackLeft: KeyCombo(keyCode: KeyCode.leftBracket, modifiers: m),
+            .expel: KeyCombo(keyCode: KeyCode.rightBracket, modifiers: m),
+            .sendToNextScreen: KeyCombo(keyCode: KeyCode.n, modifiers: m),
+        ]
+    }()
+
+    public static let `default` = RibbonSettings(
+        shortcuts: defaultShortcuts, defaultWidth: .half, gap: 8, excludedApps: [], gestureScroll: false
+    )
+
+    enum CodingKeys: String, CodingKey { case shortcuts, defaultWidth, gap, excludedApps, gestureScroll }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        let raw: [String: KeyCombo]? = c.value(.shortcuts, or: nil)
+        if let raw {
+            var map: [RibbonAction: KeyCombo] = [:]
+            for (k, v) in raw { if let a = RibbonAction(rawValue: k) { map[a] = v } }
+            shortcuts = map
+        } else {
+            shortcuts = Self.defaultShortcuts
+        }
+        defaultWidth = c.value(.defaultWidth, or: .half)
+        gap = min(max(c.value(.gap, or: 8.0), 0), 40)
+        excludedApps = c.value(.excludedApps, or: [])
+        gestureScroll = c.value(.gestureScroll, or: false)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.container(keyedBy: CodingKeys.self)
+        try c.encode(Dictionary(uniqueKeysWithValues: shortcuts.map { ($0.key.rawValue, $0.value) }), forKey: .shortcuts)
+        try c.encode(defaultWidth, forKey: .defaultWidth)
+        try c.encode(gap, forKey: .gap)
+        try c.encode(excludedApps, forKey: .excludedApps)
+        try c.encode(gestureScroll, forKey: .gestureScroll)
+    }
+
+    public mutating func assign(_ combo: KeyCombo?, to action: RibbonAction) {
+        if let combo {
+            for (other, existing) in shortcuts where existing == combo && other != action { shortcuts[other] = nil }
+        }
+        shortcuts[action] = combo
+    }
+}
+
+public enum RibbonScreens {
+    /// Whether another display touches `screen` on its left / right edge
+    /// (overlapping vertically), so parked windows must avoid that edge.
+    public static func neighbours(of screen: LRect, among all: [LRect]) -> (left: Bool, right: Bool) {
+        var left = false
+        var right = false
+        for other in all where other != screen {
+            let overlaps = other.minY < screen.maxY && other.maxY > screen.minY
+            guard overlaps else { continue }
+            if abs(other.maxX - screen.minX) < 2 { left = true }
+            if abs(other.minX - screen.maxX) < 2 { right = true }
+        }
+        return (left, right)
     }
 }

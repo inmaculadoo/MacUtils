@@ -5,6 +5,8 @@ public enum DynamicKeys {
         var keys: [String] = []
         keys += DownloadCategory.allCases.flatMap { [$0.folderKey, $0.titleKey] }
         keys += DockSettings.ClickAction.allCases.map(\.titleKey)
+        keys += RibbonAction.allCases.map(\.localizationKey)
+        keys += ColumnWidth.allCases.map(\.titleKey)
         return keys
     }
 }

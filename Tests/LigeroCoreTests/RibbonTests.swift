@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import LigeroCore
 
@@ -275,5 +276,41 @@ final class RibbonTests: XCTestCase {
         // Widths are proportional, so a narrower display shrinks the maximum scroll.
         s.viewport = LRect(x: 0, y: 0, width: 100, height: 800)
         XCTAssertEqual(s.offset, 50)
+    }
+}
+
+final class RibbonSettingsTests: XCTestCase {
+    func testDefaultsAreUniqueAndDoNotClashWithOtherModules() {
+        let ribbon = Array(RibbonSettings.defaultShortcuts.values)
+        XCTAssertEqual(Set(ribbon).count, ribbon.count)
+        XCTAssertEqual(RibbonSettings.defaultShortcuts.count, RibbonAction.allCases.count)
+        var others: [KeyCombo] = Array(SnapSettings.defaultShortcuts.values)
+        let capture = CaptureSettings.default
+        others += [capture.regionShortcut, capture.textShortcut, capture.pinShortcut].compactMap { $0 }
+        others += [ShelfSettings.default.shortcut, MenuBarSettings.default.shortcut].compactMap { $0 }
+        others += [SwitcherSettings.default.shortcut, SwitcherSettings.default.reverseShortcut].compactMap { $0 }
+        XCTAssertEqual(Set(others).count, others.count, "two modules share a default shortcut")
+        XCTAssertTrue(Set(ribbon).isDisjoint(with: Set(others)))
+    }
+
+    func testDecodingAndAssign() {
+        var s = RibbonSettings.default
+        s.assign(RibbonSettings.defaultShortcuts[.focusLeft], to: .expel)
+        XCTAssertNil(s.shortcuts[.focusLeft])
+        s.gap = 99
+        let decoded = SettingsCoding.decode(RibbonSettings.self, from: SettingsCoding.encode(s))
+        XCTAssertEqual(decoded.gap, 40)
+        XCTAssertEqual(decoded.shortcuts, s.shortcuts)
+        XCTAssertFalse(RibbonSettings.default.gestureScroll)
+    }
+
+    func testNeighbours() {
+        let main = LRect(x: 0, y: 0, width: 1470, height: 956)
+        let right = LRect(x: 1470, y: -200, width: 1920, height: 1080)
+        let above = LRect(x: 0, y: -1080, width: 1920, height: 1080)
+        XCTAssertTrue(RibbonScreens.neighbours(of: main, among: [main, right, above]).right)
+        XCTAssertFalse(RibbonScreens.neighbours(of: main, among: [main, right, above]).left)
+        XCTAssertTrue(RibbonScreens.neighbours(of: right, among: [main, right]).left)
+        XCTAssertFalse(RibbonScreens.neighbours(of: main, among: [main, above]).right)
     }
 }

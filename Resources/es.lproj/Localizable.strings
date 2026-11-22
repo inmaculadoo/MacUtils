@@ -285,3 +285,37 @@
 "audio.nothingPlaying" = "Ninguna app está reproduciendo audio";
 "audio.percent" = "%ld %%";
 "audio.mute" = "Silenciar";
+
+/* Ribbon (experimental) */
+"module.ribbon.title" = "Ribbon — ventanas en tira";
+"module.ribbon.summary" = "Se activa con un atajo: las ventanas se vuelven columnas de ancho fijo que se desplazan en horizontal. Al desactivarlo, cada ventana vuelve a su sitio.";
+"ribbon.menu.turnOn" = "Activar modo Ribbon";
+"ribbon.menu.turnOff" = "Desactivar modo Ribbon";
+"ribbon.action.toggleMode" = "Activar / desactivar el modo";
+"ribbon.action.focusLeft" = "Enfocar columna izquierda";
+"ribbon.action.focusRight" = "Enfocar columna derecha";
+"ribbon.action.focusUp" = "Enfocar ventana de arriba (pila)";
+"ribbon.action.focusDown" = "Enfocar ventana de abajo (pila)";
+"ribbon.action.moveLeft" = "Mover columna a la izquierda";
+"ribbon.action.moveRight" = "Mover columna a la derecha";
+"ribbon.action.cycleWidth" = "Siguiente ancho de columna";
+"ribbon.action.cycleWidthBack" = "Ancho de columna anterior";
+"ribbon.action.stackLeft" = "Apilar en la columna de la izquierda";
+"ribbon.action.expel" = "Sacar de la pila";
+"ribbon.action.sendToNextScreen" = "Enviar a la siguiente pantalla";
+"ribbon.width.quarter" = "¼";
+"ribbon.width.third" = "⅓";
+"ribbon.width.half" = "½";
+"ribbon.width.twoThirds" = "⅔";
+"ribbon.width.threeQuarters" = "¾";
+"ribbon.width.full" = "Completo";
+"settings.tab.ribbon" = "Ribbon";
+"ribbon.settings.experimentalHint" = "El módulo más difícil, a nivel de prototipo. Mueve ventanas de verdad: pruébalo primero con unas pocas sin importancia.";
+"ribbon.settings.shortcuts" = "Atajos";
+"ribbon.settings.layout" = "Disposición";
+"ribbon.settings.defaultWidth" = "Ancho de las columnas nuevas";
+"ribbon.settings.gap" = "Separación entre columnas";
+"ribbon.settings.gesture" = "⌥ + scroll horizontal de dos dedos desliza la tira (usa un event tap mientras el modo está activo)";
+"ribbon.settings.excluded" = "Apps que nunca se colocan";
+"ribbon.settings.excludedEmpty" = "Los diálogos, paneles y demás ventanas no estándar nunca se tocan.";
+"ribbon.settings.addExcluded" = "Añadir app…";

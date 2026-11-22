@@ -285,3 +285,37 @@
 "audio.nothingPlaying" = "No app is playing audio";
 "audio.percent" = "%ld %%";
 "audio.mute" = "Mute";
+
+/* Ribbon (experimental) */
+"module.ribbon.title" = "Ribbon — windows in a strip";
+"module.ribbon.summary" = "Turn it on with a shortcut: windows become columns of fixed width that scroll sideways. Turning it off puts every window back.";
+"ribbon.menu.turnOn" = "Turn On Ribbon Mode";
+"ribbon.menu.turnOff" = "Turn Off Ribbon Mode";
+"ribbon.action.toggleMode" = "Turn mode on / off";
+"ribbon.action.focusLeft" = "Focus column on the left";
+"ribbon.action.focusRight" = "Focus column on the right";
+"ribbon.action.focusUp" = "Focus window above (stack)";
+"ribbon.action.focusDown" = "Focus window below (stack)";
+"ribbon.action.moveLeft" = "Move column left";
+"ribbon.action.moveRight" = "Move column right";
+"ribbon.action.cycleWidth" = "Next column width";
+"ribbon.action.cycleWidthBack" = "Previous column width";
+"ribbon.action.stackLeft" = "Stack into the column on the left";
+"ribbon.action.expel" = "Take out of the stack";
+"ribbon.action.sendToNextScreen" = "Send to the next display";
+"ribbon.width.quarter" = "¼";
+"ribbon.width.third" = "⅓";
+"ribbon.width.half" = "½";
+"ribbon.width.twoThirds" = "⅔";
+"ribbon.width.threeQuarters" = "¾";
+"ribbon.width.full" = "Full";
+"settings.tab.ribbon" = "Ribbon";
+"ribbon.settings.experimentalHint" = "The hardest module: prototype quality. It moves real windows; test it with a few unimportant ones first.";
+"ribbon.settings.shortcuts" = "Shortcuts";
+"ribbon.settings.layout" = "Layout";
+"ribbon.settings.defaultWidth" = "Width of new columns";
+"ribbon.settings.gap" = "Gap between columns";
+"ribbon.settings.gesture" = "⌥ + two-finger horizontal scroll slides the strip (uses an event tap while the mode is on)";
+"ribbon.settings.excluded" = "Apps never tiled";
+"ribbon.settings.excludedEmpty" = "Dialogs, panels and other non-standard windows are always left alone.";
+"ribbon.settings.addExcluded" = "Add App…";
