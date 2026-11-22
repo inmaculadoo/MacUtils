@@ -7,6 +7,7 @@ enum ModuleCatalog {
             SnapModule.descriptor,
             ScrollModule.descriptor,
             DownloadsModule.descriptor,
+            ShelfModule.descriptor,
         ]
     }
 }
@@ -22,6 +23,8 @@ enum SettingsPanes {
                          view: AnyView(ScrollSettingsView(model: model))),
             SettingsPane(id: DownloadsModule.id, titleKey: "settings.tab.downloads", symbol: "arrow.down.circle",
                          view: AnyView(DownloadsSettingsView(model: model))),
+            SettingsPane(id: ShelfModule.id, titleKey: "settings.tab.shelf", symbol: "tray",
+                         view: AnyView(ShelfSettingsView(model: model))),
         ]
     }
 }
