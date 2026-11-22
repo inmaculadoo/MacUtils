@@ -1,0 +1,4 @@
+
+/* Usage descriptions shown by macOS / Textos de permisos que muestra macOS */
+"NSDownloadsFolderUsageDescription" = "Ligero ordena las descargas terminadas en carpetas por tipo. Nunca borra archivos.";
+"NSDesktopFolderUsageDescription" = "Ligero guarda capturas en el Escritorio cuando se lo pides.";

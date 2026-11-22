@@ -3,7 +3,11 @@ import SwiftUI
 /// Every module the app knows about, in menu order.
 enum ModuleCatalog {
     @MainActor static var all: [ModuleDescriptor] {
-        [SnapModule.descriptor, ScrollModule.descriptor]
+        [
+            SnapModule.descriptor,
+            ScrollModule.descriptor,
+            DownloadsModule.descriptor,
+        ]
     }
 }
 
@@ -16,6 +20,8 @@ enum SettingsPanes {
                          view: AnyView(SnapSettingsView(model: model))),
             SettingsPane(id: ScrollModule.id, titleKey: "settings.tab.scroll", symbol: "computermouse",
                          view: AnyView(ScrollSettingsView(model: model))),
+            SettingsPane(id: DownloadsModule.id, titleKey: "settings.tab.downloads", symbol: "arrow.down.circle",
+                         view: AnyView(DownloadsSettingsView(model: model))),
         ]
     }
 }

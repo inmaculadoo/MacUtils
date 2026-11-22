@@ -12,7 +12,7 @@ APP="build/Ligero.app"
 SIGN_ID="${SIGN_ID:--}"
 
 echo "==> Checking localizations"
-for strings in Resources/*.lproj/Localizable.strings; do
+for strings in Resources/*.lproj/*.strings; do
     plutil -lint "$strings"
 done
 plutil -lint Resources/Info.plist
