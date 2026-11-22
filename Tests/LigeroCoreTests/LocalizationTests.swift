@@ -127,11 +127,26 @@ final class LocalizationTests: XCTestCase {
     }
 
     static func keysUsedInAppSources() throws -> Set<String> {
-        let r = try NSRegularExpression(pattern: #"(?:\bL\(|titleKey: |summaryKey: |Key: )"([a-zA-Z0-9_.]+)""#)
+        // Literal keys passed to L(...) or stored as title/summary keys, plus
+        // any string literal that looks like a key of one of our namespaces
+        // (keys handed to helper functions before reaching L).
+        let patterns = [
+            #"(?:\bL\(|titleKey: |summaryKey: |Key: )"([a-zA-Z0-9_.]+)""#,
+            #""((?:app|menu|settings|permission|module|snap|downloads|shelf|uninstall|capture|monitor|switcher|dock|menubar|audio|ribbon)\.[a-zA-Z0-9_.]*[a-zA-Z0-9_])""#,
+        ]
+        // Contexts where such a literal is not a localization key.
+        let notKeys = ["systemImage:", "systemName:", "symbol:", "id:", "static let", "autosaveName"]
         var keys = Set<String>()
-        for (_, text) in try appSources() {
-            for m in r.matches(in: text, range: NSRange(text.startIndex..., in: text)) {
-                if let range = Range(m.range(at: 1), in: text) { keys.insert(String(text[range])) }
+        for pattern in patterns {
+            let r = try NSRegularExpression(pattern: pattern)
+            for (_, text) in try appSources() {
+                for m in r.matches(in: text, range: NSRange(text.startIndex..., in: text)) {
+                    guard let range = Range(m.range(at: 1), in: text) else { continue }
+                    let lineStart = text[..<range.lowerBound].lastIndex(of: "\n").map { text.index(after: $0) } ?? text.startIndex
+                    let before = text[lineStart..<range.lowerBound]
+                    if notKeys.contains(where: { before.contains($0) }) { continue }
+                    keys.insert(String(text[range]))
+                }
             }
         }
         return keys
