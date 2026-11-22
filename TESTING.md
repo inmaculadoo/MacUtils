@@ -1,6 +1,10 @@
 # Qué probar en el Mac
 
-Antes de nada, compila y firma siempre con el mismo certificado (ver `README.md`):
+Orden de prueba: primero lo estable (**Prioridad 1 y 2**), después lo experimental (**Prioridad 3**), un módulo cada vez. Los módulos experimentales vienen desactivados y llevan la etiqueta «Experimental» en Ajustes.
+
+## 0. Preparación
+
+Compila y firma siempre con el mismo certificado (ver `README.md`), o macOS volverá a pedir los permisos:
 
 ```sh
 git pull
@@ -9,15 +13,18 @@ pkill Ligero; rm -rf /Applications/Ligero.app
 cp -R build/Ligero.app /Applications/ && open /Applications/Ligero.app
 ```
 
-Para ver los logs mientras pruebas:
+Logs mientras pruebas (puedes filtrar con `AND category == "scroll"`, `"modules"`, `"snap"`…):
 
 ```sh
 log stream --predicate 'subsystem == "app.allinone"' --level info
 ```
 
-## Medición de batería (en todas las fases)
+## 1. Medición de batería (para cada módulo)
 
-Con todos los módulos activados, deja el Mac en reposo (sin tocar ratón ni teclado) y ejecuta:
+Procedimiento para cada módulo:
+1. En Ajustes → General → Módulos, deja activado **solo ese módulo** (y luego repite la medición con todos los estables activados a la vez).
+2. Cierra la ventana de Ajustes y el menú de Ligero, y deja el Mac 60 s sin tocar ratón ni teclado.
+3. Ejecuta:
 
 ```sh
 top -l 30 -s 2 -stats pid,command,cpu,idlew,power -pid $(pgrep Ligero)
@@ -25,93 +32,156 @@ top -l 30 -s 2 -stats pid,command,cpu,idlew,power -pid $(pgrep Ligero)
 
 | Métrica | Límite |
 |---|---|
-| `cpu` | 0,0 % en todas las muestras (salvo la primera) |
+| `cpu` | 0,0 % en todas las muestras salvo la primera |
 | `idlew` | < 1 por segundo |
-| RAM (Monitor de Actividad → Memoria) | < 60 MB |
-| Hilos (Monitor de Actividad → doble clic → Hilos o `ps -M $(pgrep Ligero) \| wc -l`) | Sin hilos propios vivos en reposo |
+| RAM (Monitor de Actividad → Memoria) | < 60 MB con todo activado |
+| Hilos (`ps -M $(pgrep Ligero) \| wc -l`) | Sin hilos propios vivos en reposo |
 
-Anota los valores en el PR o en el CHANGELOG. Repite la medición con el ratón externo conectado y desconectado (Fase 1).
+Condiciones concretas por módulo (anota los valores en esta tabla):
 
-## Fase 0 — esqueleto
+| Módulo | Medir con… | cpu | idlew | RAM |
+|---|---|---|---|---|
+| Snap | en reposo | | | |
+| Scroll | sin ratón **y** con ratón conectado sin tocarlo | | | |
+| Downloads | sin descargas en curso | | | |
+| Shelf | en reposo (sin arrastrar) | | | |
+| Uninstall | ventana cerrada | | | |
+| Capture | en reposo, tras hacer 3 capturas | | | |
+| Monitor | submenú **cerrado** (abierto, 1 muestra/s es lo esperado) | | | |
+| Monitor + lectura en la barra | ≥ 10 s de intervalo: idlew ≈ 0,1/s es lo esperado | | | |
+| Switcher | en reposo, tras abrirlo 3 veces | | | |
+| Dock Previews | ratón fuera del Dock | | | |
+| MenuBar | iconos ocultos | | | |
+| Audio | todo al 100 % (0 taps) **y** con una app al 50 % sonando | | | |
+| Ribbon | modo apagado **y** modo encendido sin tocar nada | | | |
+| **Todos los estables a la vez** | en reposo | | | |
 
-### Arranque y barra de menús
-- [ ] Al abrir Ligero aparece un icono en la barra de menús y **no** aparece en el Dock ni en ⌘Tab.
-- [ ] Al hacer clic en el icono se abre el menú con las secciones «Módulos» y «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Ligero».
-- [ ] «Salir de Ligero» (⌘Q con el menú abierto) cierra la app.
-- [ ] Al abrir otra vez la app desde Finder o Spotlight con la app ya abierta, se muestran los Ajustes.
+---
+
+## Prioridad 1 — base, Snap y Scroll
+
+### Arranque y menú
+- [ ] Aparece el icono en la barra de menús y **no** en el Dock ni en ⌘Tab.
+- [ ] El menú muestra «Módulos», las entradas de los módulos activos, «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Ligero».
+- [ ] Volver a abrir la app desde Finder con ella ya abierta muestra los Ajustes.
 
 ### Permisos
-- [ ] En el menú, «Accesibilidad» y «Grabación de pantalla» aparecen como «no concedido» la primera vez. Al pulsar en ellos se abre el panel correcto de Ajustes del Sistema → Privacidad y seguridad.
-- [ ] Concede Accesibilidad y vuelve al menú: ahora dice «concedido» sin reiniciar la app.
-- [ ] Quita el permiso de Accesibilidad: el menú vuelve a decir «no concedido».
-- [ ] Recompila con `SIGN_ID="Ligero Dev"`, reinstala y comprueba que **no** se pierden los permisos.
+- [ ] «Accesibilidad» y «Grabación de pantalla» aparecen como «no concedido» la primera vez y, al pulsarlos, abren el panel correcto de Ajustes del Sistema.
+- [ ] Al conceder Accesibilidad, el menú dice «concedido» sin reiniciar y Snap/Scroll arrancan solos.
+- [ ] Al recompilar con `SIGN_ID="Ligero Dev"` y reinstalar, **no** se pierden los permisos.
 
-### Ajustes
-- [ ] «Ajustes…» abre una ventana con la pestaña General: Idioma, Arranque, Módulos y Permisos.
-- [ ] Cierra la ventana y vuelve a abrirla: se abre bien (se recrea cada vez).
-- [ ] Con la ventana cerrada, la RAM de Ligero vuelve aproximadamente al valor anterior a abrirla.
+### Ajustes, idioma y arranque
+- [ ] «Ajustes…» abre la ventana con una pestaña por módulo. Al cerrarla, la RAM vuelve aproximadamente a lo de antes.
+- [ ] Idioma: «English» → «Reiniciar ahora» → todo en inglés; «Español» → todo en español; «Sistema» → sigue a macOS. No aparece ninguna clave del tipo `menu.settings`.
+- [ ] «Abrir al iniciar sesión» aparece en Ajustes del Sistema → General → Elementos de inicio, y Ligero arranca solo al iniciar sesión.
 
-### Idioma
-- [ ] Con el selector en «Sistema», la app sigue el idioma de macOS.
-- [ ] Cambia a «English»: aparece el aviso y el botón «Reiniciar ahora». Al pulsarlo, la app se reinicia en inglés (menú y Ajustes).
-- [ ] Cambia a «Español» y reinicia: todo en español.
-- [ ] Vuelve a «Sistema» y reinicia: sigue el idioma del sistema.
-- [ ] No hay ningún texto que aparezca como clave (por ejemplo, `menu.settings`).
-
-### Abrir al iniciar sesión
-- [ ] Activa «Abrir al iniciar sesión» (desde el menú o desde Ajustes). Aparece en Ajustes del Sistema → General → Elementos de inicio. Si macOS pide aprobación, la app muestra el aviso y el botón para abrir Ajustes.
-- [ ] Cierra la sesión y vuelve a entrar: Ligero arranca solo.
-- [ ] Desactívalo: desaparece de Elementos de inicio.
-
-### Batería
-- [ ] Medición de reposo con `top` (arriba): CPU 0,0 %, idlew < 1/s, RAM < 60 MB.
-
-## Fase 1 — Snap
-
-Requisito: Accesibilidad concedida. Si no lo está, el menú muestra «Snap — encaje de ventanas (falta permiso)» y el módulo arranca solo en cuanto lo concedes, sin reiniciar.
-
-### Atajos por defecto
+### Snap
 | Acción | Atajo |
 |---|---|
-| Mitad izquierda / derecha / superior / inferior | ⌃⌥← / ⌃⌥→ / ⌃⌥↑ / ⌃⌥↓ |
-| Cuartos: sup. izq. / sup. der. / inf. izq. / inf. der. | ⌃⌥U / ⌃⌥I / ⌃⌥J / ⌃⌥K |
-| Primer / central / último tercio | ⌃⌥D / ⌃⌥F / ⌃⌥G |
-| Dos primeros / dos últimos tercios | ⌃⌥E / ⌃⌥T |
+| Mitades izq. / der. / sup. / inf. | ⌃⌥← / ⌃⌥→ / ⌃⌥↑ / ⌃⌥↓ |
+| Cuartos | ⌃⌥U / ⌃⌥I / ⌃⌥J / ⌃⌥K |
+| Tercios: primero / central / último | ⌃⌥D / ⌃⌥F / ⌃⌥G |
+| Dos tercios: primeros / últimos | ⌃⌥E / ⌃⌥T |
 | Maximizar / maximizar altura / centrar | ⌃⌥↩ / ⌃⌥⇧↑ / ⌃⌥C |
 | Pantalla siguiente / anterior | ⌃⌥⌘→ / ⌃⌥⌘← |
-| Restaurar tamaño anterior | ⌃⌥⌫ |
+| Restaurar | ⌃⌥⌫ |
 
-### Pruebas
-- [ ] Con Safari, Finder, Terminal y una app Electron (VS Code, Slack…), prueba cada atajo de la tabla. La ventana se mueve de golpe, sin animación, y respeta la barra de menús (el notch) y el Dock.
-- [ ] Pulsa ⌃⌥← tres veces seguidas: ½ → ⅔ → ⅓ → ½. Lo mismo con ⌃⌥→ anclado a la derecha. Desactiva «Repetir el atajo…» en Ajustes → Snap: ahora siempre es ½.
-- [ ] Haz dos snaps seguidos y pulsa ⌃⌥⌫: vuelve al tamaño de **antes del primero**. Mueve una ventana a mano tras un snap, haz otro snap y restaura: vuelve a donde la dejaste a mano.
-- [ ] Con el Dock oculto y visible, y con el Dock a un lado: las mitades no quedan debajo del Dock.
-- [ ] Con pantalla externa: ⌃⌥⌘→ pasa la ventana a la otra pantalla conservando su posición relativa (una mitad izquierda sigue siendo mitad izquierda); ⌃⌥⌘← vuelve. Prueba la externa a la izquierda, a la derecha y encima.
-- [ ] Pantalla en vertical (si tienes): los tercios se apilan de arriba abajo.
-- [ ] Ajustes → Snap: separación a 10 pt y comprueba el hueco entre dos mitades y con los bordes.
-- [ ] Grabar atajo: haz clic en el atajo de «Centrar», pulsa ⌃⌥X. Funciona al momento. Asigna a otra acción un atajo ya usado: se quita de la acción anterior. Esc cancela, Borrar lo deja en «Ninguno». Una tecla sin ⌘/⌥/⌃ (por ejemplo, solo ⇧A) suena y no se acepta.
-- [ ] Mientras grabas un atajo, pulsar ⌃⌥← **no** mueve ninguna ventana. Al cerrar la ventana de Ajustes a mitad de grabación, los atajos vuelven a funcionar.
-- [ ] «Restaurar atajos por defecto» los devuelve a la tabla.
-- [ ] Desactiva Snap en el menú: ningún atajo hace nada (y otras apps pueden usar ⌃⌥←). Actívalo: vuelven.
-- [ ] Ventana sin permiso de redimensionado o diálogo modal: no se cuelga; como mucho se mueve sin cambiar de tamaño. Sin ninguna ventana enfocada (escritorio vacío) suena un pitido.
+- [ ] Cada atajo de la tabla en Safari, Finder, Terminal y una app Electron: se mueve de golpe y respeta el notch y el Dock.
+- [ ] ⌃⌥← tres veces: ½ → ⅔ → ⅓. Desactivando la opción en Ajustes → Snap, siempre ½.
+- [ ] Dos snaps seguidos y ⌃⌥⌫: vuelve al tamaño de antes del primero.
+- [ ] Con pantalla externa, ⌃⌥⌘→/← conserva la posición relativa.
+- [ ] Separación de 10 pt entre ventanas y bordes.
+- [ ] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
 
-## Fase 1 — Scroll
+### Scroll
+- [ ] Sin ratón: el log **no** muestra «Event tap installed».
+- [ ] Al conectar un ratón: «Mouse connected» + «Event tap installed». Al desconectarlo: «Event tap removed».
+- [ ] La rueda va al revés que el trackpad; el trackpad (y el Magic Mouse) siguen igual.
+- [ ] Scroll horizontal invertido (opción), scroll lineal con 1, 3 y 10 líneas.
+- [ ] Botones laterales: Atrás/Adelante en Safari, Chrome y Finder **con el teclado en español**; «Intercambiar» los invierte.
+- [ ] Con todas las opciones desactivadas, no se instala la tap ni con ratón.
 
-Requisito: Accesibilidad. Por defecto: rueda vertical **invertida** respecto al sistema (para tener el trackpad «natural» y el ratón «clásico»), scroll lineal desactivado y botones laterales como Atrás/Adelante.
+---
 
-- [ ] **Sin ratón conectado**: `log stream --predicate 'subsystem == "app.allinone" AND category == "scroll"' --level info` no muestra «Event tap installed».
-- [ ] Conecta un ratón USB o Bluetooth: aparece «Mouse connected: <nombre>» y «Event tap installed». Desconéctalo: «Event tap removed».
-- [ ] Con el ratón conectado: la rueda va en sentido contrario al trackpad; el trackpad sigue igual que antes. Si tienes Magic Mouse, comprueba que no cambia (va como el trackpad).
-- [ ] Desactiva «Invertir la rueda vertical» en Ajustes → Scroll: la rueda vuelve al sentido del sistema al instante.
-- [ ] Scroll horizontal (rueda inclinable o ⇧ + rueda) con «Invertir el scroll horizontal».
-- [ ] Scroll lineal: con 3 líneas, girar rápido o lento avanza siempre lo mismo por paso. Cambia a 1 y a 10.
-- [ ] Botones laterales: en Safari, Chrome y Finder, el botón trasero va Atrás y el delantero Adelante. **Prueba con el teclado en español** (⌘[ / ⌘] se envían con el carácter explícito; si alguna app no responde, apúntala). «Intercambiar Atrás y Adelante» los invierte. Con la opción desactivada, los botones vuelven a su función original.
-- [ ] Clic izquierdo, derecho y central no cambian.
-- [ ] Desactiva todas las opciones de Scroll: el log no muestra la tap ni con el ratón conectado.
-- [ ] Desactiva el módulo Scroll en el menú con el ratón conectado: «Event tap removed», y todo vuelve al comportamiento del sistema.
+## Prioridad 2 — módulos estables nuevos
 
-### Batería (Fase 1)
-- [ ] `top -l 30 -s 2 -stats pid,command,cpu,idlew,power -pid $(pgrep Ligero)` con Snap y Scroll activos, en reposo, **sin** ratón: CPU 0,0 %, idlew < 1/s.
-- [ ] Lo mismo **con** ratón conectado y sin tocarlo: CPU 0,0 %, idlew < 1/s.
-- [ ] Mientras haces scroll con el ratón, la CPU de Ligero sube solo unas décimas y vuelve a 0,0 al parar.
-- [ ] RAM < 60 MB con la ventana de Ajustes cerrada.
+### Uninstall (activado por defecto)
+- [ ] Menú → «Desinstalar una app…» abre la ventana. Arrastra una app de prueba (por ejemplo, una descargada y abierta una vez): lista la app y sus restos en ~/Library con tamaños.
+- [ ] Desmarcar un elemento lo excluye del total.
+- [ ] Con la app abierta, avisa y el botón «Salir de la app» la cierra.
+- [ ] «Mover a la Papelera»: todo aparece en la Papelera y se puede recuperar con «Recuperar». **Nunca** se borra nada directamente.
+- [ ] Safari u otra app de Apple: la rechaza. Ligero no se desinstala a sí mismo.
+- [ ] Si macOS pide «acceder a datos de otras apps» al tocar ~/Library/Containers, acepta y repite.
+
+### Monitor (activado por defecto)
+- [ ] Menú → «Monitor»: CPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Más energía ahora». Los valores se actualizan cada segundo mientras está abierto.
+- [ ] Con el submenú cerrado, `top` muestra 0,0 % de CPU (no sigue midiendo).
+- [ ] Comprueba que los valores cuadran aproximadamente con Monitor de Actividad e Información del sistema → Energía.
+- [ ] Ajustes → Monitor → «Mostrar CPU y RAM en la barra»: aparece el texto y se actualiza cada ~10 s. Al desactivarlo, desaparece.
+
+### Downloads (desactivado por defecto)
+- [ ] Ajustes → Descargas: la vista previa lista lo que movería sin mover nada.
+- [ ] «Activar orden automático» mueve lo de la vista previa y crea las carpetas (Imágenes, Documentos, PDFs, Vídeo, Audio, Comprimidos, Instaladores, Código). macOS puede pedir acceso a Descargas: acepta.
+- [ ] Descarga un archivo grande en Safari y en Chrome: no se toca mientras es `.download`/`.crdownload`; se mueve unos 2 s después de terminar.
+- [ ] Con un archivo del mismo nombre ya en la carpeta destino, el nuevo se llama «nombre 2.ext». Nada se sobrescribe.
+- [ ] Menú → «Deshacer un movimiento» → elige uno: el archivo vuelve a Descargas y **no** se vuelve a mover.
+- [ ] Desactivar una categoría o renombrar su carpeta en Ajustes se respeta.
+
+### Shelf (desactivado por defecto)
+- [ ] Empieza a arrastrar un archivo en Finder: aparece la bandeja bajo el notch. Arrastrar para seleccionar texto **no** la abre.
+- [ ] Suelta archivos, un enlace de Safari y texto: aparecen como iconos. Sácalos arrastrando a otra carpeta o app.
+- [ ] Si sueltas el arrastre fuera y la bandeja está vacía, se oculta sola; con cosas, se queda hasta ✕.
+- [ ] ⌃⌥⌘S la muestra y la oculta.
+- [ ] Carpeta fijada (Ajustes → Bandeja): soltar archivos encima los **copia** allí.
+
+### Capture (desactivado por defecto; necesita Grabación de pantalla)
+- [ ] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan.
+- [ ] Con «Guardar un PNG en el Escritorio»: aparece «Captura <fecha>.png».
+- [ ] ⌃⌥⇧4 sobre texto en español y en inglés: el texto queda en el portapapeles en orden de lectura.
+- [ ] ⌃⌥⇧5: la captura queda flotando; se mueve arrastrando y se cierra con Esc o doble clic.
+- [ ] Con dos pantallas, captura una región de la externa.
+- [ ] Tras capturar, la app que tenías delante sigue activa.
+
+---
+
+## Prioridad 3 — experimentales (activar uno a uno)
+
+### MenuBar — validar primero (riesgo de Tahoe)
+- [ ] Al activarlo aparecen una flecha y un separador fino. Con ⌘ arrastra varios iconos a la izquierda del separador y deja el de Ligero a la derecha.
+- [ ] Clic en la flecha: los iconos de la izquierda desaparecen y vuelven a aparecer. ⌃⌥⌘B hace lo mismo.
+- [ ] **Tahoe**: comprueba que el separador largo de verdad los empuja fuera, que no se lleva el icono de Ligero y que no rompe el Centro de control. Si falla, anótalo y desactiva el módulo.
+- [ ] Con «Volver a ocultarlos al cambiar de app», al pulsar en otra app se vuelven a ocultar.
+- [ ] Sección «siempre oculto»: ⌥-clic en la flecha la muestra.
+- [ ] Al desactivar el módulo desaparecen la flecha y los separadores y todo se ve como antes.
+
+### Switcher
+- [ ] ⌥Tab muestra las ventanas del Space actual ordenadas por uso reciente; soltar ⌥ cambia a la seleccionada. Un ⌥Tab rápido va a la ventana anterior.
+- [ ] Tab / flechas / ⇧Tab navegan; escribir filtra (sin importar tildes); Esc cancela.
+- [ ] ⌘W cierra, ⌘M minimiza y ⌘Q sale de la app seleccionada.
+- [ ] Con Grabación de pantalla hay miniaturas; sin ella, iconos. La segunda vez que lo abres, las miniaturas salen al momento (caché) y se actualizan si mueves o cambias la ventana.
+- [ ] Las ventanas minimizadas aparecen en gris y se restauran al elegirlas.
+
+### Dock Previews
+- [ ] Pasa el ratón por el icono de una app con varias ventanas: aparece el panel encima del Dock con sus ventanas. Con el Dock a un lado, aparece al lado.
+- [ ] Clic en una miniatura cambia a esa ventana; los botones cierran y minimizan.
+- [ ] Al salir del icono y del panel, se oculta.
+- [ ] Opción «Al hacer clic en el icono de la app que está delante» → «Ocultar la app» / «Minimizar sus ventanas»: funciona solo con la app que está delante, y con «Nada» los clics no se interceptan.
+- [ ] Reinicia el Dock (`killall Dock`): las vistas previas siguen funcionando.
+
+### Audio
+- [ ] Menú → «Mezclador de audio» con Música o Spotify sonando: aparece la app con su deslizador.
+- [ ] Al bajar a 50 % baja el volumen; al subir a 150 % sube, sin distorsión exagerada. Silenciar funciona. macOS pedirá permiso de audio la primera vez.
+- [ ] «Taps activos» muestra 1 con una app cambiada y 0 cuando la vuelves a 100 % o deja de sonar (también en el log: «Audio tap created/removed»).
+- [ ] «Salida de <app>» → auriculares: esa app suena por los auriculares y el resto por los altavoces.
+- [ ] Cerrar la app que tiene tap: el tap desaparece. Cambiar la salida por defecto del sistema no corta el sonido.
+- [ ] Con todo al 100 % no hay ningún tap (medición de batería).
+
+### Ribbon (el más delicado: pruébalo con pocas ventanas sin importancia)
+- [ ] ⌃⌥⌘Space activa el modo: las ventanas de cada pantalla se colocan en columnas de izquierda a derecha.
+- [ ] Abre una ventana nueva: aparece a la derecha de la enfocada y las demás no cambian de tamaño.
+- [ ] ⌃⌥⌘H/L cambia de columna y desplaza la tira si hace falta; las que quedan fuera se ven 1 pt en el borde.
+- [ ] ⌃⌥⌘⇧H/L mueve la columna; ⌃⌥⌘R / ⌃⌥⌘⇧R cambia el ancho; ⌃⌥⌘[ apila en la columna izquierda y ⌃⌥⌘] saca de la pila; ⌃⌥⌘K/J se mueve dentro de la pila.
+- [ ] ⌃⌥⌘N envía la ventana a la otra pantalla (con pantalla externa). Las ventanas aparcadas no se ven en la otra pantalla.
+- [ ] Diálogos, paneles y apps excluidas no se tocan.
+- [ ] ⌃⌥⌘Space otra vez: **todas** las ventanas vuelven a donde estaban.
+- [ ] Opción del gesto: ⌥ + scroll horizontal con dos dedos desliza la tira solo con el modo activo.
