@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import LigeroCore
 
@@ -61,5 +62,13 @@ final class SwitcherTests: XCTestCase {
         var s = SwitcherSettings.default
         s.reverseShortcut = nil
         XCTAssertNil(SettingsCoding.decode(SwitcherSettings.self, from: SettingsCoding.encode(s)).reverseShortcut)
+    }
+
+    func testDockSettings() {
+        XCTAssertEqual(DockSettings.default.clickAction, .none)
+        let s = SettingsCoding.decode(DockSettings.self, from: Data(#"{"clickAction": "hide", "showPreviews": false}"#.utf8))
+        XCTAssertEqual(s.clickAction, .hide)
+        XCTAssertFalse(s.showPreviews)
+        XCTAssertEqual(SettingsCoding.decode(DockSettings.self, from: Data(#"{"clickAction": "explode"}"#.utf8)).clickAction, .none)
     }
 }

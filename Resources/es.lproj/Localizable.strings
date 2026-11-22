@@ -243,3 +243,21 @@
 "switcher.settings.thumbnails" = "Miniaturas";
 "switcher.settings.showThumbnails" = "Mostrar miniaturas de las ventanas";
 "switcher.settings.thumbnailsHint" = "Necesita Grabación de pantalla. Las miniaturas se toman una vez al abrir el switcher y se guardan hasta que la ventana cambia. Sin el permiso se muestran los iconos de las apps.";
+
+/* Dock Previews (experimental) */
+"module.dock.title" = "Dock Previews — vistas previas del Dock";
+"module.dock.summary" = "Pasa el ratón por un icono del Dock para ver sus ventanas; haz clic en una para ir a ella.";
+"dock.minimize" = "Minimizar";
+"dock.close" = "Cerrar";
+"dock.click.none" = "Nada (lo normal en macOS)";
+"dock.click.minimize" = "Minimizar sus ventanas";
+"dock.click.hide" = "Ocultar la app";
+"settings.tab.dock" = "Dock";
+"dock.settings.experimentalHint" = "Depende de cómo el Dock informa del icono bajo el ratón, que puede cambiar entre versiones de macOS.";
+"dock.settings.previews" = "Vistas previas";
+"dock.settings.showPreviews" = "Mostrar vistas previas al pasar por un icono";
+"dock.settings.click" = "Clic en la app activa";
+"dock.settings.clickAction" = "Al hacer clic en el icono de la app que está delante";
+"dock.settings.clickHint" = "Cualquier opción distinta de «Nada» vigila los clics del ratón con un event tap mientras está activa.";
+
+/* MenuBar (experimental) */

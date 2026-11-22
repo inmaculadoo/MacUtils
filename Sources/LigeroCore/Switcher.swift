@@ -155,3 +155,31 @@ public struct SwitcherSelection: Equatable, Sendable {
         index = min(max(0, i), count - 1)
     }
 }
+
+/// Settings of the Dock Previews module (SPEC §4.6).
+public struct DockSettings: ModuleSettings {
+    public enum ClickAction: String, Codable, CaseIterable, Sendable {
+        case none, minimize, hide
+
+        public var titleKey: String { "dock.click.\(rawValue)" }
+    }
+
+    public var showPreviews: Bool
+    /// What clicking the icon of the app that is already active does.
+    public var clickAction: ClickAction
+
+    public init(showPreviews: Bool, clickAction: ClickAction) {
+        self.showPreviews = showPreviews
+        self.clickAction = clickAction
+    }
+
+    public static let `default` = DockSettings(showPreviews: true, clickAction: .none)
+
+    enum CodingKeys: String, CodingKey { case showPreviews, clickAction }
+
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        showPreviews = c.value(.showPreviews, or: true)
+        clickAction = c.value(.clickAction, or: .none)
+    }
+}

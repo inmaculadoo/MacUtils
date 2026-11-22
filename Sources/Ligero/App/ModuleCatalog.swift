@@ -12,6 +12,7 @@ enum ModuleCatalog {
             CaptureModule.descriptor,
             MonitorModule.descriptor,
             SwitcherModule.descriptor,
+            DockModule.descriptor,
         ]
     }
 }
@@ -35,6 +36,8 @@ enum SettingsPanes {
                          view: AnyView(MonitorSettingsView(model: model))),
             SettingsPane(id: SwitcherModule.id, titleKey: "settings.tab.switcher", symbol: "rectangle.on.rectangle",
                          view: AnyView(SwitcherSettingsView(model: model))),
+            SettingsPane(id: DockModule.id, titleKey: "settings.tab.dock", symbol: "dock.rectangle",
+                         view: AnyView(DockSettingsView(model: model))),
         ]
     }
 }

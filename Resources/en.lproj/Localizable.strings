@@ -243,3 +243,21 @@
 "switcher.settings.thumbnails" = "Thumbnails";
 "switcher.settings.showThumbnails" = "Show window thumbnails";
 "switcher.settings.thumbnailsHint" = "Needs Screen Recording. Thumbnails are taken once when the switcher opens and kept until the window changes. Without the permission, app icons are shown.";
+
+/* Dock Previews (experimental) */
+"module.dock.title" = "Dock Previews";
+"module.dock.summary" = "Hover a Dock icon to see its windows; click one to switch to it.";
+"dock.minimize" = "Minimize";
+"dock.close" = "Close";
+"dock.click.none" = "Do nothing (macOS default)";
+"dock.click.minimize" = "Minimize its windows";
+"dock.click.hide" = "Hide the app";
+"settings.tab.dock" = "Dock";
+"dock.settings.experimentalHint" = "Relies on how the Dock reports the hovered icon, which can change between macOS versions.";
+"dock.settings.previews" = "Previews";
+"dock.settings.showPreviews" = "Show window previews when hovering an icon";
+"dock.settings.click" = "Clicking the active app";
+"dock.settings.clickAction" = "When you click the icon of the app in front";
+"dock.settings.clickHint" = "Any option other than “Do nothing” watches mouse clicks with an event tap while it is on.";
+
+/* MenuBar (experimental) */
