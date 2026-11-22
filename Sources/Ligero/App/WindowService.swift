@@ -9,8 +9,8 @@ import LigeroCore
 @_silgen_name("_AXUIElementGetWindow")
 private func _AXUIElementGetWindow(_ element: AXUIElement, _ id: UnsafeMutablePointer<CGWindowID>) -> AXError
 
-/// A window as the Switcher, Dock Previews and Ribbon see it.
-@MainActor
+/// A window as the Switcher, Dock Previews and Ribbon see it. Used on the
+/// main actor only.
 struct WindowInfo {
     let id: CGWindowID
     let pid: pid_t
@@ -386,5 +386,6 @@ private func windowServiceCallback(
     guard let refcon else { return }
     let service = Unmanaged<WindowService>.fromOpaque(refcon).takeUnretainedValue()
     let name = notification as String
-    MainActor.assumeIsolated { service.axEvent(element, name) }
+    let box = UncheckedSendable(element)
+    MainActor.assumeIsolated { service.axEvent(box.value, name) }
 }

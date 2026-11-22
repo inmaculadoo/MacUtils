@@ -93,7 +93,7 @@ enum SystemSampler {
             }
             guard ok == 0 else { continue }
             let len = proc_name(pid, &nameBuffer, UInt32(nameBuffer.count))
-            let name = len > 0 ? String(cString: nameBuffer) : String(pid)
+            let name = len > 0 ? nameBuffer.withUnsafeBufferPointer { String(cString: $0.baseAddress!) } : String(pid)
             samples.append(ProcessEnergySample(pid: pid, name: name, energy: info.ri_billed_energy))
         }
         return samples
