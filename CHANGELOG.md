@@ -29,7 +29,7 @@
   quarters, thirds that stack on portrait displays, two-thirds, maximize, maximize
   height, center, next/previous display keeping the relative frame, optional gap),
   `RestoreHistory`, `KeyCombo`, tolerant settings decoding and a `.strings` parser.
-- CI: the Linux job pins Swift 6.2.
+- CI: the Linux job runs in the official `swift:6.2-noble` container.
 
 ### Notes
 - Strings are looked up in `Bundle.main` instead of `Bundle.module`: an SPM resource

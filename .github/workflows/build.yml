@@ -12,12 +12,10 @@ concurrency:
 jobs:
   core-tests-linux:
     runs-on: ubuntu-latest
+    # Official Swift image: does not depend on the runner's Ubuntu version.
+    container: swift:6.2-noble
     steps:
       - uses: actions/checkout@v4
-      - uses: swift-actions/setup-swift@v2
-        if: hashFiles('Package.swift') != ''
-        with:
-          swift-version: "6.2"
       - name: Test LigeroCore
         if: hashFiles('Package.swift') != ''
         run: swift test --filter LigeroCoreTests
