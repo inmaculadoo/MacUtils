@@ -147,6 +147,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 ## Prioridad 3 — experimentales (activar uno a uno)
 
 ### MenuBar — validar primero (riesgo de Tahoe)
+> **24-11, macOS 27.2: no viable.** El sistema limita el separador a 5002 pt y lo coloca fuera de su sitio; con un icono ⌘-arrastrado a su izquierda, al plegar el icono sigue visible. Déjalo desactivado (ver CHANGELOG). Alternativa nativa: Ajustes del Sistema → Barra de menús.
 - [ ] Al activarlo aparecen una flecha y un separador fino. Con ⌘ arrastra varios iconos a la izquierda del separador y deja el de Ligero a la derecha.
 - [ ] Clic en la flecha: los iconos de la izquierda desaparecen y vuelven a aparecer. ⌃⌥⌘B hace lo mismo.
 - [ ] **Tahoe**: comprueba que el separador largo de verdad los empuja fuera, que no se lleva el icono de Ligero y que no rompe el Centro de control. Si falla, anótalo y desactiva el módulo.
@@ -162,6 +163,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Las ventanas minimizadas aparecen en gris y se restauran al elegirlas.
 
 ### Dock Previews
+> **24-11:** Se vio que la vista previa se quedaba en pantalla al salir del Dock (con el Dock en ocultación automática). Arreglado: mientras se ve, se oculta en cuanto el ratón sale del panel y del Dock. **Vuelve a probar la primera casilla y «Al salir del icono y del panel, se oculta».**
 - [ ] Pasa el ratón por el icono de una app con varias ventanas: aparece el panel encima del Dock con sus ventanas. Con el Dock a un lado, aparece al lado.
 - [ ] Clic en una miniatura cambia a esa ventana; los botones cierran y minimizan.
 - [ ] Al salir del icono y del panel, se oculta.
@@ -169,6 +171,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Reinicia el Dock (`killall Dock`): las vistas previas siguen funcionando.
 
 ### Audio
+> **24-11:** Ligero salía en la lista del mezclador: arreglado. Subir por encima de 100 % solo se nota con fuentes grabadas bajas: la música ya suena cerca del máximo digital y +50 % (≈ +3,5 dB) se recorta en los picos.
 - [ ] Menú → «Mezclador de audio» con Música o Spotify sonando: aparece la app con su deslizador.
 - [ ] Al bajar a 50 % baja el volumen; al subir a 150 % sube, sin distorsión exagerada. Silenciar funciona. macOS pedirá permiso de audio la primera vez.
 - [ ] «Taps activos» muestra 1 con una app cambiada y 0 cuando la vuelves a 100 % o deja de sonar (también en el log: «Audio tap created/removed»).
@@ -177,6 +180,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Con todo al 100 % no hay ningún tap (medición de batería).
 
 ### Ribbon (el más delicado: pruébalo con pocas ventanas sin importancia)
+> **24-11:** probado con 7 ventanas de TextEdit y 2 de Terminal: modo, foco, ancho, mover, apilar/sacar, ventana nueva y restaurar al apagar, todo correcto. Arreglado: las ventanas de apps abiertas con Ligero ya en marcha no entraban en la tira (y su posición guardada podía estar vieja). Sin animaciones a propósito (regla de batería). Las columnas fuera de la vista se aparcan una encima de otra en el borde.
 - [ ] ⌃⌥⌘Space activa el modo: las ventanas de cada pantalla se colocan en columnas de izquierda a derecha.
 - [ ] Abre una ventana nueva: aparece a la derecha de la enfocada y las demás no cambian de tamaño.
 - [ ] ⌃⌥⌘H/L cambia de columna y desplaza la tira si hace falta; las que quedan fuera se ven 1 pt en el borde.

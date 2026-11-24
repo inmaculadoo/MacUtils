@@ -21,7 +21,29 @@
   capacities now live only inside `BatteryData`, which hid the health row; read
   there too, preferring the nominal capacity (closest to System Settings).
 
+- **Dock Previews**: with an auto-hiding Dock the preview stayed on screen
+  after leaving the Dock (the Dock does not always report it). While visible,
+  mouse-move monitors hide it once the pointer is outside the panel and the
+  Dock (`DockPreviewHover`); they exist only while the preview shows.
+- **Audio**: Ligero itself showed up in the mixer (it becomes an audio client
+  after playing a sound or hosting a tap); its pid is excluded.
+- **WindowService** (Ribbon, Switcher, Dock): apps launched while the service
+  was active were observed before they answered AX, so their window cache was
+  never invalidated and their windows were missing (Ribbon ignored them).
+  Observers are kept only if they registered; unobserved apps are read fresh.
+  Ribbon reads fresh frames when the mode starts.
+
+### Not viable
+- **MenuBar** on macOS 27: a status item's length is capped (10 000 → 5 002 pt)
+  and the oversized separator is laid out away from its slot, so icons on its
+  left are not pushed off screen. Left off; macOS 26+ has a native setting
+  (System Settings → Menu Bar) to choose which apps show icons.
+
 ### Notes
+- Audio boost above 100 % is only audible for quiet sources: most music is
+  already near full scale, and +50 % (≈ +3.5 dB) clips at the peaks.
+- Ribbon has no animations on purpose (they need a timer or display link
+  while moving, against the battery rules).
 - Rectangle registers the same ⌃⌥ shortcuts; whichever app registered first gets
   them. Quit Rectangle (or change its shortcuts) to use Snap.
 - The first value of the optional menu bar CPU reading is 0 % until the second
