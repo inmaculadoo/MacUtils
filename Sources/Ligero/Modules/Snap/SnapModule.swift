@@ -19,6 +19,7 @@ final class SnapModule: LigeroModule, MenuContributing {
     private let settings: SnapSettings
     private var tokens: [HotKeyToken] = []
     private var history = RestoreHistory<WindowKey>(capacity: 50)
+    private let drag = SnapDrag()
 
     init(context: AppContext) {
         hotKeys = context.hotKeys
@@ -34,9 +35,15 @@ final class SnapModule: LigeroModule, MenuContributing {
             if let token { tokens.append(token) }
         }
         Log.snap.info("Registered \(self.tokens.count) shortcut(s)")
+        if settings.dragToEdges {
+            drag.onDrop = { [weak self] window, before, zone in self?.dropped(window, before: before, zone: zone) }
+            drag.start(options: settings.options)
+        }
     }
 
     func stop() {
+        drag.stop()
+        drag.onDrop = nil
         for token in tokens { hotKeys.unregister(token) }
         tokens.removeAll()
         history.removeAll()
@@ -101,6 +108,20 @@ final class SnapModule: LigeroModule, MenuContributing {
             return
         }
         guard !target.isClose(to: layout, tolerance: 0.5) else { return }
+        place(window, from: current, to: target, screens: screens)
+    }
+
+    /// A window was dragged and let go in an edge zone.
+    private func dropped(_ window: AXWindow, before: LRect, zone: SnapZones.Zone) {
+        let screens = ScreenGeometry.screens()
+        guard let target = SnapZones.target(for: zone, screens: screens, options: settings.options) else { return }
+        // Restore (⌃⌥⌫) goes back to the frame from before the drag, or from
+        // before the first snap if the window was still snapped.
+        let current = history.appliedBeforeDrag(window.key, dragged: before) ?? before
+        place(window, from: current, to: target, screens: screens)
+    }
+
+    private func place(_ window: AXWindow, from current: LRect, to target: LRect, screens: [ScreenInfo]) {
         // Ribbon lets go of a window the user places on purpose.
         if let id = WindowService.windowID(window.element) {
             NotificationCenter.default.post(name: .ligeroWindowPlaced, object: NSNumber(value: id))
@@ -113,6 +134,6 @@ final class SnapModule: LigeroModule, MenuContributing {
             window.setPosition(CGPoint(x: settled.x, y: settled.y))
             applied = window.frame ?? settled
         }
-        history.record(key, current: current, applied: applied, target: target)
+        history.record(window.key, current: current, applied: applied, target: target)
     }
 }

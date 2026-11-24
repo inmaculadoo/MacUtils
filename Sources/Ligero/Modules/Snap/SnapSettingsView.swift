@@ -29,6 +29,13 @@ struct SnapSettingsView: View {
             }
 
             Section(L("settings.snap.behaviour")) {
+                Toggle(L("settings.snap.dragToEdges"), isOn: Binding(
+                    get: { settings.dragToEdges },
+                    set: { value in model.update(SnapSettings.self, module: SnapModule.id) { $0.dragToEdges = value } }
+                ))
+                Text(L("settings.snap.dragToEdgesHint"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                 Toggle(L("settings.snap.cycleHalves"), isOn: Binding(
                     get: { settings.cycleHalves },
                     set: { value in model.update(SnapSettings.self, module: SnapModule.id) { $0.cycleHalves = value } }

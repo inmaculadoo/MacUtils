@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.4] — Snap by dragging to the screen edges
+
+### Added
+- **Snap**: drag a window to a screen edge or corner to snap it, with a
+  translucent preview of the target. Left/right edge: half; top: maximise;
+  corners: quarter; the bottom middle is left to the Dock. Edges shared with
+  another display are not zones. On by default, option in Settings → Snap.
+  Idle cost stays zero: the "window moved" AX notifications start the watch,
+  and the two mouse monitors and the preview panel exist only until mouse-up.
+  Zone logic in `SnapZones`, with tests.
+- **Snap**: restore (⌃⌥⌫) after dragging a snapped window to another edge goes
+  back to the frame from before the first snap (`RestoreHistory.appliedBeforeDrag`).
+
 ## [0.3.3] — Place windows from the menu
 
 ### Added

@@ -3,11 +3,14 @@ public struct SnapSettings: ModuleSettings {
     public var shortcuts: [SnapAction: KeyCombo]
     public var gap: Double
     public var cycleHalves: Bool
+    /// Dragging a window to a screen edge or corner snaps it there.
+    public var dragToEdges: Bool
 
-    public init(shortcuts: [SnapAction: KeyCombo], gap: Double, cycleHalves: Bool) {
+    public init(shortcuts: [SnapAction: KeyCombo], gap: Double, cycleHalves: Bool, dragToEdges: Bool = true) {
         self.shortcuts = shortcuts
         self.gap = gap
         self.cycleHalves = cycleHalves
+        self.dragToEdges = dragToEdges
     }
 
     public static let maxGap: Double = 40
@@ -57,7 +60,7 @@ public struct SnapSettings: ModuleSettings {
 
     // Stored as [rawValue: combo] so an action removed in a later version is
     // simply skipped instead of breaking the whole blob.
-    enum CodingKeys: String, CodingKey { case shortcuts, gap, cycleHalves }
+    enum CodingKeys: String, CodingKey { case shortcuts, gap, cycleHalves, dragToEdges }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -73,6 +76,7 @@ public struct SnapSettings: ModuleSettings {
         }
         gap = c.value(.gap, or: Self.default.gap)
         cycleHalves = c.value(.cycleHalves, or: Self.default.cycleHalves)
+        dragToEdges = c.value(.dragToEdges, or: true)
     }
 
     public func encode(to encoder: Encoder) throws {
@@ -81,5 +85,6 @@ public struct SnapSettings: ModuleSettings {
         try c.encode(raw, forKey: .shortcuts)
         try c.encode(gap, forKey: .gap)
         try c.encode(cycleHalves, forKey: .cycleHalves)
+        try c.encode(dragToEdges, forKey: .dragToEdges)
     }
 }

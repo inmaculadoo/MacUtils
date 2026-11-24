@@ -245,6 +245,16 @@ public struct RestoreHistory<Key: Hashable> {
         return e.target
     }
 
+    /// For a window dragged by the user: the frame Ligero last gave it, if
+    /// the drag only moved it (same size). Dragging a snapped window to
+    /// another edge then keeps the chain, so restore still goes back to the
+    /// frame from before the first snap.
+    public func appliedBeforeDrag(_ key: Key, dragged: LRect, tolerance: Double = 2) -> LRect? {
+        guard let e = entries[key], abs(e.applied.width - dragged.width) <= tolerance,
+              abs(e.applied.height - dragged.height) <= tolerance else { return nil }
+        return e.applied
+    }
+
     /// The frame to restore, removing it from the history.
     public mutating func takeOriginal(_ key: Key) -> LRect? {
         entries.removeValue(forKey: key)?.original

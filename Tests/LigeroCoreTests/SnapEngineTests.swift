@@ -170,6 +170,19 @@ final class RestoreHistoryTests: XCTestCase {
         XCTAssertNil(h.takeOriginal(1))
     }
 
+    func testDraggingASnappedWindowToAnotherEdgeKeepsTheOriginal() {
+        var h = RestoreHistory<Int>()
+        h.record(1, current: a, applied: b)
+        // The drag is noticed once the window moved a little: same size as b.
+        let dragged = LRect(x: 40, y: 20, width: 735, height: 919)
+        let current = h.appliedBeforeDrag(1, dragged: dragged) ?? dragged
+        h.record(1, current: current, applied: c)
+        XCTAssertEqual(h.takeOriginal(1), a)
+        // A window resized by hand since is not part of the chain.
+        h.record(1, current: a, applied: b)
+        XCTAssertNil(h.appliedBeforeDrag(1, dragged: a))
+    }
+
     func testManualMoveResetsOriginal() {
         var h = RestoreHistory<Int>()
         h.record(1, current: a, applied: b)

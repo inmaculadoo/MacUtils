@@ -94,7 +94,11 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [x] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
 - [x] *(0.3.3)* Menú de Ligero → "Colocar ventana de <app>": cada opción coloca la ventana activa y muestra su atajo al lado. *(25-11: probado con TextEdit)*
 - [ ] *(0.3.3)* Con el modo Ribbon activo, un atajo de Snap saca esa ventana de la tira y la deja donde la pone Snap; las demás columnas cierran el hueco. *(25-11: probado con atajos sintéticos)*
-- [ ] Colocar con el ratón: Snap no tiene zonas de arrastre propias (gastaría eventos en cada arrastre). Para eso usa el mosaico de macOS: activa en Ajustes del Sistema → Escritorio y Dock "Arrastrar ventanas a los bordes de la pantalla para organizarlas en mosaico" y arrastra la ventana a un borde o con ⌥ pulsada.
+- [ ] *(0.3.4)* **Arrastrar a los bordes** (activado por defecto; se quita en Ajustes → Snap). Arrastra una ventana por el título hasta tocar el borde con el puntero: aparece un recuadro azul donde quedará y al soltar se coloca. Izquierda/derecha → mitad, arriba → maximizar, esquinas (80 pt) → cuarto, abajo en el centro → nada (es del Dock). Soltar lejos del borde no hace nada; redimensionar hasta un borde tampoco. *(25-11: probado con arrastres sintéticos en TextEdit: derecha, arriba, esquina inferior izquierda)*
+- [ ] Tras encajar arrastrando (una o varias veces), ⌃⌥⌫ vuelve al tamaño de antes del primer encaje. *(25-11: tamaño correcto; la posición puede quedar desplazada lo que la ventana ya se había movido cuando Snap notó el arrastre)*
+- [ ] Con pantalla externa, el borde que comparten las dos pantallas no encaja: puedes pasar la ventana de una a otra.
+- [ ] Deja desactivado el mosaico de macOS (Ajustes del Sistema → Escritorio y Dock → "Arrastrar ventanas a los bordes…") para que no actúen los dos a la vez.
+- [ ] Batería: en reposo, idlew no sube (Snap solo escucha el ratón mientras arrastras una ventana). *(25-11: CPU 0,0 %, idlew sin cambios en 12 s, 13 MB)*
 
 ### Scroll
 - [x] Sin ratón: el log **no** muestra «Event tap installed». *(24-11: 0 event taps de Ligero en `CGGetEventTapList`)*
