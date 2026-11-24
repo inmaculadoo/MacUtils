@@ -46,6 +46,18 @@ final class MonitorTests: XCTestCase {
         XCTAssertEqual(BatteryInfo.hoursMinutes(245), "4:05")
     }
 
+    func testBatteryHealthFromNestedBatteryData() {
+        // macOS 27: capacities only inside BatteryData; nominal wins over raw.
+        let d: [String: Any] = [
+            "CurrentCapacity": 74, "MaxCapacity": 100,
+            "BatteryData": ["AppleRawMaxCapacity": 4452, "NominalChargeCapacity": 4579, "DesignCapacity": 4629],
+        ]
+        XCTAssertEqual(BatteryInfo.parse(d)!.health, 99)
+        // A new battery can report more than its design capacity.
+        let fresh: [String: Any] = ["CurrentCapacity": 50, "NominalChargeCapacity": 4700, "DesignCapacity": 4629]
+        XCTAssertEqual(BatteryInfo.parse(fresh)!.health, 100)
+    }
+
     func testBatteryChargingAndCalculating() {
         let d: [String: Any] = [
             "CurrentCapacity": 2000, "MaxCapacity": 4000, "IsCharging": true, "ExternalConnected": true,

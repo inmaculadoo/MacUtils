@@ -75,7 +75,8 @@ enum SystemSampler {
         return result
     }
 
-    /// Billed energy of every process we can read (`proc_pid_rusage`).
+    /// Energy of every process we can read (`proc_pid_rusage`). Uses
+    /// `ri_energy_nj`: `ri_billed_energy` stays at 0 on recent macOS.
     static func energy() -> [ProcessEnergySample] {
         let capacity = 4096
         var pids = [pid_t](repeating: 0, count: capacity)
@@ -85,16 +86,16 @@ enum SystemSampler {
         samples.reserveCapacity(Int(n))
         var nameBuffer = [CChar](repeating: 0, count: 256)
         for pid in pids.prefix(Int(n)) where pid > 0 {
-            var info = rusage_info_v4()
+            var info = rusage_info_v6()
             let ok = withUnsafeMutablePointer(to: &info) { ptr in
                 ptr.withMemoryRebound(to: rusage_info_t?.self, capacity: 1) {
-                    proc_pid_rusage(pid, RUSAGE_INFO_V4, $0)
+                    proc_pid_rusage(pid, RUSAGE_INFO_V6, $0)
                 }
             }
             guard ok == 0 else { continue }
             let len = proc_name(pid, &nameBuffer, UInt32(nameBuffer.count))
             let name = len > 0 ? nameBuffer.withUnsafeBufferPointer { String(cString: $0.baseAddress!) } : String(pid)
-            samples.append(ProcessEnergySample(pid: pid, name: name, energy: info.ri_billed_energy))
+            samples.append(ProcessEnergySample(pid: pid, name: name, energy: info.ri_energy_nj))
         }
         return samples
     }

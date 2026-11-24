@@ -122,11 +122,16 @@ public struct BatteryInfo: Equatable, Sendable {
         // Apple Silicon reports CurrentCapacity already in % with MaxCapacity 100.
         percent = Swift.min(100, Swift.max(0, percent))
 
-        let rawMax = int(d["AppleRawMaxCapacity"]) ?? int(d["NominalChargeCapacity"])
-        let design = int(d["DesignCapacity"])
+        // Recent macOS keeps the capacities only inside "BatteryData". The
+        // nominal capacity matches System Settings' "Maximum Capacity" best;
+        // the raw one reads a few points lower.
+        let nested = d["BatteryData"] as? [String: Any] ?? [:]
+        func capacity(_ key: String) -> Int? { int(d[key]) ?? int(nested[key]) }
+        let full = capacity("NominalChargeCapacity") ?? capacity("AppleRawMaxCapacity")
+        let design = capacity("DesignCapacity")
         var health: Int?
-        if let rawMax, let design, design > 0 {
-            health = Int((Double(rawMax) / Double(design) * 100).rounded())
+        if let full, let design, design > 0 {
+            health = Swift.min(100, Int((Double(full) / Double(design) * 100).rounded()))
         }
 
         var watts: Double?
@@ -229,7 +234,7 @@ public struct NetworkCounters: Equatable, Sendable {
 public struct ProcessEnergySample: Equatable, Sendable {
     public var pid: Int32
     public var name: String
-    /// `ri_billed_energy`, cumulative nanojoules.
+    /// `ri_energy_nj`, cumulative nanojoules.
     public var energy: UInt64
 
     public init(pid: Int32, name: String, energy: UInt64) {
