@@ -33,46 +33,46 @@ top -l 30 -s 2 -stats pid,command,cpu,idlew,power -pid $(pgrep Ligero)
 | Métrica | Límite |
 |---|---|
 | `cpu` | 0,0 % en todas las muestras salvo la primera |
-| `idlew` | < 1 por segundo |
+| `idlew` | < 1 por segundo. En `top -l` la columna es **acumulada** desde que arrancó el proceso: usa (última muestra − primera) / 60 s |
 | RAM (Monitor de Actividad → Memoria) | < 60 MB con todo activado |
 | Hilos (`ps -M $(pgrep Ligero) \| wc -l`) | Sin hilos propios vivos en reposo |
 
-Condiciones concretas por módulo (anota los valores en esta tabla):
+Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 24-11 (15 s tras arrancar, 60 s de `top`, más `footprint` y `ps -M`), solo con ese módulo activo; sin módulos: 0,00 %, 0,03/s, 12 MB, 3 hilos (todos del sistema):
 
 | Módulo | Medir con… | cpu | idlew | RAM |
 |---|---|---|---|---|
-| Snap | en reposo | | | |
-| Scroll | sin ratón **y** con ratón conectado sin tocarlo | | | |
-| Downloads | sin descargas en curso | | | |
-| Shelf | en reposo (sin arrastrar) | | | |
-| Uninstall | ventana cerrada | | | |
-| Capture | en reposo, tras hacer 3 capturas | | | |
-| Monitor | submenú **cerrado** (abierto, 1 muestra/s es lo esperado) | | | |
+| Snap | en reposo | 0,00 % | 0,02/s | 12 MB |
+| Scroll | sin ratón **y** con ratón conectado sin tocarlo | 0,00 % (sin ratón) | 0,03/s (sin ratón) | 12 MB · *con ratón: pendiente* |
+| Downloads | sin descargas en curso | 0,00 % | 0,03/s | 42 MB con Ajustes abiertos (vista previa sin aceptar) · *con FSEvents activo: pendiente* |
+| Shelf | en reposo (sin arrastrar) | 0,00 % | 0,02/s | 12 MB |
+| Uninstall | ventana cerrada | 0,00 % | 0,02/s | 12 MB |
+| Capture | en reposo, tras hacer 3 capturas | 0,00 % (recién arrancado) | 0,02/s | 12 MB · *tras capturas: pendiente* |
+| Monitor | submenú **cerrado** (abierto, 1 muestra/s es lo esperado) | 0,00 % | 0,03/s | 12 MB |
 | Monitor + lectura en la barra | ≥ 10 s de intervalo: idlew ≈ 0,1/s es lo esperado | | | |
-| Switcher | en reposo, tras abrirlo 3 veces | | | |
-| Dock Previews | ratón fuera del Dock | | | |
+| Switcher | en reposo, tras abrirlo 3 veces | 0,00 % (sin abrirlo) | 0,03/s | 12 MB · *tras abrirlo: pendiente* |
+| Dock Previews | ratón fuera del Dock | 0,00 % | 0,02/s | 12 MB |
 | MenuBar | iconos ocultos | | | |
 | Audio | todo al 100 % (0 taps) **y** con una app al 50 % sonando | | | |
-| Ribbon | modo apagado **y** modo encendido sin tocar nada | | | |
-| **Todos los estables a la vez** | en reposo | | | |
+| Ribbon | modo apagado **y** modo encendido sin tocar nada | 0,00 % (apagado) | 0,03/s (apagado) | 12 MB · *encendido: pendiente* |
+| **Todos los estables a la vez** | en reposo | 0,00 % | 0,02/s | 42 MB (con Ajustes abiertos, ver Downloads) |
 
 ---
 
 ## Prioridad 1 — base, Snap y Scroll
 
 ### Arranque y menú
-- [ ] Aparece el icono en la barra de menús y **no** en el Dock ni en ⌘Tab.
-- [ ] El menú muestra «Módulos», las entradas de los módulos activos, «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Ligero».
-- [ ] Volver a abrir la app desde Finder con ella ya abierta muestra los Ajustes.
+- [x] Aparece el icono en la barra de menús y **no** en el Dock ni en ⌘Tab. *(24-11: `LSUIElement`, política accessory)*
+- [x] El menú muestra «Módulos», las entradas de los módulos activos, «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Ligero».
+- [x] Volver a abrir la app desde Finder con ella ya abierta muestra los Ajustes.
 
 ### Permisos
 - [ ] «Accesibilidad» y «Grabación de pantalla» aparecen como «no concedido» la primera vez y, al pulsarlos, abren el panel correcto de Ajustes del Sistema.
 - [ ] Al conceder Accesibilidad, el menú dice «concedido» sin reiniciar y Snap/Scroll arrancan solos.
-- [ ] Al recompilar con `SIGN_ID="Ligero Dev"` y reinstalar, **no** se pierden los permisos.
+- [x] Al recompilar con `SIGN_ID="Ligero Dev"` y reinstalar, **no** se pierden los permisos. *(24-11: 8 reinstalaciones)*
 
 ### Ajustes, idioma y arranque
-- [ ] «Ajustes…» abre la ventana con una pestaña por módulo. Al cerrarla, la RAM vuelve aproximadamente a lo de antes.
-- [ ] Idioma: «English» → «Reiniciar ahora» → todo en inglés; «Español» → todo en español; «Sistema» → sigue a macOS. No aparece ninguna clave del tipo `menu.settings`.
+- [x] «Ajustes…» abre la ventana con una pestaña por módulo (Uninstall y Audio no tienen opciones). Al cerrarla, la RAM vuelve aproximadamente a lo de antes. *(24-11: 42 → 39 MB)*
+- [ ] Idioma *(24-11: inglés y español sin claves sueltas en el menú ni en las 11 pestañas, cambiando `AppleLanguages`; falta probar el selector y «Reiniciar ahora»)*: «English» → «Reiniciar ahora» → todo en inglés; «Español» → todo en español; «Sistema» → sigue a macOS. No aparece ninguna clave del tipo `menu.settings`.
 - [ ] «Abrir al iniciar sesión» aparece en Ajustes del Sistema → General → Elementos de inicio, y Ligero arranca solo al iniciar sesión.
 
 ### Snap
@@ -86,15 +86,15 @@ Condiciones concretas por módulo (anota los valores en esta tabla):
 | Pantalla siguiente / anterior | ⌃⌥⌘→ / ⌃⌥⌘← |
 | Restaurar | ⌃⌥⌫ |
 
-- [ ] Cada atajo de la tabla en Safari, Finder, Terminal y una app Electron: se mueve de golpe y respeta el notch y el Dock.
-- [ ] ⌃⌥← tres veces: ½ → ⅔ → ⅓. Desactivando la opción en Ajustes → Snap, siempre ½.
-- [ ] Dos snaps seguidos y ⌃⌥⌫: vuelve al tamaño de antes del primero.
+- [x] Cada atajo de la tabla en Safari, Finder, Terminal y una app Electron: se mueve de golpe y respeta el notch y el Dock. *(24-11: también TextEdit y Discord; ventanas con tamaño mínimo se quedan dentro de la pantalla)*
+- [x] ⌃⌥← tres veces: ½ → ⅔ → ⅓. Desactivando la opción en Ajustes → Snap, siempre ½.
+- [x] Dos snaps seguidos y ⌃⌥⌫: vuelve al tamaño de antes del primero.
 - [ ] Con pantalla externa, ⌃⌥⌘→/← conserva la posición relativa.
-- [ ] Separación de 10 pt entre ventanas y bordes.
-- [ ] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
+- [x] Separación de 10 pt entre ventanas y bordes.
+- [x] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
 
 ### Scroll
-- [ ] Sin ratón: el log **no** muestra «Event tap installed».
+- [x] Sin ratón: el log **no** muestra «Event tap installed». *(24-11: 0 event taps de Ligero en `CGGetEventTapList`)*
 - [ ] Al conectar un ratón: «Mouse connected» + «Event tap installed». Al desconectarlo: «Event tap removed».
 - [ ] La rueda va al revés que el trackpad; el trackpad (y el Magic Mouse) siguen igual.
 - [ ] Scroll horizontal invertido (opción), scroll lineal con 1, 3 y 10 líneas.
@@ -106,18 +106,18 @@ Condiciones concretas por módulo (anota los valores en esta tabla):
 ## Prioridad 2 — módulos estables nuevos
 
 ### Uninstall (activado por defecto)
-- [ ] Menú → «Desinstalar una app…» abre la ventana. Arrastra una app de prueba (por ejemplo, una descargada y abierta una vez): lista la app y sus restos en ~/Library con tamaños.
-- [ ] Desmarcar un elemento lo excluye del total.
-- [ ] Con la app abierta, avisa y el botón «Salir de la app» la cierra.
-- [ ] «Mover a la Papelera»: todo aparece en la Papelera y se puede recuperar con «Recuperar». **Nunca** se borra nada directamente.
-- [ ] Safari u otra app de Apple: la rechaza. Ligero no se desinstala a sí mismo.
+- [x] Menú → «Desinstalar una app…» abre la ventana. Arrastra una app de prueba (por ejemplo, una descargada y abierta una vez): lista la app y sus restos en ~/Library con tamaños.
+- [x] Desmarcar un elemento lo excluye del total.
+- [x] Con la app abierta, avisa y el botón «Salir de la app» la cierra. *(24-11: también si se abre después de cargarla)*
+- [x] «Mover a la Papelera»: todo aparece en la Papelera y se puede recuperar con «Recuperar». **Nunca** se borra nada directamente.
+- [x] Safari u otra app de Apple: la rechaza. Ligero no se desinstala a sí mismo.
 - [ ] Si macOS pide «acceder a datos de otras apps» al tocar ~/Library/Containers, acepta y repite.
 
 ### Monitor (activado por defecto)
-- [ ] Menú → «Monitor»: CPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Más energía ahora». Los valores se actualizan cada segundo mientras está abierto.
-- [ ] Con el submenú cerrado, `top` muestra 0,0 % de CPU (no sigue midiendo).
-- [ ] Comprueba que los valores cuadran aproximadamente con Monitor de Actividad e Información del sistema → Energía.
-- [ ] Ajustes → Monitor → «Mostrar CPU y RAM en la barra»: aparece el texto y se actualiza cada ~10 s. Al desactivarlo, desaparece.
+- [x] Menú → «Monitor»: CPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Más energía ahora». Los valores se actualizan cada segundo mientras está abierto.
+- [x] Con el submenú cerrado, `top` muestra 0,0 % de CPU (no sigue midiendo).
+- [x] Comprueba que los valores cuadran aproximadamente con Monitor de Actividad e Información del sistema → Energía. *(24-11: %, W, ciclos y salud frente a `pmset`/`ioreg`; un proceso al 100 % sale con ~6 W)*
+- [x] Ajustes → Monitor → «Mostrar CPU y RAM en la barra»: aparece el texto y se actualiza cada ~10 s. Al desactivarlo, desaparece.
 
 ### Downloads (desactivado por defecto)
 - [ ] Ajustes → Descargas: la vista previa lista lo que movería sin mover nada.
@@ -135,10 +135,10 @@ Condiciones concretas por módulo (anota los valores en esta tabla):
 - [ ] Carpeta fijada (Ajustes → Bandeja): soltar archivos encima los **copia** allí.
 
 ### Capture (desactivado por defecto; necesita Grabación de pantalla)
-- [ ] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan.
-- [ ] Con «Guardar un PNG en el Escritorio»: aparece «Captura <fecha>.png».
-- [ ] ⌃⌥⇧4 sobre texto en español y en inglés: el texto queda en el portapapeles en orden de lectura.
-- [ ] ⌃⌥⇧5: la captura queda flotando; se mueve arrastrando y se cierra con Esc o doble clic.
+- [x] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan. *(24-11: Esc probado; falta el clic derecho)*
+- [x] Con «Guardar un PNG en el Escritorio»: aparece «Captura <fecha>.png».
+- [x] ⌃⌥⇧4 sobre texto en español y en inglés: el texto queda en el portapapeles en orden de lectura.
+- [ ] ⌃⌥⇧5: la captura queda flotando; se mueve arrastrando y se cierra con Esc o doble clic. *(24-11: aparece en su sitio y se cierra con clic + Esc y con doble clic; falta moverla arrastrando)*
 - [ ] Con dos pantallas, captura una región de la externa.
 - [ ] Tras capturar, la app que tenías delante sigue activa.
 

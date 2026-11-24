@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.1] — First run on the Mac (Apple Silicon, macOS 27.2, Xcode 27.2)
+
+### Fixed
+- **Snap**: windows with a minimum size (Safari ~574 pt, Discord 940×500) ended
+  up partly off screen on the right/bottom layouts; they are now settled inside
+  the screen, keeping the edge the layout touches (`SnapEngine.settle`).
+- **Snap**: apps that round their size to a grid (Terminal) never matched a snap
+  frame, so the ½ → ⅔ → ⅓ cycle never advanced and restore lost the original
+  frame. The history now keeps the requested and the real frame
+  (`RestoreHistory.lastTarget`).
+- **Downloads**: the Settings preview read ~/Downloads on the main thread; the
+  first read waits on macOS's folder-access prompt and froze the whole app
+  (menu, Settings, hotkeys) until it was answered. Now read off the main thread.
+- **Uninstall**: the "app is running" check ran only when the app was loaded, so
+  an app opened afterwards could be moved to the Trash while running. Re-checked
+  when the window becomes key and right before trashing.
+- **Monitor**: `ri_billed_energy` is always 0 on macOS 27, so "Top energy now"
+  showed 0.00 W for everything; uses `ri_energy_nj` (`rusage_info_v6`). Battery
+  capacities now live only inside `BatteryData`, which hid the health row; read
+  there too, preferring the nominal capacity (closest to System Settings).
+
+### Notes
+- Rectangle registers the same ⌃⌥ shortcuts; whichever app registered first gets
+  them. Quit Rectangle (or change its shortcuts) to use Snap.
+- The first value of the optional menu bar CPU reading is 0 % until the second
+  sample (one interval later).
+
 ## [0.3.0] — Fases 2–6: el resto del SPEC
 
 ### Added — stable (Block A)
