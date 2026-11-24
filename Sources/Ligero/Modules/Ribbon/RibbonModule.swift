@@ -74,7 +74,9 @@ final class RibbonModule: LigeroModule, MenuContributing {
         }
         var perScreen: [LRect: [(id: CGWindowID, frame: LRect)]] = [:]
         for w in service.windows(includeMinimized: false) where isTileable(w) {
-            guard let frame = w.frame, let screen = screenFrame(for: frame, screens) else { continue }
+            // Fresh frame: it is what the windows go back to when the mode ends.
+            guard let frame = WindowService.frame(w.element) ?? w.frame,
+                  let screen = screenFrame(for: frame, screens) else { continue }
             elements[w.id] = w.element
             original[w.id] = frame
             applied[w.id] = frame

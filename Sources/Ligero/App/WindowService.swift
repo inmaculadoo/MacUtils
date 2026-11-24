@@ -129,9 +129,14 @@ final class WindowService {
         guard AXObserverCreate(pid, windowServiceCallback, &observer) == .success, let observer else { return }
         let app = Self.appElement(pid)
         let refcon = Unmanaged.passUnretained(self).toOpaque()
+        var registered = false
         for n in Self.appNotifications {
-            AXObserverAddNotification(observer, app, n as CFString, refcon)
+            let err = AXObserverAddNotification(observer, app, n as CFString, refcon)
+            if err == .success || err == .notificationAlreadyRegistered { registered = true }
         }
+        // Right after launch an app may not answer AX yet. Keep no observer
+        // then, so the next query reads it again and retries (see cachedWindows).
+        guard registered else { return }
         CFRunLoopAddSource(CFRunLoopGetMain(), AXObserverGetRunLoopSource(observer), .defaultMode)
         observers[pid] = observer
         for w in axWindows(of: app) { watchWindow(w, observer: observer) }
@@ -200,8 +205,7 @@ final class WindowService {
         for app in NSWorkspace.shared.runningApplications where app.activationPolicy == .regular {
             let pid = app.processIdentifier
             if pid == ProcessInfo.processInfo.processIdentifier { continue }
-            let list = cache[pid] ?? loadWindows(app)
-            cache[pid] = list
+            let list = cachedWindows(app)
             all += list.filter { onScreen.contains($0.id) || (includeMinimized && $0.isMinimized) }
         }
         let byID = Dictionary(all.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
@@ -210,8 +214,17 @@ final class WindowService {
 
     func windows(ofApp pid: pid_t) -> [WindowInfo] {
         guard let app = NSRunningApplication(processIdentifier: pid) else { return [] }
-        let list = cache[pid] ?? loadWindows(app)
-        cache[pid] = list
+        return cachedWindows(app)
+    }
+
+    /// The cache is only trusted for apps whose AX observer is in place: it
+    /// is what invalidates it. Otherwise read the app now and retry observing.
+    private func cachedWindows(_ app: NSRunningApplication) -> [WindowInfo] {
+        let pid = app.processIdentifier
+        if observers[pid] == nil, !clients.isEmpty { observe(pid) }
+        if observers[pid] != nil, let list = cache[pid] { return list }
+        let list = loadWindows(app)
+        if observers[pid] != nil { cache[pid] = list }
         return list
     }
 
