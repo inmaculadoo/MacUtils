@@ -72,9 +72,13 @@ enum CoreAudioHAL {
         let isPlaying: Bool
     }
 
+    /// Audio clients other than Ligero itself: Ligero shows up too once it
+    /// plays a sound (Capture's "Pop") or hosts a tap, and must never be
+    /// listed in the mixer nor tapped.
     static func processes() -> [Process] {
-        ids(system, kAudioHardwarePropertyProcessObjectList).compactMap { object in
-            guard let pid = value(object, kAudioProcessPropertyPID, pid_t(0)), pid > 0,
+        let me = getpid()
+        return ids(system, kAudioHardwarePropertyProcessObjectList).compactMap { object in
+            guard let pid = value(object, kAudioProcessPropertyPID, pid_t(0)), pid > 0, pid != me,
                   let bundle = string(object, kAudioProcessPropertyBundleID), !bundle.isEmpty else { return nil }
             let running = value(object, kAudioProcessPropertyIsRunningOutput, UInt32(0)) ?? 0
             return Process(object: object, pid: pid, bundleID: bundle, isPlaying: running != 0)
