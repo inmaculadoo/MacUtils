@@ -35,7 +35,7 @@ final class DownloadsModule: LigeroModule, MenuContributing {
         history = context.settings.loadValue(UndoHistory.self, key: Self.historyKey) ?? UndoHistory()
     }
 
-    static var downloadsURL: URL {
+    nonisolated static var downloadsURL: URL {
         FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Downloads", isDirectory: true)
     }
 
@@ -179,7 +179,7 @@ final class DownloadsModule: LigeroModule, MenuContributing {
         let modified: Double
     }
 
-    static func listEntries() -> [ScannedEntry] {
+    nonisolated static func listEntries() -> [ScannedEntry] {
         let keys: [URLResourceKey] = [.isDirectoryKey, .isPackageKey, .fileSizeKey, .contentModificationDateKey]
         guard let urls = try? FileManager.default.contentsOfDirectory(
             at: downloadsURL, includingPropertiesForKeys: keys, options: []
@@ -197,7 +197,7 @@ final class DownloadsModule: LigeroModule, MenuContributing {
     }
 
     /// Folder names from settings, falling back to the localized defaults.
-    static func folderNames(_ settings: DownloadsSettings) -> [DownloadCategory: String] {
+    nonisolated static func folderNames(_ settings: DownloadsSettings) -> [DownloadCategory: String] {
         var names: [DownloadCategory: String] = [:]
         for c in DownloadCategory.allCases {
             names[c] = settings.folderNames[c] ?? L(c.folderKey)
@@ -205,7 +205,7 @@ final class DownloadsModule: LigeroModule, MenuContributing {
         return names
     }
 
-    static func plan(for entries: [DownloadEntry], settings: DownloadsSettings, history: UndoHistory) -> [PlannedMove] {
+    nonisolated static func plan(for entries: [DownloadEntry], settings: DownloadsSettings, history: UndoHistory) -> [PlannedMove] {
         let names = folderNames(settings)
         var existing: [String: Set<String>] = [:]
         for folder in Set(names.values) {
@@ -221,7 +221,7 @@ final class DownloadsModule: LigeroModule, MenuContributing {
     }
 
     /// Extension table first, then UTType for unusual extensions.
-    static func category(for entry: DownloadEntry) -> DownloadCategory? {
+    nonisolated static func category(for entry: DownloadEntry) -> DownloadCategory? {
         let ext = DownloadsPlanner.fileExtension(entry.name)
         if let c = DownloadCategory.forExtension(ext) { return c }
         guard !ext.isEmpty, let type = UTType(filenameExtension: ext) else { return nil }

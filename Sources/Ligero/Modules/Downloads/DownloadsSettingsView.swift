@@ -78,10 +78,16 @@ struct DownloadsSettingsView: View {
         .onAppear { if preview == nil { refreshPreview() } }
     }
 
+    /// Reads ~/Downloads off the main thread: the first read can wait on
+    /// macOS's folder-access prompt, and that must not freeze the app.
     private func refreshPreview() {
-        let entries = DownloadsModule.listEntries().map(\.entry)
+        let settings = settings
         let history = model.store.loadValue(UndoHistory.self, key: DownloadsModule.historyKey) ?? UndoHistory()
-        preview = DownloadsModule.plan(for: entries, settings: settings, history: history)
+        Task {
+            preview = await Task.detached(priority: .userInitiated) {
+                DownloadsModule.plan(for: DownloadsModule.listEntries().map(\.entry), settings: settings, history: history)
+            }.value
+        }
     }
 
     /// Freezes the folder names in the current language, turns sorting on and
