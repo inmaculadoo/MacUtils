@@ -336,3 +336,4 @@
 "ribbon.menu.windowName" = "%1$@ — %2$@";
 "settings.snap.dragToEdges" = "Arrastrar una ventana a un borde o esquina de la pantalla la encaja ahí";
 "settings.snap.dragToEdgesHint" = "Izquierda o derecha: mitad. Arriba: maximizar. Esquinas: cuarto. Solo vigila el ratón mientras arrastras una ventana. Desactiva el mosaico de macOS (Ajustes del Sistema → Escritorio y Dock) para que no se pisen.";
+"shelf.settings.showOnNotchHover" = "Mostrar la bandeja al pasar el ratón por el notch (se cierra al salir)";

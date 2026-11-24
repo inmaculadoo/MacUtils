@@ -15,6 +15,10 @@ struct ShelfSettingsView: View {
                     get: { settings.showOnDrag },
                     set: { v in model.update(ShelfSettings.self, module: ShelfModule.id) { $0.showOnDrag = v } }
                 ))
+                Toggle(L("shelf.settings.showOnNotchHover"), isOn: Binding(
+                    get: { settings.showOnNotchHover },
+                    set: { v in model.update(ShelfSettings.self, module: ShelfModule.id) { $0.showOnNotchHover = v } }
+                ))
                 HStack {
                     Text(L("shelf.settings.shortcut"))
                     Spacer()

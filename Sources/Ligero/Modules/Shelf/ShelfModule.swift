@@ -28,6 +28,10 @@ final class ShelfModule: LigeroModule, MenuContributing {
     private var panel: NSPanel?
     private let viewModel = ShelfViewModel()
     private var shownByDrag = false
+    /// Opened by hovering the notch: closes again when the pointer leaves
+    /// both the notch and the panel.
+    private var shownByHover: LRect?
+    private var notch: NotchHotspot?
     private var hideCheck: Task<Void, Never>?
 
     init(context: AppContext) {
@@ -47,6 +51,13 @@ final class ShelfModule: LigeroModule, MenuContributing {
         if let combo = settings.shortcut {
             hotKey = context.hotKeys.register(combo) { [weak self] in self?.toggle() }
         }
+        if settings.showOnNotchHover {
+            let hotspot = NotchHotspot()
+            hotspot.onEnter = { [weak self] rect in self?.notchEntered(rect) }
+            hotspot.onExit = { [weak self] _ in self?.hoverMaybeEnded() }
+            hotspot.start()
+            notch = hotspot
+        }
     }
 
     func stop() {
@@ -56,13 +67,33 @@ final class ShelfModule: LigeroModule, MenuContributing {
         hotKey = nil
         hideCheck?.cancel()
         hideCheck = nil
+        notch?.stop()
+        notch = nil
+        shownByHover = nil
         panel?.orderOut(nil)
         panel = nil
+    }
+
+    // MARK: Notch hover
+
+    private func notchEntered(_ rect: LRect) {
+        guard panel?.isVisible != true else { return }
+        show()
+        shownByHover = rect
+    }
+
+    /// The pointer left the notch or the panel: close a hover-opened shelf
+    /// unless the pointer is on the other one, or a drag is going on.
+    private func hoverMaybeEnded() {
+        guard let rect = shownByHover, let panel, panel.isVisible, NSEvent.pressedMouseButtons == 0 else { return }
+        let m = NSEvent.mouseLocation
+        if !NotchHover.keepsShelf(mouseX: m.x, mouseY: m.y, notch: rect, panel: LRect(panel.frame)) { hide() }
     }
 
     private func mouseEvent(isUp: Bool) {
         if isUp {
             detector.mouseUp()
+            hoverMaybeEnded()
             guard shownByDrag else { return }
             // Let a drop on the shelf land before deciding to hide it.
             hideCheck?.cancel()
@@ -96,6 +127,7 @@ final class ShelfModule: LigeroModule, MenuContributing {
     func hide() {
         panel?.orderOut(nil)
         shownByDrag = false
+        shownByHover = nil
     }
 
     private func makePanel() -> NSPanel {
@@ -113,7 +145,14 @@ final class ShelfModule: LigeroModule, MenuContributing {
         panel.isOpaque = false
         panel.hasShadow = true
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        panel.contentView = NSHostingView(rootView: ShelfView(model: viewModel))
+        // The container reports the pointer leaving, for the notch hover.
+        let container = HoverView(frame: NSRect(x: 0, y: 0, width: 420, height: 130))
+        container.onExit = { [weak self] in self?.hoverMaybeEnded() }
+        let hosting = NSHostingView(rootView: ShelfView(model: viewModel))
+        hosting.frame = container.bounds
+        hosting.autoresizingMask = [.width, .height]
+        container.addSubview(hosting)
+        panel.contentView = container
         return panel
     }
 

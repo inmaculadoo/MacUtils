@@ -140,6 +140,10 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Si sueltas el arrastre fuera y la bandeja está vacía, se oculta sola; con cosas, se queda hasta ✕.
 - [ ] ⌃⌥⌘S la muestra y la oculta.
 - [ ] Carpeta fijada (Ajustes → Bandeja): soltar archivos encima los **copia** allí.
+- [ ] *(0.3.5)* **Notch**: pasa el ratón por el notch (donde la cámara): se abre la bandeja. Baja hasta ella y sigue abierta; aléjate y se cierra. Si la abriste con ⌃⌥⌘S o arrastrando, no se cierra al salir. Se quita en Ajustes → Shelf. *(25-11: probado con movimientos sintéticos del puntero)*
+- [ ] Con el notch, arrastra un archivo de la bandeja a una carpeta: la bandeja no se cierra mientras arrastras.
+- [ ] Conecta o desconecta la pantalla externa y cierra/abre la tapa: la zona del notch sigue funcionando en la pantalla del Mac.
+- [ ] Batería: la zona del notch la vigila el sistema (tracking area), no Ligero. *(25-11: CPU 0,0 %, idlew sin cambios en reposo)*
 
 ### Capture (desactivado por defecto; necesita Grabación de pantalla)
 - [x] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan. *(24-11: Esc probado; falta el clic derecho)*

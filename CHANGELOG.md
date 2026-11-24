@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.5] — Open the shelf from the notch
+
+### Added
+- **Shelf**: hovering the notch opens the shelf; it closes when the pointer
+  leaves both the notch and the panel (not during a drag, and not when the
+  shelf was opened with the shortcut or by a drag). An opaque black window
+  sits exactly over each notch (`auxiliaryTopLeftArea` / `TopRightArea`) with
+  a tracking area, so the window server reports enter/exit and nothing polls
+  the mouse. Rebuilt on display changes. On by default, option in Settings →
+  Shelf. Geometry in `NotchHover`, with tests.
+
 ## [0.3.4] — Snap by dragging to the screen edges
 
 ### Added

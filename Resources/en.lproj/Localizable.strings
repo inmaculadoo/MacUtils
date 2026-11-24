@@ -336,3 +336,4 @@
 "ribbon.menu.windowName" = "%1$@ — %2$@";
 "settings.snap.dragToEdges" = "Dragging a window to a screen edge or corner snaps it there";
 "settings.snap.dragToEdgesHint" = "Left or right: half. Top: maximise. Corners: quarter. The mouse is only watched while you drag a window. Turn off macOS tiling (System Settings → Desktop & Dock) so the two don't clash.";
+"shelf.settings.showOnNotchHover" = "Show the shelf when the pointer hovers the notch (closes when it leaves)";
