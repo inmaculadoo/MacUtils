@@ -33,6 +33,18 @@ final class RibbonModule: LigeroModule, MenuContributing {
     private var original: [CGWindowID: LRect] = [:]
     private var applied: [CGWindowID: LRect] = [:]
     private var gesture: RibbonGestureTap?
+    /// Tiled windows the user moved or resized with the mouse button down.
+    /// They are read once, when the button comes up (SPEC §4.12: no polling).
+    private var dragged: Set<CGWindowID> = []
+    /// Exists only between a drag of a tiled window and its mouse-up.
+    private var mouseUpMonitor: Any?
+    /// Times a parked window was pushed back after its app pulled it on
+    /// screen (AppKit does that on activation). Capped so an app that keeps
+    /// fighting can't start a loop; reset whenever the layout moves it.
+    private var reparks: [CGWindowID: Int] = [:]
+    /// Windows just dropped by the user. macOS may still move them after the
+    /// mouse-up (its own tiling); they are put back in their slot too.
+    private var settling: Set<CGWindowID> = []
 
     init(context: AppContext) {
         self.context = context
@@ -98,6 +110,7 @@ final class RibbonModule: LigeroModule, MenuContributing {
     private func deactivate() {
         gesture?.invalidate()
         gesture = nil
+        endDragWatch()
         // Put every window back where it was before the mode started.
         for (id, frame) in original {
             if let e = elements[id] { WindowService.setFrame(e, frame) }
@@ -107,6 +120,8 @@ final class RibbonModule: LigeroModule, MenuContributing {
         elements.removeAll()
         original.removeAll()
         applied.removeAll()
+        reparks.removeAll()
+        settling.removeAll()
         active = false
         Log.modules.info("Ribbon off")
     }
@@ -134,6 +149,7 @@ final class RibbonModule: LigeroModule, MenuContributing {
             guard let e = elements[id], let placement = target[id] else { continue }
             WindowService.setFrame(e, placement.frame)
             applied[id] = placement.frame
+            reparks[id] = nil
         }
     }
 
@@ -221,17 +237,9 @@ final class RibbonModule: LigeroModule, MenuContributing {
         switch event {
         case .created(let pid, let element):
             guard WindowService.isStandardWindow(element), let id = WindowService.windowID(element),
-                  elements[id] == nil, let app = NSRunningApplication(processIdentifier: pid),
-                  let bundle = app.bundleIdentifier, !settings.excludedApps.contains(bundle),
-                  let frame = WindowService.frame(element),
-                  let key = screenFrame(for: frame, ScreenGeometry.screens()), var strip = strips[key] else { return }
-            elements[id] = element
-            original[id] = frame
-            applied[id] = frame
-            // New windows open to the right of the focused one (SPEC §4.12).
-            strip.insert(id)
-            strips[key] = strip
-            layout(strip)
+                  let app = NSRunningApplication(processIdentifier: pid),
+                  let bundle = app.bundleIdentifier, !settings.excludedApps.contains(bundle) else { return }
+            if let key = add(id, element: element) { layout(strips[key]!) }
         case .destroyed(_, let id):
             guard let id, let key = stripKey(containing: id), var strip = strips[key] else { return }
             strip.remove(id)
@@ -239,9 +247,17 @@ final class RibbonModule: LigeroModule, MenuContributing {
             elements.removeValue(forKey: id)
             original.removeValue(forKey: id)
             applied.removeValue(forKey: id)
+            dragged.remove(id)
+            reparks.removeValue(forKey: id)
+            settling.remove(id)
             layout(strip)
         case .focused(let pid):
+            // "Window created" is lost for apps that did not answer AX yet when
+            // they opened it (just launched): pick those windows up now.
+            var touched = Set(adoptMissing(pid))
+            defer { for key in touched { layout(strips[key]!) } }
             guard let id = focusedWindowID(pid), let key = stripKey(containing: id), var strip = strips[key] else { return }
+            touched.remove(key)
             strip.focusWindow(id)
             strips[key] = strip
             layout(strip)
@@ -254,13 +270,92 @@ final class RibbonModule: LigeroModule, MenuContributing {
                     elements.removeValue(forKey: id)
                     original.removeValue(forKey: id)
                     applied.removeValue(forKey: id)
+                    reparks.removeValue(forKey: id)
                 }
                 strips[key] = strip
                 layout(strip)
             }
-        case .changed:
-            break
+        case .changed(_, let id):
+            guard let id, let e = elements[id] else { return }
+            guard NSEvent.pressedMouseButtons & 1 != 0 else {
+                repark(id, e)
+                return
+            }
+            settling.removeAll()
+            dragged.insert(id)
+            if mouseUpMonitor == nil {
+                mouseUpMonitor = NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { [weak self] _ in
+                    MainActor.assumeIsolated { self?.dragEnded() }
+                }
+            }
         }
+    }
+
+    /// Adds a window to the strip of its display, right of the focused column.
+    /// Returns that strip's key, or nil if it was already tiled or off-screen.
+    @discardableResult
+    private func add(_ id: CGWindowID, element: AXUIElement) -> LRect? {
+        guard elements[id] == nil, let frame = WindowService.frame(element),
+              let key = screenFrame(for: frame, ScreenGeometry.screens()), var strip = strips[key] else { return nil }
+        elements[id] = element
+        original[id] = frame
+        applied[id] = frame
+        // New windows open to the right of the focused one (SPEC §4.12).
+        strip.insert(id)
+        strips[key] = strip
+        return key
+    }
+
+    /// Tiles every visible window of `pid` that the strip doesn't have yet.
+    private func adoptMissing(_ pid: pid_t) -> [LRect] {
+        let onScreen = WindowService.onScreenWindowIDs()
+        var keys: [LRect] = []
+        for w in service.windows(ofApp: pid) where elements[w.id] == nil && onScreen.contains(w.id) && isTileable(w) {
+            if let key = add(w.id, element: w.element) { keys.append(key) }
+        }
+        return keys
+    }
+
+    // MARK: Mouse
+
+    /// The user let go of a tiled window they dragged: a new width sticks to
+    /// its column, a move reorders the strip, and everything snaps into place.
+    private func dragEnded() {
+        let ids = dragged
+        endDragWatch()
+        guard active else { return }
+        var touched = Set<LRect>()
+        for id in ids {
+            guard let e = elements[id], let frame = WindowService.frame(e),
+                  let key = stripKey(containing: id), var strip = strips[key],
+                  strip.layout()[id]?.state == .visible else { continue }
+            let edit = strip.userEdit(id, frame: frame)
+            Log.modules.debug("Ribbon drop \(id): \(String(describing: edit))")
+            strip.apply(edit, to: id)
+            strips[key] = strip
+            applied[id] = frame // where it really is, so the layout puts it back
+            touched.insert(key)
+            settling.insert(id)
+        }
+        for key in touched { layout(strips[key]!) }
+    }
+
+    /// Puts a parked window back at the edge if its app moved it on screen,
+    /// and a just-dropped window back in its slot.
+    private func repark(_ id: CGWindowID, _ e: AXUIElement) {
+        guard let key = stripKey(containing: id), let placement = strips[key]?.layout()[id],
+              placement.state != .visible || settling.contains(id), reparks[id, default: 0] < 3,
+              let frame = WindowService.frame(e), !frame.isClose(to: placement.frame, tolerance: 2) else { return }
+        reparks[id, default: 0] += 1
+        Log.modules.debug("Ribbon repark \(id)")
+        WindowService.setFrame(e, placement.frame)
+        applied[id] = placement.frame
+    }
+
+    private func endDragWatch() {
+        if let mouseUpMonitor { NSEvent.removeMonitor(mouseUpMonitor) }
+        mouseUpMonitor = nil
+        dragged.removeAll()
     }
 
     /// ⌥ + horizontal two-finger scroll. Returns true to swallow the event.

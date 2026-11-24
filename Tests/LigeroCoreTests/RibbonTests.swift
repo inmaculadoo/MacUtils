@@ -277,6 +277,60 @@ final class RibbonTests: XCTestCase {
         s.viewport = LRect(x: 0, y: 0, width: 100, height: 800)
         XCTAssertEqual(s.offset, 50)
     }
+
+    // MARK: Mouse
+
+    func testDraggingAnEdgeKeepsThatWidthAndShiftsNeighbours() {
+        var s = strip([1, 2, 3]) // 600 pt columns, columns 1 and 2 on screen
+        let slot = s.layout()[2]!.frame
+        let edit = s.userEdit(2, frame: LRect(x: slot.x, y: slot.y, width: 400, height: slot.height))
+        XCTAssertEqual(edit, .resized(400))
+        s.apply(edit, to: 2)
+        XCTAssertEqual(s.columnWidth(1), 400)
+        XCTAssertEqual(s.layout()[2]!.frame.width, 400)
+        XCTAssertEqual(s.layout()[3]!.frame.x, s.layout()[2]!.frame.maxX)
+        XCTAssertEqual(s.focusedWindow, 2)
+        // A width shortcut goes back to the fixed widths.
+        s.cycleWidth()
+        XCTAssertEqual(s.columnWidth(1), s.points(for: .twoThirds))
+    }
+
+    func testResizeIsClampedToTheViewport() {
+        var s = strip([1])
+        s.apply(.resized(5000), to: 1)
+        XCTAssertEqual(s.columnWidth(0), 1200)
+        s.apply(.resized(10), to: 1)
+        XCTAssertEqual(s.columnWidth(0), 100)
+    }
+
+    func testDroppingAWindowReordersByItsCentre() {
+        var s = strip([1, 2, 3])
+        let slot = s.layout()[3]!.frame // x = 600 on screen
+        let edit = s.userEdit(3, frame: LRect(x: -100, y: slot.y, width: slot.width, height: slot.height))
+        XCTAssertEqual(edit, .moved(toColumn: 1))
+        s.apply(edit, to: 3)
+        XCTAssertEqual(s.columns.map(\.windows), [[1], [3], [2]])
+        XCTAssertEqual(s.focusedWindow, 3)
+    }
+
+    func testSmallDragOrHeightChangeIsIgnored() {
+        let s = strip([1, 2, 3])
+        let slot = s.layout()[3]!.frame
+        XCTAssertEqual(s.userEdit(3, frame: LRect(x: slot.x + 50, y: slot.y + 40, width: slot.width, height: slot.height)), .none)
+        XCTAssertEqual(s.userEdit(3, frame: LRect(x: slot.x, y: slot.y, width: slot.width, height: 300)), .none)
+        XCTAssertEqual(s.userEdit(9, frame: slot), .none)
+    }
+
+    func testDraggingOutOfAStackMakesANewColumn() {
+        var s = strip([1, 2])
+        s.stackIntoLeft()
+        XCTAssertEqual(s.columns.map(\.windows), [[1, 2]])
+        let slot = s.layout()[2]!.frame
+        let edit = s.userEdit(2, frame: LRect(x: 700, y: slot.y, width: slot.width, height: slot.height))
+        XCTAssertEqual(edit, .moved(toColumn: 1))
+        s.apply(edit, to: 2)
+        XCTAssertEqual(s.columns.map(\.windows), [[1], [2]])
+    }
 }
 
 final class RibbonSettingsTests: XCTestCase {
@@ -301,7 +355,7 @@ final class RibbonSettingsTests: XCTestCase {
         let decoded = SettingsCoding.decode(RibbonSettings.self, from: SettingsCoding.encode(s))
         XCTAssertEqual(decoded.gap, 40)
         XCTAssertEqual(decoded.shortcuts, s.shortcuts)
-        XCTAssertFalse(RibbonSettings.default.gestureScroll)
+        XCTAssertTrue(RibbonSettings.default.gestureScroll)
     }
 
     func testNeighbours() {

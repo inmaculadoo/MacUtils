@@ -32,12 +32,16 @@ public enum ColumnWidth: String, CaseIterable, Codable, Sendable {
 public struct RibbonColumn<ID: Hashable>: Equatable {
     public var windows: [ID]
     public var width: ColumnWidth
+    /// Width set by dragging a window edge; overrides `width` until the next
+    /// width shortcut.
+    public var customPoints: Double?
     /// Row that gets focus when the column is focused.
     public var active: Int
 
-    public init(windows: [ID], width: ColumnWidth, active: Int = 0) {
+    public init(windows: [ID], width: ColumnWidth, customPoints: Double? = nil, active: Int = 0) {
         self.windows = windows
         self.width = width
+        self.customPoints = customPoints
         self.active = active
     }
 }
@@ -109,11 +113,17 @@ public struct RibbonStrip<ID: Hashable> {
         max(1, width.fraction * (viewport.width - gap) - gap)
     }
 
+    /// Width of column `index` in points.
+    public func columnWidth(_ index: Int) -> Double {
+        let column = columns[index]
+        return column.customPoints ?? points(for: column.width)
+    }
+
     /// Left edge of column `index` in strip coordinates (0 = strip start).
     public func columnX(_ index: Int) -> Double {
         var x = gap
         for i in 0..<min(index, columns.count) {
-            x += points(for: columns[i].width) + gap
+            x += columnWidth(i) + gap
         }
         return x
     }
@@ -215,6 +225,7 @@ public struct RibbonStrip<ID: Hashable> {
     public mutating func cycleWidth(backwards: Bool = false) {
         guard let f = focus else { return }
         columns[f.column].width = columns[f.column].width.next(backwards: backwards)
+        columns[f.column].customPoints = nil
         clampOffset()
         ensureVisible(f.column)
     }
@@ -222,6 +233,7 @@ public struct RibbonStrip<ID: Hashable> {
     public mutating func setWidth(_ width: ColumnWidth) {
         guard let f = focus else { return }
         columns[f.column].width = width
+        columns[f.column].customPoints = nil
         clampOffset()
         ensureVisible(f.column)
     }
@@ -251,9 +263,71 @@ public struct RibbonStrip<ID: Hashable> {
         guard let f = focus, columns[f.column].windows.count > 1, let id = focusedWindow else { return }
         columns[f.column].windows.remove(at: f.row)
         columns[f.column].active = min(columns[f.column].active, columns[f.column].windows.count - 1)
-        columns.insert(RibbonColumn(windows: [id], width: columns[f.column].width), at: f.column + 1)
+        columns.insert(RibbonColumn(windows: [id], width: columns[f.column].width,
+                                    customPoints: columns[f.column].customPoints), at: f.column + 1)
         focus = RibbonPosition(column: f.column + 1, row: 0)
         ensureVisible(f.column + 1)
+    }
+
+    // MARK: Mouse
+
+    /// What a frame the user gave a tiled window by hand means for the strip.
+    public enum UserEdit: Equatable, Sendable {
+        /// Width changed: the column keeps that width.
+        case resized(Double)
+        /// Same size, moved: the column goes to this index.
+        case moved(toColumn: Int)
+        /// Nothing the strip cares about (height only, or back where it was).
+        case none
+    }
+
+    /// Compares the frame a window was dragged to with its slot. A width
+    /// change is a resize (from either edge); otherwise the window's centre
+    /// picks the column it is dropped on.
+    public func userEdit(_ id: ID, frame: LRect, tolerance: Double = 2) -> UserEdit {
+        guard let p = position(of: id), let slot = layout()[id]?.frame else { return .none }
+        if abs(frame.width - slot.width) > tolerance {
+            return .resized(frame.width)
+        }
+        guard abs(frame.x - slot.x) > tolerance else { return .none }
+        let centre = frame.x + frame.width / 2 - viewport.x + offset
+        // A stacked window leaves its column behind, so that column counts too.
+        let alone = columns[p.column].windows.count == 1
+        var index = 0
+        for i in columns.indices where i != p.column || !alone {
+            if columnX(i) + columnWidth(i) / 2 < centre { index += 1 }
+        }
+        return alone && index == p.column ? .none : .moved(toColumn: index)
+    }
+
+    /// Applies a `userEdit`. A window dragged out of a stack gets its own column.
+    public mutating func apply(_ edit: UserEdit, to id: ID) {
+        guard let p = position(of: id) else { return }
+        switch edit {
+        case .none:
+            return
+        case .resized(let w):
+            columns[p.column].customPoints = min(max(w, 100), viewport.width - 2 * gap)
+            focus = p
+            columns[p.column].active = p.row
+            clampOffset()
+            ensureVisible(p.column)
+        case .moved(let target):
+            var column = columns[p.column]
+            if column.windows.count == 1 {
+                columns.remove(at: p.column)
+            } else {
+                columns[p.column].windows.remove(at: p.row)
+                columns[p.column].active = min(columns[p.column].active, columns[p.column].windows.count - 1)
+                column = RibbonColumn(windows: [id], width: column.width, customPoints: column.customPoints)
+            }
+            let index = min(max(0, target), columns.count)
+            columns.insert(column, at: index)
+            focus = RibbonPosition(column: index, row: column.windows.firstIndex(of: id) ?? 0)
+            columns[index].active = focus!.row
+            clampOffset()
+            ensureVisible(index)
+        }
     }
 
     // MARK: Scrolling
@@ -267,7 +341,7 @@ public struct RibbonStrip<ID: Hashable> {
     public mutating func ensureVisible(_ index: Int) {
         guard columns.indices.contains(index) else { return }
         let left = columnX(index) - gap
-        let right = columnX(index) + points(for: columns[index].width) + gap
+        let right = columnX(index) + columnWidth(index) + gap
         if left < offset {
             offset = left
         } else if right > offset + viewport.width {
@@ -288,7 +362,7 @@ public struct RibbonStrip<ID: Hashable> {
         var result: [ID: RibbonPlacement] = [:]
         let height = max(1, viewport.height - 2 * gap)
         for (i, column) in columns.enumerated() {
-            let w = points(for: column.width)
+            let w = columnWidth(i)
             let x = viewport.x + columnX(i) - offset
             let n = Double(column.windows.count)
             let h = max(1, (height - (n - 1) * gap) / n)
@@ -355,7 +429,8 @@ public struct RibbonSettings: ModuleSettings {
     /// Bundle ids that are never tiled.
     public var excludedApps: [String]
     /// ⌥ + two-finger horizontal scroll slides the strip (needs an event tap
-    /// while the mode is on). Off by default.
+    /// while the mode is on, and only then). On by default, like the app
+    /// that inspired the module.
     public var gestureScroll: Bool
 
     public init(shortcuts: [RibbonAction: KeyCombo], defaultWidth: ColumnWidth, gap: Double,
@@ -387,7 +462,7 @@ public struct RibbonSettings: ModuleSettings {
     }()
 
     public static let `default` = RibbonSettings(
-        shortcuts: defaultShortcuts, defaultWidth: .half, gap: 8, excludedApps: [], gestureScroll: false
+        shortcuts: defaultShortcuts, defaultWidth: .half, gap: 8, excludedApps: [], gestureScroll: true
     )
 
     enum CodingKeys: String, CodingKey { case shortcuts, defaultWidth, gap, excludedApps, gestureScroll }
@@ -405,7 +480,7 @@ public struct RibbonSettings: ModuleSettings {
         defaultWidth = c.value(.defaultWidth, or: .half)
         gap = min(max(c.value(.gap, or: 8.0), 0), 40)
         excludedApps = c.value(.excludedApps, or: [])
-        gestureScroll = c.value(.gestureScroll, or: false)
+        gestureScroll = c.value(.gestureScroll, or: true)
     }
 
     public func encode(to encoder: Encoder) throws {

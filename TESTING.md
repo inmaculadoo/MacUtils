@@ -188,4 +188,11 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] ⌃⌥⌘N envía la ventana a la otra pantalla (con pantalla externa). Las ventanas aparcadas no se ven en la otra pantalla.
 - [ ] Diálogos, paneles y apps excluidas no se tocan.
 - [ ] ⌃⌥⌘Space otra vez: **todas** las ventanas vuelven a donde estaban.
-- [ ] Opción del gesto: ⌥ + scroll horizontal con dos dedos desliza la tira solo con el modo activo.
+- [ ] Gesto (activado por defecto desde 0.3.2): ⌥ + scroll horizontal con dos dedos desliza la tira, solo con el modo activo.
+
+> **24-11 (0.3.2):** revisado contra Ribbon (meetribbon.app): tira horizontal, columnas de ancho fijo, la ventana nueva junto a la enfocada, ⌥ + scroll. Arreglado: dos ventanas de Safari no entraban en la tira, y al activar una app sus ventanas aparcadas volvían encima de las columnas. Añadido el ratón (probado con arrastres sintéticos; falta tu ratón real). Antes de probar, desactiva en Ajustes del Sistema → Escritorio y Dock → "Arrastrar ventanas a los bordes de la pantalla para organizarlas en mosaico": el mosaico de macOS se queda con la ventana que sueltas.
+- [ ] Abre dos ventanas de la misma app (dos de Safari) con el modo activo: las dos entran en la tira.
+- [ ] Activa una app con ventanas aparcadas (⌘Tab): no se amontonan encima de las columnas visibles.
+- [ ] Arrastra el borde derecho de una ventana de la tira: al soltar, la columna se queda con ese ancho y la de al lado se pega con el hueco. ⌃⌥⌘R vuelve a los anchos fijos.
+- [ ] Arrastra una ventana por el título y suéltala sobre otra columna: la tira se reordena y cada ventana vuelve a su hueco.
+- [ ] Arrastra una ventana apilada hacia un lado: sale de la pila a su propia columna.

@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.3.2] — Ribbon closer to a real scrolling window manager
+
+### Fixed
+- **Ribbon**: windows that missed "window created" (their app had just launched
+  and did not answer AX yet) never joined the strip; two Safari windows stayed
+  out of it. When an app gets focus, its visible windows that are not tiled
+  are added.
+- **Ribbon**: activating an app makes AppKit pull its parked windows back on
+  screen, so they piled up over the visible columns. Parked windows moved by
+  their app are put back at the edge (at most 3 times in a row, so an app that
+  keeps fighting can't start a loop).
+
+### Added
+- **Ribbon**: mouse editing. Dragging a tiled window's edge keeps that width for
+  its column (until a width shortcut); dropping a window reorders the strip by
+  its centre, and dragging one out of a stack gives it its own column. The
+  change is read once, on mouse-up, from a monitor that exists only between the
+  drag and the mouse-up. Logic in `RibbonStrip.userEdit` / `apply`, with tests.
+- **Ribbon**: ⌥ + two-finger horizontal scroll is on by default (the event tap
+  still exists only while the mode is on).
+
+### Notes
+- macOS's own tiling can grab a window dropped while Ribbon is on and keep
+  re-tiling it. Turn off System Settings → Desktop & Dock → "Drag windows to
+  screen edges to tile" while using Ribbon.
+
 ## [0.3.1] — First run on the Mac (Apple Silicon, macOS 27.2, Xcode 27.2)
 
 ### Fixed
