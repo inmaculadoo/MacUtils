@@ -45,6 +45,16 @@ final class RibbonModule: LigeroModule, MenuContributing {
     /// Windows just dropped by the user. macOS may still move them after the
     /// mouse-up (its own tiling); they are put back in their slot too.
     private var settling: Set<CGWindowID> = []
+    /// Windows taken out of the strip (float shortcut, or placed with Snap).
+    /// Ribbon leaves them alone until they are floated back in.
+    private var floating: Set<CGWindowID> = []
+    /// Observes Snap placing a window; exists only while the mode is on.
+    private var placedObserver: NSObjectProtocol?
+    /// Horizontal gesture distance not applied yet: windows move only every
+    /// `gestureStep` points, not on each scroll event (each move is AX calls
+    /// to every visible window).
+    private var pendingScroll: Double = 0
+    private let gestureStep: Double = 24
 
     init(context: AppContext) {
         self.context = context
@@ -66,7 +76,122 @@ final class RibbonModule: LigeroModule, MenuContributing {
 
     func menuItems() -> [NSMenuItem] {
         let title = active ? L("ribbon.menu.turnOff") : L("ribbon.menu.turnOn")
-        return [ClosureMenuItem(title: title) { [weak self] in self?.perform(.toggleMode) }]
+        let toggle = ClosureMenuItem(title: title) { [weak self] in self?.perform(.toggleMode) }
+        toggle.showShortcut(settings.shortcuts[.toggleMode])
+        guard active else { return [toggle] }
+        var items: [NSMenuItem] = [toggle]
+        // Read once, now: the focused window of the app in front.
+        let front = NSWorkspace.shared.frontmostApplication.flatMap { focusedWindowID($0.processIdentifier) }
+        let titles = Dictionary(service.windows().map { ($0.id, $0.appName.isEmpty ? $0.title : L("ribbon.menu.windowName", $0.appName, $0.title)) },
+                                uniquingKeysWith: { a, _ in a })
+        let keys = strips.keys.sorted { $0.minX != $1.minX ? $0.minX < $1.minX : $0.minY < $1.minY }
+        for key in keys {
+            guard let strip = strips[key], !strip.isEmpty else { continue }
+            items.append(.separator())
+            items.append(NSMenuItem.sectionHeader(title: L("ribbon.menu.columns")))
+            for (c, column) in strip.columns.enumerated() {
+                for (r, id) in column.windows.enumerated() {
+                    let name = titles[id] ?? "#\(id)"
+                    let label = r == 0 ? L("ribbon.menu.column", c + 1, name) : L("ribbon.menu.stacked", name)
+                    let item = ClosureMenuItem(title: label) { [weak self] in self?.reveal(id) }
+                    item.state = id == front ? .on : .off
+                    items.append(item)
+                }
+            }
+        }
+        if let front {
+            items.append(.separator())
+            items.append(windowMenu(for: front))
+        }
+        return items
+    }
+
+    /// "This window" submenu: width, position, stack and float.
+    private func windowMenu(for id: CGWindowID) -> NSMenuItem {
+        let root = NSMenuItem(title: L("ribbon.menu.window"), action: nil, keyEquivalent: "")
+        let sub = NSMenu()
+        sub.autoenablesItems = false
+        func add(_ title: String, _ action: RibbonAction? = nil, _ run: @escaping @MainActor () -> Void) {
+            let item = ClosureMenuItem(title: title, handler: run)
+            if let action { item.showShortcut(settings.shortcuts[action]) }
+            sub.addItem(item)
+        }
+        if floating.contains(id) {
+            add(L("ribbon.menu.unfloat"), .toggleFloat) { [weak self] in self?.edit(id) { $0.toggleFloat(id) } }
+            root.submenu = sub
+            return root
+        }
+        guard let key = stripKey(containing: id), let strip = strips[key], let p = strip.position(of: id) else {
+            root.isEnabled = false
+            return root
+        }
+        let widths = NSMenuItem(title: L("ribbon.menu.width"), action: nil, keyEquivalent: "")
+        let widthMenu = NSMenu()
+        for w in ColumnWidth.allCases {
+            let item = ClosureMenuItem(title: L(w.titleKey)) { [weak self] in
+                self?.edit(id) { m in m.change(id) { $0.setWidth(w) } }
+            }
+            item.state = strip.columns[p.column].customPoints == nil && strip.columns[p.column].width == w ? .on : .off
+            widthMenu.addItem(item)
+        }
+        widths.submenu = widthMenu
+        sub.addItem(widths)
+
+        let stacked = strip.columns[p.column].windows.count > 1
+        let slots = strip.columns.count + (stacked ? 1 : 0)
+        if slots > 1 {
+            let position = NSMenuItem(title: L("ribbon.menu.position"), action: nil, keyEquivalent: "")
+            let positionMenu = NSMenu()
+            for i in 0..<slots {
+                let item = ClosureMenuItem(title: L("ribbon.menu.slot", i + 1)) { [weak self] in
+                    self?.edit(id) { m in m.change(id) { $0.apply(.moved(toColumn: i), to: id) } }
+                }
+                item.state = !stacked && i == p.column ? .on : .off
+                positionMenu.addItem(item)
+            }
+            position.submenu = positionMenu
+            sub.addItem(position)
+        }
+        sub.addItem(.separator())
+        add(L(RibbonAction.moveLeft.localizationKey), .moveLeft) { [weak self] in self?.perform(.moveLeft, window: id) }
+        add(L(RibbonAction.moveRight.localizationKey), .moveRight) { [weak self] in self?.perform(.moveRight, window: id) }
+        if p.column > 0 {
+            add(L(RibbonAction.stackLeft.localizationKey), .stackLeft) { [weak self] in self?.perform(.stackLeft, window: id) }
+        }
+        if stacked {
+            add(L(RibbonAction.expel.localizationKey), .expel) { [weak self] in self?.perform(.expel, window: id) }
+        }
+        if strips.count > 1 {
+            add(L(RibbonAction.sendToNextScreen.localizationKey), .sendToNextScreen) { [weak self] in
+                self?.perform(.sendToNextScreen, window: id)
+            }
+        }
+        sub.addItem(.separator())
+        add(L("ribbon.menu.float"), .toggleFloat) { [weak self] in self?.edit(id) { $0.toggleFloat(id) } }
+        root.submenu = sub
+        return root
+    }
+
+    /// Runs a menu edit only if the mode is still on when the item fires.
+    private func edit(_ id: CGWindowID, _ body: (RibbonModule) -> Void) {
+        guard active else { return }
+        body(self)
+    }
+
+    /// Applies `body` to the strip holding `id`, lays it out and focuses `id`.
+    private func change(_ id: CGWindowID, _ body: (inout RibbonStrip<CGWindowID>) -> Void) {
+        guard let key = stripKey(containing: id), var strip = strips[key] else { return }
+        strip.focusWindow(id)
+        body(&strip)
+        strips[key] = strip
+        layout(strip)
+        focus(id)
+    }
+
+    /// Scrolls the strip to `id` and focuses it (menu column list).
+    private func reveal(_ id: CGWindowID) {
+        guard active else { return }
+        change(id) { _ in }
     }
 
     // MARK: Mode
@@ -100,6 +225,11 @@ final class RibbonModule: LigeroModule, MenuContributing {
             for column in adopted.columns { strip.insert(column.windows[0], width: column.width) }
             strips[screen] = strip
         }
+        placedObserver = NotificationCenter.default.addObserver(forName: .ligeroWindowPlaced, object: nil, queue: nil) {
+            [weak self] note in
+            guard let id = (note.object as? NSNumber)?.uint32Value else { return }
+            MainActor.assumeIsolated { self?.letGo(CGWindowID(id)) }
+        }
         if settings.gestureScroll {
             gesture = RibbonGestureTap { [weak self] dx in self?.gestureScroll(dx) ?? false }
         }
@@ -110,6 +240,9 @@ final class RibbonModule: LigeroModule, MenuContributing {
     private func deactivate() {
         gesture?.invalidate()
         gesture = nil
+        if let placedObserver { NotificationCenter.default.removeObserver(placedObserver) }
+        placedObserver = nil
+        pendingScroll = 0
         endDragWatch()
         // Put every window back where it was before the mode started.
         for (id, frame) in original {
@@ -122,12 +255,13 @@ final class RibbonModule: LigeroModule, MenuContributing {
         applied.removeAll()
         reparks.removeAll()
         settling.removeAll()
+        floating.removeAll()
         active = false
         Log.modules.info("Ribbon off")
     }
 
     private func isTileable(_ w: WindowInfo) -> Bool {
-        guard !w.isMinimized, let bundle = w.app?.bundleIdentifier else { return false }
+        guard !w.isMinimized, !floating.contains(w.id), let bundle = w.app?.bundleIdentifier else { return false }
         return !settings.excludedApps.contains(bundle) && bundle != Bundle.main.bundleIdentifier
     }
 
@@ -179,15 +313,23 @@ final class RibbonModule: LigeroModule, MenuContributing {
 
     // MARK: Actions
 
-    private func perform(_ action: RibbonAction) {
+    private func perform(_ action: RibbonAction, window: CGWindowID? = nil) {
         if action == .toggleMode {
             active ? deactivate() : activate()
             return
         }
-        guard active, let key = currentStripKey(), var strip = strips[key] else { return }
+        guard active else { return }
+        if action == .toggleFloat {
+            if let id = window ?? NSWorkspace.shared.frontmostApplication.flatMap({ focusedWindowID($0.processIdentifier) }) {
+                toggleFloat(id)
+            }
+            return
+        }
+        guard let key = window.flatMap(stripKey(containing:)) ?? currentStripKey(), var strip = strips[key] else { return }
+        if let window { strip.focusWindow(window) }
         var focusAfter: CGWindowID?
         switch action {
-        case .toggleMode: return
+        case .toggleMode, .toggleFloat: return
         case .focusLeft: focusAfter = strip.focusLeft()
         case .focusRight: focusAfter = strip.focusRight()
         case .focusUp: focusAfter = strip.focusUp()
@@ -238,9 +380,11 @@ final class RibbonModule: LigeroModule, MenuContributing {
         case .created(let pid, let element):
             guard WindowService.isStandardWindow(element), let id = WindowService.windowID(element),
                   let app = NSRunningApplication(processIdentifier: pid),
-                  let bundle = app.bundleIdentifier, !settings.excludedApps.contains(bundle) else { return }
+                  let bundle = app.bundleIdentifier, !settings.excludedApps.contains(bundle),
+                  !floating.contains(id) else { return }
             if let key = add(id, element: element) { layout(strips[key]!) }
         case .destroyed(_, let id):
+            if let id { floating.remove(id) }
             guard let id, let key = stripKey(containing: id), var strip = strips[key] else { return }
             strip.remove(id)
             strips[key] = strip
@@ -264,6 +408,7 @@ final class RibbonModule: LigeroModule, MenuContributing {
         case .appTerminated:
             // Each window also posts "destroyed"; prune anything left over.
             let live = Set(service.windows().map(\.id))
+            floating.formIntersection(live)
             for (key, var strip) in strips {
                 for id in strip.windowIDs where !live.contains(id) {
                     strip.remove(id)
@@ -316,6 +461,40 @@ final class RibbonModule: LigeroModule, MenuContributing {
         return keys
     }
 
+    // MARK: Floating
+
+    /// Takes a tiled window out of the strip where it is, or puts a floating
+    /// one back in (right of the focused column).
+    private func toggleFloat(_ id: CGWindowID) {
+        if floating.contains(id) {
+            floating.remove(id)
+            guard let e = service.windows().first(where: { $0.id == id })?.element,
+                  let key = add(id, element: e) else { return }
+            layout(strips[key]!)
+            focus(id)
+        } else {
+            letGo(id)
+        }
+    }
+
+    /// Stops tiling `id` and leaves it where it is: it won't go back to its
+    /// pre-mode frame either, the user has placed it.
+    private func letGo(_ id: CGWindowID) {
+        guard active, let key = stripKey(containing: id), var strip = strips[key] else { return }
+        let parked = strip.layout()[id]?.state != .visible
+        strip.remove(id)
+        strips[key] = strip
+        floating.insert(id)
+        if parked, let e = elements[id], let frame = original[id] { WindowService.setFrame(e, frame) }
+        elements.removeValue(forKey: id)
+        original.removeValue(forKey: id)
+        applied.removeValue(forKey: id)
+        dragged.remove(id)
+        reparks.removeValue(forKey: id)
+        settling.remove(id)
+        layout(strip)
+    }
+
     // MARK: Mouse
 
     /// The user let go of a tiled window they dragged: a new width sticks to
@@ -361,7 +540,10 @@ final class RibbonModule: LigeroModule, MenuContributing {
     /// ⌥ + horizontal two-finger scroll. Returns true to swallow the event.
     private func gestureScroll(_ dx: Double) -> Bool {
         guard active, let key = currentStripKey(), var strip = strips[key] else { return false }
-        strip.scroll(by: -dx)
+        pendingScroll -= dx
+        guard abs(pendingScroll) >= gestureStep else { return true }
+        strip.scroll(by: pendingScroll)
+        pendingScroll = 0
         strips[key] = strip
         layout(strip)
         return true

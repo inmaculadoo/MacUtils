@@ -281,7 +281,7 @@
 "audio.menu.title" = "Mezclador de audio";
 "audio.menu.outputFor" = "Salida de %@";
 "audio.menu.systemOutput" = "Salida del sistema";
-"audio.menu.costNote" = "Taps activos: %ld. Cada tap gasta algo de CPU mientras esa app suena; las apps al 100 % por la salida del sistema no tienen ninguno.";
+"audio.menu.costNote" = "Taps activos: %ld. Cada tap gasta algo de CPU mientras esa app suena; las apps al 100 %% por la salida del sistema no tienen ninguno.";
 "audio.nothingPlaying" = "Ninguna app está reproduciendo audio";
 "audio.percent" = "%ld %%";
 "audio.mute" = "Silenciar";
@@ -319,3 +319,18 @@
 "ribbon.settings.excluded" = "Apps que nunca se colocan";
 "ribbon.settings.excludedEmpty" = "Los diálogos, paneles y demás ventanas no estándar nunca se tocan.";
 "ribbon.settings.addExcluded" = "Añadir app…";
+
+/* Window menus (0.3.3) */
+"snap.menu.place" = "Colocar ventana de %@";
+"snap.menu.noWindow" = "Colocar ventana (no hay ventana activa)";
+"ribbon.action.toggleFloat" = "Sacar de la tira / volver a meterla";
+"ribbon.menu.columns" = "Columnas (clic para ir)";
+"ribbon.menu.column" = "%1$ld. %2$@";
+"ribbon.menu.stacked" = "     ↳ %@";
+"ribbon.menu.window" = "Ventana activa";
+"ribbon.menu.width" = "Ancho";
+"ribbon.menu.position" = "Mover a la posición";
+"ribbon.menu.float" = "Sacar de la tira (flotante)";
+"ribbon.menu.unfloat" = "Volver a meter en la tira";
+"ribbon.menu.slot" = "%ld";
+"ribbon.menu.windowName" = "%1$@ — %2$@";

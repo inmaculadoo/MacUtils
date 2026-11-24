@@ -416,7 +416,7 @@ public struct RibbonStrip<ID: Hashable> {
 /// Shortcuts of the Ribbon module.
 public enum RibbonAction: String, CaseIterable, Codable, Hashable, Sendable {
     case toggleMode, focusLeft, focusRight, focusUp, focusDown, moveLeft, moveRight
-    case cycleWidth, cycleWidthBack, stackLeft, expel, sendToNextScreen
+    case cycleWidth, cycleWidthBack, stackLeft, expel, sendToNextScreen, toggleFloat
 
     public var localizationKey: String { "ribbon.action.\(rawValue)" }
 }
@@ -458,6 +458,7 @@ public struct RibbonSettings: ModuleSettings {
             .stackLeft: KeyCombo(keyCode: KeyCode.leftBracket, modifiers: m),
             .expel: KeyCombo(keyCode: KeyCode.rightBracket, modifiers: m),
             .sendToNextScreen: KeyCombo(keyCode: KeyCode.n, modifiers: m),
+            .toggleFloat: KeyCombo(keyCode: KeyCode.f, modifiers: m),
         ]
     }()
 

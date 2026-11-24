@@ -331,6 +331,16 @@ final class RibbonTests: XCTestCase {
         s.apply(edit, to: 2)
         XCTAssertEqual(s.columns.map(\.windows), [[1], [2]])
     }
+
+    // "Move to position n" in the menu: n is the final, 0-based column index.
+    func testMenuMoveToPositionPutsTheColumnThere() {
+        var s = strip([1, 2, 3])
+        s.apply(.moved(toColumn: 0), to: 3)
+        XCTAssertEqual(s.columns.map(\.windows), [[3], [1], [2]])
+        s.apply(.moved(toColumn: 2), to: 3)
+        XCTAssertEqual(s.columns.map(\.windows), [[1], [2], [3]])
+        XCTAssertEqual(s.focusedWindow, 3)
+    }
 }
 
 final class RibbonSettingsTests: XCTestCase {

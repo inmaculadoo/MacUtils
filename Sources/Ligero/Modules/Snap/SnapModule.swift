@@ -5,7 +5,7 @@ import LigeroCore
 /// Idle cost: zero. Only Carbon hotkeys are registered; AX is touched only
 /// when a shortcut is pressed.
 @MainActor
-final class SnapModule: LigeroModule {
+final class SnapModule: LigeroModule, MenuContributing {
     static let id = "snap"
     static let requiredPermissions: Set<Permission> = [.accessibility]
 
@@ -42,14 +42,54 @@ final class SnapModule: LigeroModule {
         history.removeAll()
     }
 
-    func perform(_ action: SnapAction) {
-        guard let window = AXWindow.focused(), let current = window.frame else {
+    /// Groups of the "Place window" submenu, in menu order.
+    private static let menuGroups: [[SnapAction]] = [
+        [.leftHalf, .rightHalf, .topHalf, .bottomHalf],
+        [.topLeft, .topRight, .bottomLeft, .bottomRight],
+        [.firstThird, .centerThird, .lastThird, .firstTwoThirds, .lastTwoThirds],
+        [.maximize, .maximizeHeight, .center],
+        [.nextDisplay, .previousDisplay],
+        [.restore],
+    ]
+
+    /// A submenu with every placement, for the window that is focused when
+    /// the menu opens (the menu doesn't take focus from it).
+    func menuItems() -> [NSMenuItem] {
+        let window = AXWindow.focused()
+        let app = NSWorkspace.shared.frontmostApplication?.localizedName ?? ""
+        let root = NSMenuItem(title: window == nil ? L("snap.menu.noWindow") : L("snap.menu.place", app),
+                              action: nil, keyEquivalent: "")
+        guard let window else {
+            root.isEnabled = false
+            return [root]
+        }
+        let sub = NSMenu()
+        sub.autoenablesItems = false
+        for (i, group) in Self.menuGroups.enumerated() {
+            if i > 0 { sub.addItem(.separator()) }
+            for action in group {
+                let item = ClosureMenuItem(title: L(action.localizationKey)) { [weak self] in
+                    self?.perform(action, on: window)
+                }
+                item.showShortcut(settings.shortcuts[action])
+                sub.addItem(item)
+            }
+        }
+        root.submenu = sub
+        return [root]
+    }
+
+    func perform(_ action: SnapAction, on chosen: AXWindow? = nil) {
+        guard let window = chosen ?? AXWindow.focused(), let current = window.frame else {
             NSSound.beep()
             return
         }
         let key = window.key
         if action == .restore {
             guard let original = history.takeOriginal(key) else { return }
+            if let id = WindowService.windowID(window.element) {
+                NotificationCenter.default.post(name: .ligeroWindowPlaced, object: NSNumber(value: id))
+            }
             window.setFrame(original)
             return
         }
@@ -61,6 +101,10 @@ final class SnapModule: LigeroModule {
             return
         }
         guard !target.isClose(to: layout, tolerance: 0.5) else { return }
+        // Ribbon lets go of a window the user places on purpose.
+        if let id = WindowService.windowID(window.element) {
+            NotificationCenter.default.post(name: .ligeroWindowPlaced, object: NSNumber(value: id))
+        }
         window.setFrame(target)
         // Apps with a minimum size may refuse the target: keep the window on
         // screen and remember where it really ended up, so restore still works.

@@ -92,6 +92,9 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Con pantalla externa, ⌃⌥⌘→/← conserva la posición relativa.
 - [x] Separación de 10 pt entre ventanas y bordes.
 - [x] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
+- [x] *(0.3.3)* Menú de Ligero → "Colocar ventana de <app>": cada opción coloca la ventana activa y muestra su atajo al lado. *(25-11: probado con TextEdit)*
+- [ ] *(0.3.3)* Con el modo Ribbon activo, un atajo de Snap saca esa ventana de la tira y la deja donde la pone Snap; las demás columnas cierran el hueco. *(25-11: probado con atajos sintéticos)*
+- [ ] Colocar con el ratón: Snap no tiene zonas de arrastre propias (gastaría eventos en cada arrastre). Para eso usa el mosaico de macOS: activa en Ajustes del Sistema → Escritorio y Dock "Arrastrar ventanas a los bordes de la pantalla para organizarlas en mosaico" y arrastra la ventana a un borde o con ⌥ pulsada.
 
 ### Scroll
 - [x] Sin ratón: el log **no** muestra «Event tap installed». *(24-11: 0 event taps de Ligero en `CGGetEventTapList`)*
@@ -196,3 +199,10 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Arrastra el borde derecho de una ventana de la tira: al soltar, la columna se queda con ese ancho y la de al lado se pega con el hueco. ⌃⌥⌘R vuelve a los anchos fijos.
 - [ ] Arrastra una ventana por el título y suéltala sobre otra columna: la tira se reordena y cada ventana vuelve a su hueco.
 - [ ] Arrastra una ventana apilada hacia un lado: sale de la pila a su propia columna.
+
+> **25-11 (0.3.3):** menú para organizar sin atajos (probado pulsando el menú por accesibilidad; falta tu ratón). Con el modo activo, el menú de Ligero muestra la lista de columnas en orden y un submenú "Ventana activa".
+- [ ] Menú → "Columnas": clic en una columna → la tira se desplaza hasta ella y la enfoca.
+- [ ] Menú → "Ventana activa" → "Ancho" (¼ … Completo) y "Mover a la posición" n: la columna cambia y las demás se recolocan.
+- [ ] Menú → "Ventana activa" → "Sacar de la tira (flotante)" o ⌃⌥⌘F: la ventana se queda donde está y Ribbon ya no la toca; otra vez ⌃⌥⌘F (o "Volver a meter en la tira") la mete a la derecha de la enfocada.
+- [ ] Gesto ⌥ + dos dedos: la tira avanza a saltos de 24 pt en vez de en cada evento (menos trabajo de AX); comprueba que se nota fluido.
+- [ ] Con el modo activo y el mosaico de macOS activado, evita soltar ventanas de la tira en los bordes de la pantalla: macOS las encaja y Ribbon las devuelve a su hueco (máximo 3 veces).

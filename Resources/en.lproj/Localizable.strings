@@ -281,7 +281,7 @@
 "audio.menu.title" = "Audio Mixer";
 "audio.menu.outputFor" = "Output for %@";
 "audio.menu.systemOutput" = "System Output";
-"audio.menu.costNote" = "Active taps: %ld. Each tap costs a little CPU while that app plays; apps at 100 % on the system output have none.";
+"audio.menu.costNote" = "Active taps: %ld. Each tap costs a little CPU while that app plays; apps at 100 %% on the system output have none.";
 "audio.nothingPlaying" = "No app is playing audio";
 "audio.percent" = "%ld %%";
 "audio.mute" = "Mute";
@@ -319,3 +319,18 @@
 "ribbon.settings.excluded" = "Apps never tiled";
 "ribbon.settings.excludedEmpty" = "Dialogs, panels and other non-standard windows are always left alone.";
 "ribbon.settings.addExcluded" = "Add App…";
+
+/* Window menus (0.3.3) */
+"snap.menu.place" = "Place %@ Window";
+"snap.menu.noWindow" = "Place Window (no active window)";
+"ribbon.action.toggleFloat" = "Take out of the strip / put back";
+"ribbon.menu.columns" = "Columns (click to go)";
+"ribbon.menu.column" = "%1$ld. %2$@";
+"ribbon.menu.stacked" = "     ↳ %@";
+"ribbon.menu.window" = "Active Window";
+"ribbon.menu.width" = "Width";
+"ribbon.menu.position" = "Move to Position";
+"ribbon.menu.float" = "Take Out of the Strip (Floating)";
+"ribbon.menu.unfloat" = "Put Back in the Strip";
+"ribbon.menu.slot" = "%ld";
+"ribbon.menu.windowName" = "%1$@ — %2$@";

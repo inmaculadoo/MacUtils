@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.3.3] — Place windows from the menu
+
+### Added
+- **Snap**: a "Place <app> Window" submenu in the menu bar menu with every
+  placement and its shortcut, acting on the window that was focused when the
+  menu opened. Built only when the menu opens.
+- **Ribbon**: while the mode is on, the menu lists the strip's columns in order
+  (click one to scroll to it and focus it) and an "Active Window" submenu:
+  width (¼ … full), move to position n, move left/right, stack, unstack, next
+  display, and take out of / put back in the strip.
+- **Ribbon**: floating windows (⌃⌥⌘F or the menu). A floating window leaves
+  the strip, stays where it is and is not tiled again until put back.
+
+### Fixed
+- **Snap + Ribbon**: with the Ribbon mode on, a Snap placement was undone by
+  the strip on its next layout. Snap now tells Ribbon (a local notification,
+  observed only while the mode is on) and the window floats where Snap put it.
+- **Ribbon**: the ⌥ + scroll gesture moved every visible window on each scroll
+  event; it now moves them every 24 pt of accumulated scroll.
+- **Audio**: the cost note in the menu showed "100 0x0or" (an unescaped `%`).
+
 ## [0.3.2] — Ribbon closer to a real scrolling window manager
 
 ### Fixed
