@@ -67,6 +67,11 @@ final class UninstallWindowController: NSObject, NSWindowDelegate {
         window?.close()
     }
 
+    /// The app may have been opened since it was loaded.
+    func windowDidBecomeKey(_ notification: Notification) {
+        model.refreshRunning()
+    }
+
     func windowWillClose(_ notification: Notification) {
         window?.contentViewController = nil
         window = nil
@@ -167,6 +172,9 @@ final class UninstallModel: ObservableObject {
 
     /// Sends every selected item to the Trash. Never deletes.
     func moveToTrash() {
+        // Never trash a running app: re-check, and let the view show the warning.
+        refreshRunning()
+        guard !isRunning else { return }
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         var trashed = 0
         var failed = 0
