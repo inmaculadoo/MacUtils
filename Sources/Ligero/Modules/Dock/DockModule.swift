@@ -34,6 +34,10 @@ final class DockModule: LigeroModule {
     private var hoveredPID: pid_t?
     private var clickTap: ClickTap?
     private var thumbnailTask: Task<Void, Never>?
+    /// Mouse monitors that exist only while the preview is visible.
+    private var moveMonitors: [Any] = []
+    /// The Dock's icon list frame (top-left), read once when the panel shows.
+    private var dockFrame: LRect?
 
     init(context: AppContext) {
         settings = context.settings.load(DockSettings.self, module: Self.id)
@@ -65,7 +69,7 @@ final class DockModule: LigeroModule {
         thumbnailTask?.cancel()
         thumbnailTask = nil
         service.release(self)
-        panel?.orderOut(nil)
+        hidePanel()
         panel = nil
     }
 
@@ -139,6 +143,8 @@ final class DockModule: LigeroModule {
         viewModel.windows = windows
         viewModel.refreshThumbnails()
         panel.show(near: anchor)
+        dockFrame = list.flatMap { WindowService.frame($0) }
+        watchMouse()
         guard CGPreflightScreenCaptureAccess() else { return }
         let ids = windows.map(\.id)
         thumbnailTask?.cancel()
@@ -151,11 +157,47 @@ final class DockModule: LigeroModule {
 
     private func hideUnlessHovered() {
         guard let panel, panel.isVisible else { return }
-        if !panel.frame.contains(NSEvent.mouseLocation) { panel.orderOut(nil) }
+        if !panel.frame.contains(NSEvent.mouseLocation) { hidePanel() }
     }
 
     private func panelExited() {
-        if hoveredPID == nil { panel?.orderOut(nil) }
+        if hoveredPID == nil { hidePanel() }
+    }
+
+    private func hidePanel() {
+        panel?.orderOut(nil)
+        for m in moveMonitors { NSEvent.removeMonitor(m) }
+        moveMonitors.removeAll()
+    }
+
+    /// The Dock does not always report that the mouse left it (an auto-hiding
+    /// Dock just disappears), and the panel only sees an exit after an entry.
+    /// While the preview is visible, every mouse move checks where it is.
+    private func watchMouse() {
+        guard moveMonitors.isEmpty else { return }
+        let events: NSEvent.EventTypeMask = [.mouseMoved, .leftMouseDragged]
+        if let m = NSEvent.addGlobalMonitorForEvents(matching: events, handler: { [weak self] _ in
+            MainActor.assumeIsolated { self?.mouseMoved() }
+        }) { moveMonitors.append(m) }
+        if let m = NSEvent.addLocalMonitorForEvents(matching: events, handler: { [weak self] event in
+            MainActor.assumeIsolated { self?.mouseMoved() }
+            return event
+        }) { moveMonitors.append(m) }
+    }
+
+    private func mouseMoved() {
+        guard let panel, panel.isVisible, let primary = NSScreen.screens.first else {
+            hidePanel()
+            return
+        }
+        let h = Double(primary.frame.height)
+        let mouse = NSEvent.mouseLocation
+        let panelFrame = CoordinateSpace.topLeft(fromCocoa: LRect(panel.frame), primaryHeight: h)
+        if !DockPreviewHover.keepsPreview(mouseX: Double(mouse.x), mouseY: h - Double(mouse.y),
+                                          panel: panelFrame, dock: dockFrame) {
+            hoveredPID = nil
+            hidePanel()
+        }
     }
 
     private func windowEvent(_ event: WindowEvent) {
@@ -168,7 +210,7 @@ final class DockModule: LigeroModule {
         guard affected == pid else { return }
         viewModel.windows = service.windows(ofApp: pid)
         viewModel.refreshThumbnails()
-        if viewModel.windows.isEmpty { panel.orderOut(nil) }
+        if viewModel.windows.isEmpty { hidePanel() }
     }
 
     // MARK: Click on the active app's icon
@@ -185,7 +227,7 @@ final class DockModule: LigeroModule {
         case .minimize:
             for w in service.windows(ofApp: pid) where !w.isMinimized { service.minimize(w) }
         }
-        panel?.orderOut(nil)
+        hidePanel()
         return true
     }
 }
