@@ -131,6 +131,30 @@ final class SnapEngineTests: XCTestCase {
         XCTAssertEqual(LRect(x: 0.4, y: 0.6, width: 10.2, height: 10.2).integral, LRect(x: 0, y: 1, width: 11, height: 10))
         XCTAssertEqual(LRect(x: 0, y: 0, width: 10, height: 10).intersection(LRect(x: 20, y: 0, width: 5, height: 5)), .zero)
     }
+
+    // Safari refuses widths under ~574 pt; a third of 1470 is 490.
+    func testSettleKeepsRightAnchoredWindowOnScreen() {
+        let t = target(.lastThird)!
+        let actual = LRect(x: t.x, y: t.y, width: 574, height: t.height)
+        XCTAssertEqual(SnapEngine.settle(actual: actual, target: t, screens: [laptop]),
+                       LRect(x: 1470 - 574, y: 37, width: 574, height: 919))
+    }
+
+    func testSettleKeepsLeftAnchoredAndFittingWindowsAlone() {
+        let first = target(.firstThird)!
+        XCTAssertNil(SnapEngine.settle(actual: LRect(x: 0, y: 37, width: 574, height: 919), target: first, screens: [laptop]))
+        let middle = target(.centerThird)!
+        XCTAssertNil(SnapEngine.settle(actual: LRect(x: middle.x, y: 37, width: 574, height: 919), target: middle, screens: [laptop]))
+        XCTAssertNil(SnapEngine.settle(actual: first, target: first, screens: [laptop]))
+    }
+
+    func testSettlePullsBackOverflowAndRespectsGap() {
+        let t = target(.bottomRight, gap: 10)!
+        let actual = LRect(x: t.x, y: t.y, width: 900, height: 600)
+        let s = SnapEngine.settle(actual: actual, target: t, screens: [laptop], gap: 10)!
+        XCTAssertEqual(s.maxX, 1470 - 10)
+        XCTAssertEqual(s.maxY, 956 - 10)
+    }
 }
 
 final class RestoreHistoryTests: XCTestCase {
@@ -162,5 +186,17 @@ final class RestoreHistoryTests: XCTestCase {
         XCTAssertEqual(h.count, 2)
         XCTAssertNil(h.takeOriginal(1))
         XCTAssertNotNil(h.takeOriginal(3))
+    }
+
+    func testLastTargetWhileWindowStaysPut() {
+        var h = RestoreHistory<Int>()
+        let rounded = LRect(x: 0, y: 37, width: 734, height: 915)
+        h.record(1, current: a, applied: rounded, target: b)
+        XCTAssertEqual(h.lastTarget(1, current: rounded), b)
+        XCTAssertNil(h.lastTarget(1, current: c))
+        XCTAssertNil(h.lastTarget(2, current: rounded))
+        h.record(1, current: rounded, applied: c)
+        XCTAssertEqual(h.lastTarget(1, current: c), c)
+        XCTAssertEqual(h.takeOriginal(1), a)
     }
 }

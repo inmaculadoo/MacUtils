@@ -54,11 +54,21 @@ final class SnapModule: LigeroModule {
             return
         }
         let screens = ScreenGeometry.screens()
-        guard let target = SnapEngine.target(for: action, window: current, screens: screens, options: settings.options) else {
+        // Apps that round their size never sit exactly on a snap frame: use
+        // the frame Ligero asked for while the window hasn't moved since.
+        let layout = history.lastTarget(key, current: current) ?? current
+        guard let target = SnapEngine.target(for: action, window: layout, screens: screens, options: settings.options) else {
             return
         }
-        guard !target.isClose(to: current, tolerance: 0.5) else { return }
-        history.record(key, current: current, applied: target)
+        guard !target.isClose(to: layout, tolerance: 0.5) else { return }
         window.setFrame(target)
+        // Apps with a minimum size may refuse the target: keep the window on
+        // screen and remember where it really ended up, so restore still works.
+        var applied = window.frame ?? target
+        if let settled = SnapEngine.settle(actual: applied, target: target, screens: screens, gap: settings.options.gap) {
+            window.setPosition(CGPoint(x: settled.x, y: settled.y))
+            applied = window.frame ?? settled
+        }
+        history.record(key, current: current, applied: applied, target: target)
     }
 }

@@ -173,6 +173,23 @@ public enum SnapEngine {
         y = min(max(y, destination.minY), destination.maxY - h)
         return LRect(x: x, y: y, width: w, height: h).integral
     }
+
+    /// Where to put a window that refused the target size (e.g. Safari's
+    /// minimum width), so it stays on the target's screen. A target touching
+    /// the right or bottom edge keeps that edge; otherwise the origin is kept
+    /// and only pulled back as far as needed. Nil when no move is needed.
+    public static func settle(actual: LRect, target: LRect, screens: [ScreenInfo], gap: Double = 0) -> LRect? {
+        guard !screens.isEmpty, !actual.isClose(to: target, tolerance: 0.5) else { return nil }
+        let area = usableArea(of: screens[screenIndex(for: target, in: screens)], gap: gap)
+        func place(_ start: Double, _ end: Double, _ size: Double, _ lo: Double, _ hi: Double) -> Double {
+            let anchored = end >= hi - 1 ? hi - size : min(start, hi - size)
+            return max(lo, anchored)
+        }
+        let x = place(target.minX, target.maxX, actual.width, area.minX, area.maxX)
+        let y = place(target.minY, target.maxY, actual.height, area.minY, area.maxY)
+        let settled = LRect(x: x, y: y, width: actual.width, height: actual.height).integral
+        return settled.isClose(to: actual, tolerance: 0.5) ? nil : settled
+    }
 }
 
 /// Remembers the frame a window had before Ligero first snapped it, so that
@@ -181,6 +198,7 @@ public struct RestoreHistory<Key: Hashable> {
     struct Entry {
         var original: LRect
         var applied: LRect
+        var target: LRect
         var stamp: Int
     }
 
@@ -194,24 +212,37 @@ public struct RestoreHistory<Key: Hashable> {
 
     public var count: Int { entries.count }
 
-    /// Call right before moving a window from `current` to `applied`.
+    /// Call after moving a window from `current` to `applied`, the frame it
+    /// really ended up with. `target` is the frame Ligero asked for (defaults
+    /// to `applied`); apps that round their size (Terminal) or have a minimum
+    /// size end up somewhere close but different.
     ///
     /// If the window is still where Ligero last put it, the original frame is
     /// kept (snap → snap → restore goes back to the very first frame). If the
     /// user has moved it by hand since, the current frame becomes the new
     /// original.
-    public mutating func record(_ key: Key, current: LRect, applied: LRect) {
+    public mutating func record(_ key: Key, current: LRect, applied: LRect, target: LRect? = nil) {
         clock += 1
+        let target = target ?? applied
         if var e = entries[key], e.applied.isClose(to: current) {
             e.applied = applied
+            e.target = target
             e.stamp = clock
             entries[key] = e
         } else {
-            entries[key] = Entry(original: current, applied: applied, stamp: clock)
+            entries[key] = Entry(original: current, applied: applied, target: target, stamp: clock)
         }
         if entries.count > capacity, let oldest = entries.min(by: { $0.value.stamp < $1.value.stamp })?.key {
             entries.removeValue(forKey: oldest)
         }
+    }
+
+    /// The frame Ligero last asked for, if the window is still where Ligero
+    /// left it. Used instead of the real frame to recognise the current
+    /// layout (e.g. to keep cycling ½ → ⅔ → ⅓ in Terminal).
+    public func lastTarget(_ key: Key, current: LRect) -> LRect? {
+        guard let e = entries[key], e.applied.isClose(to: current) else { return nil }
+        return e.target
     }
 
     /// The frame to restore, removing it from the history.

@@ -60,7 +60,7 @@ struct AXWindow {
         return AXValueGetValue(value as! AXValue, .cgSize, &s) ? s : nil
     }
 
-    private func setPosition(_ p: CGPoint) {
+    func setPosition(_ p: CGPoint) {
         var p = p
         guard let v = AXValueCreate(.cgPoint, &p) else { return }
         AXUIElementSetAttributeValue(element, kAXPositionAttribute as CFString, v)
