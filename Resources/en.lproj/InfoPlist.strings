@@ -1,7 +1,7 @@
 
 /* Usage descriptions shown by macOS / Textos de permisos que muestra macOS */
-"NSDownloadsFolderUsageDescription" = "All In One sorts finished downloads into folders by type. It never deletes files.";
-"NSDesktopFolderUsageDescription" = "All In One saves screenshots to the Desktop when you ask it to.";
+"NSDownloadsFolderUsageDescription" = "Conde All In One sorts finished downloads into folders by type. It never deletes files.";
+"NSDesktopFolderUsageDescription" = "Conde All In One saves screenshots to the Desktop when you ask it to.";
 
 /* Audio */
-"NSAudioCaptureUsageDescription" = "All In One changes the volume and output of individual apps. Audio is processed live and never recorded.";
+"NSAudioCaptureUsageDescription" = "Conde All In One changes the volume and output of individual apps. Audio is processed live and never recorded.";

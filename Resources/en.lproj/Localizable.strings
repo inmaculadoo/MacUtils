@@ -1,6 +1,6 @@
-/* All In One — English. Every key here must also exist in es.lproj (checked by LocalizationTests). */
+/* Conde All In One — English. Every key here must also exist in es.lproj (checked by LocalizationTests). */
 
-"app.name" = "All In One";
+"app.name" = "Conde All In One";
 
 /* Menu bar menu */
 "menu.modules" = "Modules";
@@ -10,31 +10,31 @@
 "menu.permission.row" = "%1$@: %2$@";
 "menu.launchAtLogin" = "Open at Login";
 "menu.settings" = "Settings…";
-"menu.quit" = "Quit All In One";
+"menu.quit" = "Quit Conde All In One";
 
 /* Permissions */
 "permission.accessibility.title" = "Accessibility";
-"permission.accessibility.explanation" = "Lets All In One move and resize windows and change how the mouse scrolls. All In One never reads what you type.";
+"permission.accessibility.explanation" = "Lets Conde All In One move and resize windows and change how the mouse scrolls. Conde All In One never reads what you type.";
 "permission.screenRecording.title" = "Screen Recording";
-"permission.screenRecording.explanation" = "Lets All In One take one-off screenshots for window previews and captures. It never records video.";
+"permission.screenRecording.explanation" = "Lets Conde All In One take one-off screenshots for window previews and captures. It never records video.";
 "permission.status.granted" = "granted";
 "permission.status.missing" = "not granted";
-"permission.alert.title" = "All In One needs %@ permission";
-"permission.alert.neededBy" = "Needed by: %@. Turn All In One on in the list in System Settings. If it is not listed, add it with the + button.";
+"permission.alert.title" = "Conde All In One needs %@ permission";
+"permission.alert.neededBy" = "Needed by: %@. Turn Conde All In One on in the list in System Settings. If it is not listed, add it with the + button.";
 "permission.alert.open" = "Open System Settings";
 "permission.alert.later" = "Not Now";
 
 /* Settings window */
-"settings.window.title" = "All In One Settings";
+"settings.window.title" = "Conde All In One Settings";
 "settings.tab.general" = "General";
 "settings.language" = "Language";
 "settings.language.system" = "System";
 "settings.language.es" = "Español";
 "settings.language.en" = "English";
-"settings.language.restartHint" = "The new language is used after restarting All In One.";
+"settings.language.restartHint" = "The new language is used after restarting Conde All In One.";
 "settings.language.restartNow" = "Restart Now";
 "settings.startup" = "Startup";
-"settings.launchAtLogin" = "Open All In One at login";
+"settings.launchAtLogin" = "Open Conde All In One at login";
 "settings.launchAtLogin.needsApproval" = "macOS needs you to allow it in Login Items.";
 "settings.openSystemSettings" = "Open System Settings";
 "settings.modules" = "Modules";
@@ -163,7 +163,7 @@
 "uninstall.error.notApp" = "That is not an app.";
 "uninstall.error.system" = "Apple and system apps cannot be uninstalled.";
 "uninstall.error.noBundleID" = "This app has no bundle identifier, so its leftovers cannot be found safely.";
-"uninstall.error.self" = "All In One cannot uninstall itself. Drag it to the Trash after quitting it.";
+"uninstall.error.self" = "Conde All In One cannot uninstall itself. Drag it to the Trash after quitting it.";
 "uninstall.running" = "The app is open";
 "uninstall.quit" = "Quit It";
 "uninstall.reveal" = "Show in Finder";
@@ -224,11 +224,11 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Open Monitor in the All In One menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown (see CHANGELOG).";
+"monitor.settings.panelHint" = "Open Monitor in the Conde All In One menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown (see CHANGELOG).";
 "monitor.settings.menuBar" = "Menu bar";
 "monitor.settings.menuBarReading" = "Show CPU and RAM in the menu bar";
 "monitor.settings.interval" = "Update every %ld s";
-"monitor.settings.menuBarHint" = "This is the only option in All In One that wakes up on a schedule. It is off by default; the longer the interval, the less battery it uses.";
+"monitor.settings.menuBarHint" = "This is the only option in Conde All In One that wakes up on a schedule. It is off by default; the longer the interval, the less battery it uses.";
 
 /* Switcher (experimental) */
 "module.switcher.title" = "Switcher — windows with previews";

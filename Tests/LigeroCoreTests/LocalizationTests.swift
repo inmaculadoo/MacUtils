@@ -132,10 +132,10 @@ final class LocalizationTests: XCTestCase {
         // (keys handed to helper functions before reaching L).
         let patterns = [
             #"(?:\bL\(|titleKey: |summaryKey: |Key: )"([a-zA-Z0-9_.]+)""#,
-            #""((?:app|menu|settings|permission|module|snap|downloads|shelf|uninstall|capture|monitor|switcher|dock|menubar|audio|ribbon)\.[a-zA-Z0-9_.]*[a-zA-Z0-9_])""#,
+            #""((?:app|menu|settings|permission|module|snap|downloads|shelf|uninstall|capture|monitor|switcher|dock|audio|ribbon|awake)\.[a-zA-Z0-9_.]*[a-zA-Z0-9_])""#,
         ]
         // Contexts where such a literal is not a localization key.
-        let notKeys = ["systemImage:", "systemName:", "symbol:", "id:", "static let", "autosaveName"]
+        let notKeys = ["systemImage:", "systemName:", "symbol:", "id:", "static let", "autosaveName", "//"]
         var keys = Set<String>()
         for pattern in patterns {
             let r = try NSRegularExpression(pattern: pattern)

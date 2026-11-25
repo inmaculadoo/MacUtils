@@ -1,12 +1,18 @@
 # Changelog
 
-## [0.4.0] — All In One
+## [0.4.0] — Conde All In One
 
 ### Changed
-- The app is now called **All In One** (menu bar, Settings, Finder, permission
+- The app is now called **Conde All In One** (menu bar, Settings, Finder, permission
   lists) with a minimal black-and-white "C" logo: a template image in the menu
   bar and an app icon (`scripts/make-icon.swift` → `Resources/AppIcon.icns`).
-  The bundle is `All In One.app`; the executable is still `Ligero`.
+  The bundle is `Conde All In One.app`; the executable is still `Ligero`.
+- Bundle identifier `app.allinone` (log subsystem too). macOS sees a new app:
+  Accessibility, Screen Recording and Audio permissions must be granted again;
+  settings can be carried over with `defaults export <old id> - | defaults
+  import app.allinone -`.
+- The repository no longer contains personal details (owner, device, local
+  paths, session notes).
 
 ### Added
 - **Awake** module (SPEC §4.13, like Amphetamine): keep the Mac awake for

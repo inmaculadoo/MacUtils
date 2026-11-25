@@ -11,8 +11,8 @@ Utilidad personal de barra de menús para macOS. Ver `SPEC.md`.
 3. Clona el repo y ejecuta:
    ```sh
    SIGN_ID="Ligero Dev" scripts/bundle.sh
-   cp -R build/Ligero.app /Applications/
-   open /Applications/Ligero.app
+   cp -R "build/Conde All In One.app" /Applications/
+   open "/Applications/Conde All In One.app"
    ```
 4. Concede Accesibilidad y Grabación de pantalla cuando te lo pida. Con el mismo certificado, solo tendrás que hacerlo una vez.
 

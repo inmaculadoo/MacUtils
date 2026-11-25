@@ -63,7 +63,7 @@ final class AwakeModule: LigeroModule, MenuContributing {
     private func begin(_ duration: AwakeDuration) {
         endSession()
         session = AwakeSession(duration: duration, now: Date())
-        sessionAssertion = Self.assert(name: "All In One: keep awake", display: settings.keepDisplayOn,
+        sessionAssertion = Self.assert(name: "Conde All In One: keep awake", display: settings.keepDisplayOn,
                                        timeout: duration.seconds)
         Log.modules.info("Awake: session \(duration.rawValue, privacy: .public)")
     }
@@ -110,7 +110,7 @@ final class AwakeModule: LigeroModule, MenuContributing {
             if let id = appsAssertion { IOPMAssertionRelease(id) }
             appsAssertion = nil
         } else if appsAssertion == nil {
-            appsAssertion = Self.assert(name: "All In One: trigger app open", display: settings.keepDisplayOn, timeout: nil)
+            appsAssertion = Self.assert(name: "Conde All In One: trigger app open", display: settings.keepDisplayOn, timeout: nil)
         }
     }
 
@@ -127,7 +127,7 @@ final class AwakeModule: LigeroModule, MenuContributing {
         // its end time.
         if let s = currentSession, let id = sessionAssertion {
             IOPMAssertionRelease(id)
-            sessionAssertion = Self.assert(name: "All In One: keep awake", display: on,
+            sessionAssertion = Self.assert(name: "Conde All In One: keep awake", display: on,
                                            timeout: s.until.map { max(1, $0.timeIntervalSinceNow) })
         }
         if let id = appsAssertion {

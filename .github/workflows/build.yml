@@ -44,5 +44,5 @@ jobs:
         if: hashFiles('Package.swift') != ''
         with:
           name: AllInOne-app
-          path: build/All In One.app
+          path: build/Conde All In One.app
           retention-days: 7

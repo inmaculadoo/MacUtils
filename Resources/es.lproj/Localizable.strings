@@ -1,6 +1,6 @@
-/* All In One — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
+/* Conde All In One — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
 
-"app.name" = "All In One";
+"app.name" = "Conde All In One";
 
 /* Menú de la barra */
 "menu.modules" = "Módulos";
@@ -10,31 +10,31 @@
 "menu.permission.row" = "%1$@: %2$@";
 "menu.launchAtLogin" = "Abrir al iniciar sesión";
 "menu.settings" = "Ajustes…";
-"menu.quit" = "Salir de All In One";
+"menu.quit" = "Salir de Conde All In One";
 
 /* Permisos */
 "permission.accessibility.title" = "Accesibilidad";
-"permission.accessibility.explanation" = "Permite a All In One mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. All In One nunca lee lo que escribes.";
+"permission.accessibility.explanation" = "Permite a Conde All In One mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. Conde All In One nunca lee lo que escribes.";
 "permission.screenRecording.title" = "Grabación de pantalla";
-"permission.screenRecording.explanation" = "Permite a All In One hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
+"permission.screenRecording.explanation" = "Permite a Conde All In One hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
 "permission.status.granted" = "concedido";
 "permission.status.missing" = "no concedido";
-"permission.alert.title" = "All In One necesita el permiso de %@";
-"permission.alert.neededBy" = "Lo necesita: %@. Activa All In One en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
+"permission.alert.title" = "Conde All In One necesita el permiso de %@";
+"permission.alert.neededBy" = "Lo necesita: %@. Activa Conde All In One en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
 "permission.alert.open" = "Abrir Ajustes del Sistema";
 "permission.alert.later" = "Ahora no";
 
 /* Ventana de ajustes */
-"settings.window.title" = "Ajustes de All In One";
+"settings.window.title" = "Ajustes de Conde All In One";
 "settings.tab.general" = "General";
 "settings.language" = "Idioma";
 "settings.language.system" = "Sistema";
 "settings.language.es" = "Español";
 "settings.language.en" = "English";
-"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar All In One.";
+"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar Conde All In One.";
 "settings.language.restartNow" = "Reiniciar ahora";
 "settings.startup" = "Arranque";
-"settings.launchAtLogin" = "Abrir All In One al iniciar sesión";
+"settings.launchAtLogin" = "Abrir Conde All In One al iniciar sesión";
 "settings.launchAtLogin.needsApproval" = "macOS pide que lo permitas en Elementos de inicio.";
 "settings.openSystemSettings" = "Abrir Ajustes del Sistema";
 "settings.modules" = "Módulos";
@@ -163,7 +163,7 @@
 "uninstall.error.notApp" = "Eso no es una app.";
 "uninstall.error.system" = "Las apps de Apple y del sistema no se pueden desinstalar.";
 "uninstall.error.noBundleID" = "Esta app no tiene identificador de paquete, así que sus restos no se pueden buscar con seguridad.";
-"uninstall.error.self" = "All In One no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
+"uninstall.error.self" = "Conde All In One no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
 "uninstall.running" = "La app está abierta";
 "uninstall.quit" = "Salir de la app";
 "uninstall.reveal" = "Mostrar en el Finder";
@@ -224,11 +224,11 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Abre Monitor en el menú de All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas (ver CHANGELOG).";
+"monitor.settings.panelHint" = "Abre Monitor en el menú de Conde All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas (ver CHANGELOG).";
 "monitor.settings.menuBar" = "Barra de menús";
 "monitor.settings.menuBarReading" = "Mostrar CPU y RAM en la barra de menús";
 "monitor.settings.interval" = "Actualizar cada %ld s";
-"monitor.settings.menuBarHint" = "Es la única opción de All In One que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
+"monitor.settings.menuBarHint" = "Es la única opción de Conde All In One que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
 
 /* Switcher (experimental) */
 "module.switcher.title" = "Switcher — ventanas con vista previa";

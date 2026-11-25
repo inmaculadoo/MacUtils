@@ -4,7 +4,7 @@ App de barra de menús para macOS, de uso personal, que reúne en una sola app l
 
 **Objetivo número uno: batería.** Si una función no se puede hacer sin gastar batería en reposo, se hace a demanda o no se hace.
 
-- Mac objetivo: Apple Silicon (sin ventilador, Apple Silicon), macOS 26 Tahoe.
+- Mac objetivo: un Mac con Apple Silicon sin ventilador, macOS 26 Tahoe.
 - Mínimo de despliegue: macOS 15.
 - Solo arm64. Sin App Store y sin sandbox (Accesibilidad y las taps de audio lo exigen).
 
@@ -58,7 +58,7 @@ Sources/Ligero/
   App/                     # AppDelegate, StatusItem, ModuleRegistry, Settings, Permissions, HotKeys, LoginItem
   Modules/<Modulo>/        # una carpeta por módulo
 Resources/Info.plist       # LSUIElement = YES
-scripts/bundle.sh          # swift build -c release → Ligero.app + codesign
+scripts/bundle.sh          # swift build -c release → "Conde All In One.app" + codesign
 .github/workflows/build.yml
 ```
 
@@ -168,12 +168,12 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 | Fase | Contenido | Dónde |
 |---|---|---|
 | 0 | Esqueleto: SPM, `bundle.sh`, CI, StatusItem + NSMenu, ModuleRegistry, Settings, HotKeys (Carbon), Permissions (Accesibilidad / Grabación de pantalla, con explicación y enlace a Ajustes), LoginItem. `LigeroCore` con tests. | Nube |
-| 1 | Snap + Scroll | Nube (código) → casa (probar) |
-| 2 | Downloads + Shelf | Nube → casa |
-| 3 | Switcher + Dock Previews | Nube → casa |
-| 4 | MenuBar + Uninstall + Capture | Nube → casa |
-| 5 | Monitor + Audio | Nube → casa |
-| 6 | Ribbon | Prototipo en nube, iteración sobre todo en casa |
+| 1 | Snap + Scroll | Nube (código) → Mac de pruebas (probar) |
+| 2 | Downloads + Shelf | Nube → Mac de pruebas |
+| 3 | Switcher + Dock Previews | Nube → Mac de pruebas |
+| 4 | MenuBar + Uninstall + Capture | Nube → Mac de pruebas |
+| 5 | Monitor + Audio | Nube → Mac de pruebas |
+| 6 | Ribbon | Prototipo en nube, iteración sobre todo en el Mac de pruebas |
 
 Cada fase termina con CI en verde, tests de `LigeroCore` en verde, una entrada en `CHANGELOG.md` y una lista de "qué probar en el Mac" (`TESTING.md`).
 
@@ -185,7 +185,7 @@ Cada fase termina con CI en verde, tests de `LigeroCore` en verde, una entrada e
 | Grabación de pantalla | Miniaturas de Switcher y Dock, Capture |
 | Audio (el sistema lo pide al crear el tap) | Audio |
 
-macOS ata los permisos a la firma del código. En casa hay que firmar **siempre** con el mismo certificado autofirmado (ver `README.md`), o los permisos se pierden en cada compilación.
+macOS ata los permisos a la firma del código. En el Mac de pruebas hay que firmar **siempre** con el mismo certificado autofirmado (ver `README.md`), o los permisos se pierden en cada compilación.
 
 ## 7. Fuera de alcance
 - Lanzador ⌘K y portapapeles (Tahoe ya trae historial en Spotlight).

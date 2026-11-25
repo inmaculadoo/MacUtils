@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds "build/All In One.app" from the SwiftPM executable (product "Ligero") and signs it.
+# Builds "build/Conde All In One.app" from the SwiftPM executable (product "Ligero") and signs it.
 #
 #   SIGN_ID="Ligero Dev" scripts/bundle.sh   # stable signature: TCC permissions survive rebuilds
 #   scripts/bundle.sh                        # ad-hoc signature: permissions are lost on every build
@@ -8,7 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 ARCH="arm64"
-APP="build/All In One.app"
+APP="build/Conde All In One.app"
 SIGN_ID="${SIGN_ID:--}"
 
 echo "==> Checking localizations"
