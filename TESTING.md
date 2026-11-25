@@ -51,7 +51,6 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 | Monitor + lectura en la barra | ≥ 10 s de intervalo: idlew ≈ 0,1/s es lo esperado | | | |
 | Switcher | en reposo, tras abrirlo 3 veces | 0,00 % (sin abrirlo) | 0,03/s | 12 MB · *tras abrirlo: pendiente* |
 | Dock Previews | ratón fuera del Dock | 0,00 % | 0,02/s | 12 MB |
-| MenuBar | iconos ocultos | | | |
 | Audio | todo al 100 % (0 taps) **y** con una app al 50 % sonando | | | |
 | Ribbon | modo apagado **y** modo encendido sin tocar nada | 0,00 % (apagado) | 0,03/s (apagado) | 12 MB · *encendido: pendiente* |
 | **Todos los estables a la vez** | en reposo | 0,00 % | 0,02/s | 42 MB (con Ajustes abiertos, ver Downloads) |
@@ -125,6 +124,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 - [ ] Si macOS pide «acceder a datos de otras apps» al tocar ~/Library/Containers, acepta y repite.
 
 ### Monitor (activado por defecto)
+- [ ] *(0.4.0)* Fila GPU: uso en % y memoria en uso; sube al reproducir un vídeo o mover ventanas.
 - [x] Menú → «Monitor»: CPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Más energía ahora». Los valores se actualizan cada segundo mientras está abierto.
 - [x] Con el submenú cerrado, `top` muestra 0,0 % de CPU (no sigue midiendo).
 - [x] Comprueba que los valores cuadran aproximadamente con Monitor de Actividad e Información del sistema → Energía. *(24-11: %, W, ciclos y salud frente a `pmset`/`ioreg`; un proceso al 100 % sale con ~6 W)*
@@ -161,14 +161,13 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 
 ## Prioridad 3 — experimentales (activar uno a uno)
 
-### MenuBar — validar primero (riesgo de Tahoe)
-> **24-11, macOS 27.2: no viable.** El sistema limita el separador a 5002 pt y lo coloca fuera de su sitio; con un icono ⌘-arrastrado a su izquierda, al plegar el icono sigue visible. Déjalo desactivado (ver CHANGELOG). Alternativa nativa: Ajustes del Sistema → Barra de menús.
-- [ ] Al activarlo aparecen una flecha y un separador fino. Con ⌘ arrastra varios iconos a la izquierda del separador y deja el de Ligero a la derecha.
-- [ ] Clic en la flecha: los iconos de la izquierda desaparecen y vuelven a aparecer. ⌃⌥⌘B hace lo mismo.
-- [ ] **Tahoe**: comprueba que el separador largo de verdad los empuja fuera, que no se lleva el icono de Ligero y que no rompe el Centro de control. Si falla, anótalo y desactiva el módulo.
-- [ ] Con «Volver a ocultarlos al cambiar de app», al pulsar en otra app se vuelven a ocultar.
-- [ ] Sección «siempre oculto»: ⌥-clic en la flecha la muestra.
-- [ ] Al desactivar el módulo desaparecen la flecha y los separadores y todo se ve como antes.
+### Despierto (0.4.0)
+- [x] Menú → Despierto → "1 hora": `pmset -g assertions` muestra `PreventUserIdleSystemSleep named: "All In One: keep awake"` y el menú dice "Despierto hasta las …". "Apagar" la quita. *(probado por accesibilidad)*
+- [ ] ⌃⌥⌘A activa "hasta que lo apague" y lo desactiva.
+- [ ] Con "Mantener también la pantalla encendida", la aserción pasa a `PreventUserIdleDisplaySleep` y la pantalla no se apaga.
+- [ ] Pasada la duración, el Mac vuelve a dormirse solo (lo libera el sistema) y al abrir el menú pone "Despierto: apagado".
+- [ ] "Mientras esté abierta" → marca una app: con ella abierta hay aserción ("trigger app open"); al cerrarla desaparece.
+- [ ] Batería: sin sesión ni apps elegidas, CPU 0,0 % e idlew igual que sin el módulo.
 
 ### Switcher
 - [ ] ⌥Tab muestra las ventanas del Space actual ordenadas por uso reciente; soltar ⌥ cambia a la seleccionada. Un ⌥Tab rápido va a la ventana anterior.

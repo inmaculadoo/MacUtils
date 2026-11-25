@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Builds build/Ligero.app from the SwiftPM executable and signs it.
+# Builds "build/All In One.app" from the SwiftPM executable (product "Ligero") and signs it.
 #
 #   SIGN_ID="Ligero Dev" scripts/bundle.sh   # stable signature: TCC permissions survive rebuilds
 #   scripts/bundle.sh                        # ad-hoc signature: permissions are lost on every build
@@ -8,7 +8,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 ARCH="arm64"
-APP="build/Ligero.app"
+APP="build/All In One.app"
 SIGN_ID="${SIGN_ID:--}"
 
 echo "==> Checking localizations"
@@ -26,6 +26,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/Ligero" "$APP/Contents/MacOS/Ligero"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 for lproj in Resources/*.lproj; do
     cp -R "$lproj" "$APP/Contents/Resources/"
 done

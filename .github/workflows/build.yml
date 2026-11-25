@@ -43,6 +43,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: hashFiles('Package.swift') != ''
         with:
-          name: Ligero-app
-          path: build/Ligero.app
+          name: AllInOne-app
+          path: build/All In One.app
           retention-days: 7

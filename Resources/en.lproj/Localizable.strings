@@ -1,6 +1,6 @@
-/* Ligero — English. Every key here must also exist in es.lproj (checked by LocalizationTests). */
+/* All In One — English. Every key here must also exist in es.lproj (checked by LocalizationTests). */
 
-"app.name" = "Ligero";
+"app.name" = "All In One";
 
 /* Menu bar menu */
 "menu.modules" = "Modules";
@@ -10,31 +10,31 @@
 "menu.permission.row" = "%1$@: %2$@";
 "menu.launchAtLogin" = "Open at Login";
 "menu.settings" = "Settings…";
-"menu.quit" = "Quit Ligero";
+"menu.quit" = "Quit All In One";
 
 /* Permissions */
 "permission.accessibility.title" = "Accessibility";
-"permission.accessibility.explanation" = "Lets Ligero move and resize windows and change how the mouse scrolls. Ligero never reads what you type.";
+"permission.accessibility.explanation" = "Lets All In One move and resize windows and change how the mouse scrolls. All In One never reads what you type.";
 "permission.screenRecording.title" = "Screen Recording";
-"permission.screenRecording.explanation" = "Lets Ligero take one-off screenshots for window previews and captures. It never records video.";
+"permission.screenRecording.explanation" = "Lets All In One take one-off screenshots for window previews and captures. It never records video.";
 "permission.status.granted" = "granted";
 "permission.status.missing" = "not granted";
-"permission.alert.title" = "Ligero needs %@ permission";
-"permission.alert.neededBy" = "Needed by: %@. Turn Ligero on in the list in System Settings. If it is not listed, add it with the + button.";
+"permission.alert.title" = "All In One needs %@ permission";
+"permission.alert.neededBy" = "Needed by: %@. Turn All In One on in the list in System Settings. If it is not listed, add it with the + button.";
 "permission.alert.open" = "Open System Settings";
 "permission.alert.later" = "Not Now";
 
 /* Settings window */
-"settings.window.title" = "Ligero Settings";
+"settings.window.title" = "All In One Settings";
 "settings.tab.general" = "General";
 "settings.language" = "Language";
 "settings.language.system" = "System";
 "settings.language.es" = "Español";
 "settings.language.en" = "English";
-"settings.language.restartHint" = "The new language is used after restarting Ligero.";
+"settings.language.restartHint" = "The new language is used after restarting All In One.";
 "settings.language.restartNow" = "Restart Now";
 "settings.startup" = "Startup";
-"settings.launchAtLogin" = "Open Ligero at login";
+"settings.launchAtLogin" = "Open All In One at login";
 "settings.launchAtLogin.needsApproval" = "macOS needs you to allow it in Login Items.";
 "settings.openSystemSettings" = "Open System Settings";
 "settings.modules" = "Modules";
@@ -163,7 +163,7 @@
 "uninstall.error.notApp" = "That is not an app.";
 "uninstall.error.system" = "Apple and system apps cannot be uninstalled.";
 "uninstall.error.noBundleID" = "This app has no bundle identifier, so its leftovers cannot be found safely.";
-"uninstall.error.self" = "Ligero cannot uninstall itself. Drag it to the Trash after quitting it.";
+"uninstall.error.self" = "All In One cannot uninstall itself. Drag it to the Trash after quitting it.";
 "uninstall.running" = "The app is open";
 "uninstall.quit" = "Quit It";
 "uninstall.reveal" = "Show in Finder";
@@ -224,11 +224,11 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Open Monitor in the Ligero menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown (see CHANGELOG).";
+"monitor.settings.panelHint" = "Open Monitor in the All In One menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown (see CHANGELOG).";
 "monitor.settings.menuBar" = "Menu bar";
 "monitor.settings.menuBarReading" = "Show CPU and RAM in the menu bar";
 "monitor.settings.interval" = "Update every %ld s";
-"monitor.settings.menuBarHint" = "This is the only option in Ligero that wakes up on a schedule. It is off by default; the longer the interval, the less battery it uses.";
+"monitor.settings.menuBarHint" = "This is the only option in All In One that wakes up on a schedule. It is off by default; the longer the interval, the less battery it uses.";
 
 /* Switcher (experimental) */
 "module.switcher.title" = "Switcher — windows with previews";
@@ -260,20 +260,6 @@
 "dock.settings.clickAction" = "When you click the icon of the app in front";
 "dock.settings.clickHint" = "Any option other than “Do nothing” watches mouse clicks with an event tap while it is on.";
 
-/* MenuBar (experimental) */
-"module.menubar.title" = "MenuBar — hide icons";
-"module.menubar.summary" = "A divider that hides the menu bar icons on its left. Click the arrow to show them.";
-"menubar.toggleHelp" = "Show or hide menu bar icons (⌥-click: also the always-hidden ones)";
-"menubar.menu.show" = "Show Hidden Menu Bar Icons";
-"menubar.menu.hide" = "Hide Menu Bar Icons";
-"settings.tab.menubar" = "Menu Bar";
-"menubar.settings.experimentalHint" = "macOS 26 changed the menu bar; this may not hide icons correctly there. Check it on the Mac before relying on it.";
-"menubar.settings.howTo" = "How to arrange it";
-"menubar.settings.howToText" = "Hold ⌘ and drag icons in the menu bar. Icons to the left of the thin divider are hidden; the arrow next to it shows and hides them. Keep the Ligero icon to the right of the divider.";
-"menubar.settings.behaviour" = "Behaviour";
-"menubar.settings.shortcut" = "Shortcut to show or hide";
-"menubar.settings.autoHide" = "Hide them again when switching to another app";
-"menubar.settings.alwaysHidden" = "“Always hidden” section (a second divider; ⌥-click the arrow to see it)";
 
 /* Audio (experimental) */
 "module.audio.title" = "Audio — volume per app";
@@ -337,3 +323,29 @@
 "settings.snap.dragToEdges" = "Dragging a window to a screen edge or corner snaps it there";
 "settings.snap.dragToEdgesHint" = "Left or right: half. Top: maximise. Corners: quarter. The mouse is only watched while you drag a window. Turn off macOS tiling (System Settings → Desktop & Dock) so the two don't clash.";
 "shelf.settings.showOnNotchHover" = "Show the shelf when the pointer hovers the notch (closes when it leaves)";
+
+"monitor.gpu" = "GPU";
+"monitor.gpuValue" = "%1$@ · %2$@ in use";
+
+/* Awake */
+"module.awake.title" = "Awake — keep the Mac from sleeping";
+"module.awake.summary" = "Keeps the Mac awake for a while, until you turn it off, or while an app is open. Costs nothing while unused.";
+"settings.tab.awake" = "Awake";
+"awake.menu.off" = "Awake: Off";
+"awake.menu.until" = "Awake until %@";
+"awake.menu.indefinitely" = "Awake until turned off";
+"awake.menu.whileApps" = "Awake while open: %@";
+"awake.menu.turnOff" = "Turn Off";
+"awake.duration.minutes30" = "30 Minutes";
+"awake.duration.hour1" = "1 Hour";
+"awake.duration.hours2" = "2 Hours";
+"awake.duration.hours5" = "5 Hours";
+"awake.duration.indefinitely" = "Until I Turn It Off";
+"awake.menu.keepDisplayOn" = "Keep the Display On Too";
+"awake.menu.whileOpen" = "While Open";
+"awake.settings.behaviour" = "Behaviour";
+"awake.settings.displayHint" = "When off, the Mac stays awake but the display still turns off as usual, which saves the most battery.";
+"awake.settings.shortcut" = "Shortcut for “Until I turn it off”";
+"awake.settings.noApps" = "No apps chosen.";
+"awake.settings.remove" = "Remove";
+"awake.settings.appsHint" = "Add them from the menu: Awake → While Open.";

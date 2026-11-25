@@ -109,12 +109,8 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Mecanismo: `AXObserver` sobre el proceso Dock con `kAXSelectedChildrenChangedNotification`. Es como lo hace DockDoor: sin polling del ratón.
 - Reutiliza la caché de miniaturas del Switcher.
 
-### 4.7 MenuBar — ordenar y ocultar iconos (tipo Ice)
-- Un separador que oculta los iconos que quedan a su izquierda. Se muestran con clic o atajo.
-- Sección "siempre oculto".
-- Mecanismo: un `NSStatusItem` separador cuya `length` se amplía para empujar los iconos fuera de la pantalla (como Ice).
-- **Riesgo**: Tahoe cambió la barra de menús. Hay que validarlo en el Mac real antes de pulirlo.
-- Coste: 0.
+### 4.7 MenuBar — retirado
+- Se quitó en la 0.4.0: en macOS 27 el sistema limita la longitud del separador (5002 pt) y lo coloca fuera de su sitio, así que no oculta los iconos. Alternativa nativa: Ajustes del Sistema → Barra de menús.
 
 ### 4.8 Uninstall — desinstalador completo (tipo AppCleaner)
 - Se arrastra una `.app` al menú o a la ventana. Busca restos por bundle ID en `~/Library/{Application Support, Caches, Preferences, Containers, Group Containers, Saved Application State, LaunchAgents, Logs, HTTPStorages, WebKit, Cookies}`.
@@ -129,9 +125,9 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Solo funciona a demanda.
 
 ### 4.10 Monitor — sistema
-- Desde el menú: CPU, RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más energía gastan.
+- Desde el menú: CPU, GPU (uso y memoria en uso), RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más energía gastan.
 - Mecanismo:
-  - CPU con `host_processor_info`, memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
+  - CPU con `host_processor_info`, GPU con IOKit (`IOAccelerator` → `PerformanceStatistics`), memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
   - **Solo muestrea mientras el panel está abierto** (cada 1 s; es la única excepción al "no timers").
   - Lectura en la barra de menús: opcional y desactivada por defecto. Si se activa, cada ≥ 10 s con `tolerance` del 50 %.
   - Temperaturas por SMC: desactivadas por defecto.
@@ -159,6 +155,14 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Excluir apps (lista) y ventanas flotantes (paneles, diálogos, `AXSubrole` ≠ `AXStandardWindow`).
 - **Es el módulo más difícil.** Va el último y se prototipa antes de pulirlo.
 
+### 4.13 Despierto — evitar que el Mac se duerma (tipo Amphetamine)
+- Desde el menú: 30 min, 1 h, 2 h, 5 h o hasta apagarlo; atajo ⌃⌥⌘A para "hasta apagarlo".
+- Mientras una o varias apps elegidas estén abiertas.
+- Opción de mantener también la pantalla encendida (desactivada por defecto: es lo que más batería ahorra).
+- Mecanismo: aserciones de IOKit (`IOPMAssertionCreateWithProperties`). Una sesión con duración entrega el tiempo al sistema (`kIOPMAssertionTimeoutKey` + `TimeoutActionRelease`), así que la app no usa ningún timer. Las apps se siguen con las notificaciones de NSWorkspace de abrir/cerrar app, solo si hay alguna elegida.
+- Fuera de alcance: disparadores por uso de CPU, red o descargas (exigirían muestrear) y el modo tapa cerrada sin pantalla externa (necesita privilegios).
+- Coste en reposo: 0.
+
 ## 5. Fases
 
 | Fase | Contenido | Dónde |
@@ -184,5 +188,5 @@ Cada fase termina con CI en verde, tests de `LigeroCore` en verde, una entrada e
 macOS ata los permisos a la firma del código. En casa hay que firmar **siempre** con el mismo certificado autofirmado (ver `README.md`), o los permisos se pierden en cada compilación.
 
 ## 7. Fuera de alcance
-- Lanzador ⌘K, mantener despierto (el usuario ya usa Amphetamine) y portapapeles (Tahoe ya trae historial en Spotlight).
+- Lanzador ⌘K y portapapeles (Tahoe ya trae historial en Spotlight).
 - Sincronización, cuentas, red y actualizaciones automáticas.

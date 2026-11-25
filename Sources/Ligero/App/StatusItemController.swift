@@ -19,14 +19,27 @@ final class StatusItemController: NSObject, NSMenuDelegate {
         super.init()
 
         if let button = item.button {
-            let image = NSImage(systemSymbolName: "rectangle.split.2x1", accessibilityDescription: L("app.name"))
-            image?.isTemplate = true
-            button.image = image
+            button.image = Self.letterIcon()
             button.toolTip = L("app.name")
         }
         menu.autoenablesItems = false
         menu.delegate = self
         item.menu = menu
+    }
+
+    /// The app's logo, a bold "C", as a template image so it follows the
+    /// menu bar's light/dark appearance.
+    private static func letterIcon() -> NSImage {
+        let image = NSImage(size: NSSize(width: 18, height: 18), flipped: false) { rect in
+            let font = NSFont.systemFont(ofSize: 16, weight: .medium)
+            let text = NSAttributedString(string: "C", attributes: [.font: font, .foregroundColor: NSColor.black])
+            let size = text.size()
+            text.draw(at: NSPoint(x: rect.midX - size.width / 2, y: rect.midY - font.capHeight / 2 + font.descender))
+            return true
+        }
+        image.isTemplate = true
+        image.accessibilityDescription = L("app.name")
+        return image
     }
 
     // MARK: NSMenuDelegate

@@ -13,9 +13,9 @@ enum ModuleCatalog {
             MonitorModule.descriptor,
             SwitcherModule.descriptor,
             DockModule.descriptor,
-            MenuBarModule.descriptor,
             AudioModule.descriptor,
             RibbonModule.descriptor,
+            AwakeModule.descriptor,
         ]
     }
 }
@@ -41,10 +41,10 @@ enum SettingsPanes {
                          view: AnyView(SwitcherSettingsView(model: model))),
             SettingsPane(id: DockModule.id, titleKey: "settings.tab.dock", symbol: "dock.rectangle",
                          view: AnyView(DockSettingsView(model: model))),
-            SettingsPane(id: MenuBarModule.id, titleKey: "settings.tab.menubar", symbol: "menubar.rectangle",
-                         view: AnyView(MenuBarSettingsView(model: model))),
             SettingsPane(id: RibbonModule.id, titleKey: "settings.tab.ribbon", symbol: "rectangle.split.3x1",
                          view: AnyView(RibbonSettingsView(model: model))),
+            SettingsPane(id: AwakeModule.id, titleKey: "settings.tab.awake", symbol: "cup.and.saucer",
+                         view: AnyView(AwakeSettingsView(model: model))),
         ]
     }
 }

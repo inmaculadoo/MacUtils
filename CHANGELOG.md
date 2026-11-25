@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.4.0] — All In One
+
+### Changed
+- The app is now called **All In One** (menu bar, Settings, Finder, permission
+  lists) with a minimal black-and-white "C" logo: a template image in the menu
+  bar and an app icon (`scripts/make-icon.swift` → `Resources/AppIcon.icns`).
+  The bundle is `All In One.app`; the executable is still `Ligero`.
+
+### Added
+- **Awake** module (SPEC §4.13, like Amphetamine): keep the Mac awake for
+  30 min / 1 h / 2 h / 5 h or until turned off (⌃⌥⌘A), or while chosen apps
+  are open; optionally keep the display on. IOPM assertions; a timed session
+  gives its timeout to the system, so there is no timer. Logic in `Awake.swift`
+  with tests.
+- **Monitor**: GPU usage and GPU memory in use (`IOAccelerator` →
+  `PerformanceStatistics`), read only while the panel is open.
+
+### Removed
+- **MenuBar** module: not workable on macOS 27 (the separator length is capped
+  and laid out away from its slot). Use System Settings → Menu Bar.
+
 ## [0.3.6] — Settings no longer opens at launch
 
 ### Fixed

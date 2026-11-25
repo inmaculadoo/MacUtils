@@ -58,6 +58,17 @@ enum SystemSampler {
         return BatteryInfo.parse(dict)
     }
 
+    /// GPU load. Reads only the "PerformanceStatistics" property of the
+    /// IOAccelerator, not its whole property table.
+    static func gpu() -> GPUStats? {
+        let service = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("IOAccelerator"))
+        guard service != 0 else { return nil }
+        defer { IOObjectRelease(service) }
+        guard let value = IORegistryEntryCreateCFProperty(service, "PerformanceStatistics" as CFString, kCFAllocatorDefault, 0)?
+            .takeRetainedValue() as? [String: Any] else { return nil }
+        return GPUStats.parse(value)
+    }
+
     static func network() -> [String: NetworkCounters] {
         var result: [String: NetworkCounters] = [:]
         var first: UnsafeMutablePointer<ifaddrs>?

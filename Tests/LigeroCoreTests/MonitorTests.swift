@@ -116,3 +116,17 @@ final class MonitorTests: XCTestCase {
         XCTAssertEqual(s.clampedInterval, 10)
     }
 }
+
+final class GPUStatsTests: XCTestCase {
+    func testParsesAppleSiliconStatistics() {
+        // As read from an M5 (ioreg -c IOAccelerator).
+        let d: [String: Any] = ["Device Utilization %": 20, "Renderer Utilization %": 20,
+                                "Tiler Utilization %": 10, "In use system memory": 591_462_400]
+        XCTAssertEqual(GPUStats.parse(d), GPUStats(utilization: 0.2, memoryInUse: 591_462_400))
+    }
+
+    func testMissingUtilizationIsNil() {
+        XCTAssertNil(GPUStats.parse(["In use system memory": 1]))
+        XCTAssertEqual(GPUStats.parse(["Device Utilization %": 140])?.utilization, 1)
+    }
+}

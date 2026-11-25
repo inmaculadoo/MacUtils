@@ -47,6 +47,7 @@ final class MonitorModule: LigeroModule, MenuContributing {
 @MainActor
 final class MonitorModel: ObservableObject {
     @Published var cpu: Double?
+    @Published var gpu: GPUStats?
     @Published var memory: MemoryStats?
     @Published var battery: BatteryInfo?
     @Published var down: Double?
@@ -123,6 +124,7 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
                 return u
             }
         }
+        model.gpu = SystemSampler.gpu()
         model.memory = SystemSampler.memory()
         model.battery = SystemSampler.battery()
         lastCPU = cpu
@@ -138,6 +140,9 @@ struct MonitorView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             row(L("monitor.cpu"), model.cpu.map { percent($0) })
+            row(L("monitor.gpu"), model.gpu.map { g in
+                g.memoryInUse.map { L("monitor.gpuValue", percent(g.utilization), bytes($0)) } ?? percent(g.utilization)
+            })
             if let m = model.memory {
                 row(L("monitor.memory"), L("monitor.memoryValue", bytes(m.used), bytes(m.total)))
                 row(L("monitor.pressure"), L(pressureKey(m.pressure)))

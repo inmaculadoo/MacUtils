@@ -1,6 +1,6 @@
-/* Ligero — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
+/* All In One — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
 
-"app.name" = "Ligero";
+"app.name" = "All In One";
 
 /* Menú de la barra */
 "menu.modules" = "Módulos";
@@ -10,31 +10,31 @@
 "menu.permission.row" = "%1$@: %2$@";
 "menu.launchAtLogin" = "Abrir al iniciar sesión";
 "menu.settings" = "Ajustes…";
-"menu.quit" = "Salir de Ligero";
+"menu.quit" = "Salir de All In One";
 
 /* Permisos */
 "permission.accessibility.title" = "Accesibilidad";
-"permission.accessibility.explanation" = "Permite a Ligero mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. Ligero nunca lee lo que escribes.";
+"permission.accessibility.explanation" = "Permite a All In One mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. All In One nunca lee lo que escribes.";
 "permission.screenRecording.title" = "Grabación de pantalla";
-"permission.screenRecording.explanation" = "Permite a Ligero hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
+"permission.screenRecording.explanation" = "Permite a All In One hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
 "permission.status.granted" = "concedido";
 "permission.status.missing" = "no concedido";
-"permission.alert.title" = "Ligero necesita el permiso de %@";
-"permission.alert.neededBy" = "Lo necesita: %@. Activa Ligero en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
+"permission.alert.title" = "All In One necesita el permiso de %@";
+"permission.alert.neededBy" = "Lo necesita: %@. Activa All In One en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
 "permission.alert.open" = "Abrir Ajustes del Sistema";
 "permission.alert.later" = "Ahora no";
 
 /* Ventana de ajustes */
-"settings.window.title" = "Ajustes de Ligero";
+"settings.window.title" = "Ajustes de All In One";
 "settings.tab.general" = "General";
 "settings.language" = "Idioma";
 "settings.language.system" = "Sistema";
 "settings.language.es" = "Español";
 "settings.language.en" = "English";
-"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar Ligero.";
+"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar All In One.";
 "settings.language.restartNow" = "Reiniciar ahora";
 "settings.startup" = "Arranque";
-"settings.launchAtLogin" = "Abrir Ligero al iniciar sesión";
+"settings.launchAtLogin" = "Abrir All In One al iniciar sesión";
 "settings.launchAtLogin.needsApproval" = "macOS pide que lo permitas en Elementos de inicio.";
 "settings.openSystemSettings" = "Abrir Ajustes del Sistema";
 "settings.modules" = "Módulos";
@@ -163,7 +163,7 @@
 "uninstall.error.notApp" = "Eso no es una app.";
 "uninstall.error.system" = "Las apps de Apple y del sistema no se pueden desinstalar.";
 "uninstall.error.noBundleID" = "Esta app no tiene identificador de paquete, así que sus restos no se pueden buscar con seguridad.";
-"uninstall.error.self" = "Ligero no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
+"uninstall.error.self" = "All In One no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
 "uninstall.running" = "La app está abierta";
 "uninstall.quit" = "Salir de la app";
 "uninstall.reveal" = "Mostrar en el Finder";
@@ -224,11 +224,11 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Abre Monitor en el menú de Ligero. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas (ver CHANGELOG).";
+"monitor.settings.panelHint" = "Abre Monitor en el menú de All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas (ver CHANGELOG).";
 "monitor.settings.menuBar" = "Barra de menús";
 "monitor.settings.menuBarReading" = "Mostrar CPU y RAM en la barra de menús";
 "monitor.settings.interval" = "Actualizar cada %ld s";
-"monitor.settings.menuBarHint" = "Es la única opción de Ligero que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
+"monitor.settings.menuBarHint" = "Es la única opción de All In One que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
 
 /* Switcher (experimental) */
 "module.switcher.title" = "Switcher — ventanas con vista previa";
@@ -260,20 +260,6 @@
 "dock.settings.clickAction" = "Al hacer clic en el icono de la app que está delante";
 "dock.settings.clickHint" = "Cualquier opción distinta de «Nada» vigila los clics del ratón con un event tap mientras está activa.";
 
-/* MenuBar (experimental) */
-"module.menubar.title" = "MenuBar — ocultar iconos";
-"module.menubar.summary" = "Un separador que oculta los iconos de la barra de menús que quedan a su izquierda. Haz clic en la flecha para verlos.";
-"menubar.toggleHelp" = "Mostrar u ocultar iconos (⌥-clic: también los siempre ocultos)";
-"menubar.menu.show" = "Mostrar iconos ocultos de la barra";
-"menubar.menu.hide" = "Ocultar iconos de la barra";
-"settings.tab.menubar" = "Barra de menús";
-"menubar.settings.experimentalHint" = "macOS 26 cambió la barra de menús y puede que esto no oculte bien los iconos. Compruébalo en el Mac antes de fiarte.";
-"menubar.settings.howTo" = "Cómo colocarlo";
-"menubar.settings.howToText" = "Mantén ⌘ y arrastra los iconos de la barra de menús. Los que queden a la izquierda del separador fino se ocultan; la flecha de al lado los muestra y los oculta. Deja el icono de Ligero a la derecha del separador.";
-"menubar.settings.behaviour" = "Comportamiento";
-"menubar.settings.shortcut" = "Atajo para mostrar u ocultar";
-"menubar.settings.autoHide" = "Volver a ocultarlos al cambiar de app";
-"menubar.settings.alwaysHidden" = "Sección «siempre oculto» (un segundo separador; ⌥-clic en la flecha para verla)";
 
 /* Audio (experimental) */
 "module.audio.title" = "Audio — volumen por app";
@@ -337,3 +323,29 @@
 "settings.snap.dragToEdges" = "Arrastrar una ventana a un borde o esquina de la pantalla la encaja ahí";
 "settings.snap.dragToEdgesHint" = "Izquierda o derecha: mitad. Arriba: maximizar. Esquinas: cuarto. Solo vigila el ratón mientras arrastras una ventana. Desactiva el mosaico de macOS (Ajustes del Sistema → Escritorio y Dock) para que no se pisen.";
 "shelf.settings.showOnNotchHover" = "Mostrar la bandeja al pasar el ratón por el notch (se cierra al salir)";
+
+"monitor.gpu" = "GPU";
+"monitor.gpuValue" = "%1$@ · %2$@ en uso";
+
+/* Awake */
+"module.awake.title" = "Despierto — evitar que el Mac se duerma";
+"module.awake.summary" = "Mantiene el Mac despierto un rato, hasta que lo apagues o mientras una app esté abierta. No gasta nada mientras no lo usas.";
+"settings.tab.awake" = "Despierto";
+"awake.menu.off" = "Despierto: apagado";
+"awake.menu.until" = "Despierto hasta las %@";
+"awake.menu.indefinitely" = "Despierto hasta que lo apague";
+"awake.menu.whileApps" = "Despierto mientras esté abierto: %@";
+"awake.menu.turnOff" = "Apagar";
+"awake.duration.minutes30" = "30 minutos";
+"awake.duration.hour1" = "1 hora";
+"awake.duration.hours2" = "2 horas";
+"awake.duration.hours5" = "5 horas";
+"awake.duration.indefinitely" = "Hasta que lo apague";
+"awake.menu.keepDisplayOn" = "Mantener también la pantalla encendida";
+"awake.menu.whileOpen" = "Mientras esté abierta";
+"awake.settings.behaviour" = "Comportamiento";
+"awake.settings.displayHint" = "Desactivado, el Mac no se duerme pero la pantalla se apaga como siempre, que es lo que más batería ahorra.";
+"awake.settings.shortcut" = "Atajo para «Hasta que lo apague»";
+"awake.settings.noApps" = "Ninguna app elegida.";
+"awake.settings.remove" = "Quitar";
+"awake.settings.appsHint" = "Añádelas desde el menú: Despierto → Mientras esté abierta.";

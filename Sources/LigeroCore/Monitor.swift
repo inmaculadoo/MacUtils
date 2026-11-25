@@ -267,3 +267,17 @@ public enum EnergyRanking {
         return Array(users.prefix(limit))
     }
 }
+
+/// GPU load from the IOAccelerator's "PerformanceStatistics" (Apple Silicon).
+public struct GPUStats: Equatable, Sendable {
+    /// 0…1, "Device Utilization %".
+    public var utilization: Double
+    /// Memory the GPU has in use, in bytes ("In use system memory").
+    public var memoryInUse: UInt64?
+
+    public static func parse(_ stats: [String: Any]) -> GPUStats? {
+        guard let device = BatteryInfo.int(stats["Device Utilization %"]) else { return nil }
+        let memory = BatteryInfo.int(stats["In use system memory"]).map { UInt64(max(0, $0)) }
+        return GPUStats(utilization: Double(min(max(device, 0), 100)) / 100, memoryInUse: memory)
+    }
+}
