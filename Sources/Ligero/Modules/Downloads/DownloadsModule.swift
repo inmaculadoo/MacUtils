@@ -10,7 +10,7 @@ import UniformTypeIdentifiers
 /// been stable for 2 s; the re-check is a single delayed task started by the
 /// event, never a periodic timer. Nothing is ever deleted.
 @MainActor
-final class DownloadsModule: LigeroModule, MenuContributing {
+final class DownloadsModule: LigeroModule, MenuContributing, EnabledByUser {
     static let id = "downloads"
     static let requiredPermissions: Set<Permission> = []
     static let historyKey = "module.downloads.history"
@@ -41,12 +41,18 @@ final class DownloadsModule: LigeroModule, MenuContributing {
 
     func start() {
         guard settings.previewAccepted else {
-            // SPEC §4.3: show the preview before the first activation.
+            // SPEC §4.3: nothing moves before the preview is accepted. Settings
+            // opens only when the user switches the module on (userEnabled),
+            // not at every launch: the first SwiftUI window costs ~25 MB that
+            // stay for the life of the process. The menu offers the preview.
             Log.modules.info("Downloads waits for the preview to be accepted")
-            context.actions.openSettings(Self.id)
             return
         }
         startStream()
+    }
+
+    func userEnabled() {
+        if !settings.previewAccepted { context.actions.openSettings(Self.id) }
     }
 
     func stop() {

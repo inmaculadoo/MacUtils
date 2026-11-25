@@ -19,6 +19,13 @@ protocol MenuContributing: AnyObject {
     func menuItems() -> [NSMenuItem]
 }
 
+/// A module that reacts when the user switches it on (menu or Settings),
+/// as opposed to being started at launch.
+@MainActor
+protocol EnabledByUser: AnyObject {
+    func userEnabled()
+}
+
 /// App-level actions modules may trigger. Bound late by AppDelegate.
 @MainActor
 final class AppActions {
@@ -108,6 +115,7 @@ final class ModuleRegistry {
         }
         context.settings.app = app
         apply(explainMissing: enabled)
+        if enabled { (running[id] as? EnabledByUser)?.userEnabled() }
     }
 
     func state(of descriptor: ModuleDescriptor) -> ModuleState {

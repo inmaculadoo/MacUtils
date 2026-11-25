@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.3.6] — Settings no longer opens at launch
+
+### Fixed
+- **Downloads**: while its preview was not accepted, it opened Settings at
+  every launch. The first SwiftUI window loads framework caches (~25 MB of
+  live allocations: symbol images, Swift metadata, AttributeGraph) that stay
+  for the life of the process, so Ligero sat at ~49 MB instead of ~24 MB with
+  every module on. Settings now opens only when the user switches the module
+  on (`EnabledByUser`); the menu keeps "Downloads: show preview…". Opening
+  Settings by hand still costs those ~25 MB once (checked: no leak, stable
+  over repeated open/close; `malloc_zone_pressure_relief` frees nothing).
+
 ## [0.3.5] — Open the shelf from the notch
 
 ### Added
