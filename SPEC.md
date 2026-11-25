@@ -118,14 +118,14 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Solo funciona a demanda.
 
 ### 4.9 Capture — captura + OCR (tipo Shottr/TextSniper)
-- Atajo de captura de región: superposición de selección → PNG al portapapeles o al Escritorio.
-- Atajo de texto: región → OCR con Vision (`VNRecognizeTextRequest`, idiomas es y en) → texto al portapapeles.
-- Ventana flotante "pin" opcional con la captura.
+- Atajo de texto: superposición de selección → OCR con Vision (`VNRecognizeTextRequest`, idiomas es y en) → texto al portapapeles. Si no hay texto o no se puede capturar, lo dice con un aviso.
+- Atajo de captura fijada: la región queda en una ventana flotante (y, si se quiere, en el portapapeles o el Escritorio).
+- Sin captura de región simple: macOS ya la tiene (⇧⌘4).
 - Anotaciones: fuera de la v1.
 - Solo funciona a demanda.
 
 ### 4.10 Monitor — sistema
-- Desde el menú: CPU, GPU (uso y memoria en uso), RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más energía gastan.
+- Desde el menú: CPU, GPU (uso y memoria en uso), RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más CPU usan ahora (los contadores de energía por proceso valen ~0 en macOS 27).
 - Mecanismo:
   - CPU con `host_processor_info`, GPU con IOKit (`IOAccelerator` → `PerformanceStatistics`), memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
   - **Solo muestrea mientras el panel está abierto** (cada 1 s; es la única excepción al "no timers").

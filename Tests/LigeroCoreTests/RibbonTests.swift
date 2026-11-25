@@ -350,7 +350,7 @@ final class RibbonSettingsTests: XCTestCase {
         XCTAssertEqual(RibbonSettings.defaultShortcuts.count, RibbonAction.allCases.count)
         var others: [KeyCombo] = Array(SnapSettings.defaultShortcuts.values)
         let capture = CaptureSettings.default
-        others += [capture.regionShortcut, capture.textShortcut, capture.pinShortcut].compactMap { $0 }
+        others += [capture.textShortcut, capture.pinShortcut].compactMap { $0 }
         others += [ShelfSettings.default.shortcut, AwakeSettings.default.shortcut].compactMap { $0 }
         others += [SwitcherSettings.default.shortcut, SwitcherSettings.default.reverseShortcut].compactMap { $0 }
         XCTAssertEqual(Set(others).count, others.count, "two modules share a default shortcut")

@@ -231,39 +231,47 @@ public struct NetworkCounters: Equatable, Sendable {
 
 // MARK: - Energy
 
-public struct ProcessEnergySample: Equatable, Sendable {
+/// Cumulative CPU time of one process (`proc_pid_rusage` user + system).
+///
+/// The per-process energy counters (`ri_energy_nj`, `ri_billed_energy`) stay
+/// at or near 0 for almost every process on macOS 27, so the panel ranks by
+/// CPU time instead, which is what drives most of an app's energy use.
+public struct ProcessCPUSample: Equatable, Sendable {
     public var pid: Int32
     public var name: String
-    /// `ri_energy_nj`, cumulative nanojoules.
-    public var energy: UInt64
+    /// Nanoseconds of CPU time since the process started.
+    public var cpuNanoseconds: UInt64
 
-    public init(pid: Int32, name: String, energy: UInt64) {
+    public init(pid: Int32, name: String, cpuNanoseconds: UInt64) {
         self.pid = pid
         self.name = name
-        self.energy = energy
+        self.cpuNanoseconds = cpuNanoseconds
     }
 }
 
-public struct EnergyUser: Equatable, Sendable {
+public struct CPUUser: Equatable, Sendable {
     public var pid: Int32
     public var name: String
-    public var watts: Double
+    /// Share of one core between the two samples (1 = one core fully busy;
+    /// can exceed 1 for multithreaded work), like Activity Monitor's % CPU.
+    public var cores: Double
 }
 
-public enum EnergyRanking {
-    /// Processes that used the most energy between two samples, in watts.
-    /// Processes that appeared or restarted (counter went down) are skipped.
-    public static func top(_ old: [ProcessEnergySample], _ new: [ProcessEnergySample], seconds: Double, limit: Int = 5) -> [EnergyUser] {
+public enum CPURanking {
+    /// Processes that used the most CPU between two samples. Processes that
+    /// appeared or restarted (counter went down) are skipped, and so is
+    /// anything under 0.5 % of a core (noise).
+    public static func top(_ old: [ProcessCPUSample], _ new: [ProcessCPUSample], seconds: Double, limit: Int = 5) -> [CPUUser] {
         guard seconds > 0 else { return [] }
         var previous: [Int32: UInt64] = [:]
-        for s in old { previous[s.pid] = s.energy }
-        var users: [EnergyUser] = []
+        for s in old { previous[s.pid] = s.cpuNanoseconds }
+        var users: [CPUUser] = []
         for s in new {
-            guard let e0 = previous[s.pid], s.energy > e0 else { continue }
-            let watts = Double(s.energy - e0) / 1e9 / seconds
-            users.append(EnergyUser(pid: s.pid, name: s.name, watts: watts))
+            guard let t0 = previous[s.pid], s.cpuNanoseconds > t0 else { continue }
+            let cores = Double(s.cpuNanoseconds - t0) / 1e9 / seconds
+            if cores >= 0.005 { users.append(CPUUser(pid: s.pid, name: s.name, cores: cores)) }
         }
-        users.sort { $0.watts != $1.watts ? $0.watts > $1.watts : $0.pid < $1.pid }
+        users.sort { $0.cores != $1.cores ? $0.cores > $1.cores : $0.pid < $1.pid }
         return Array(users.prefix(limit))
     }
 }

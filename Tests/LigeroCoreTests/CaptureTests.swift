@@ -50,8 +50,8 @@ final class CaptureTests: XCTestCase {
 
     func testSettingsDefaultsAndClearedShortcut() {
         let d = CaptureSettings.default
-        let all = [d.regionShortcut, d.textShortcut, d.pinShortcut].compactMap { $0 }
-        XCTAssertEqual(Set(all).count, 3)
+        let all = [d.textShortcut, d.pinShortcut].compactMap { $0 }
+        XCTAssertEqual(Set(all).count, 2)
         XCTAssertTrue(all.allSatisfy(\.isValidGlobalShortcut))
         // Must not collide with Snap's defaults.
         XCTAssertTrue(Set(all).isDisjoint(with: Set(SnapSettings.defaultShortcuts.values)))

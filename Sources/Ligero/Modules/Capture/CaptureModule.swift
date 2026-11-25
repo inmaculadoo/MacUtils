@@ -3,7 +3,8 @@ import LigeroCore
 @preconcurrency import ScreenCaptureKit
 import Vision
 
-/// Region capture → PNG, region → OCR text, and floating pins (SPEC §4.9).
+/// Region → OCR text, and floating pins (SPEC §4.9). macOS already has a
+/// plain region screenshot, so the module doesn't duplicate it.
 /// Works only on demand: idle it only holds Carbon hotkeys. Captures use
 /// `SCScreenshotManager` one-shot; there is never an `SCStream`.
 @MainActor
@@ -18,7 +19,7 @@ final class CaptureModule: LigeroModule, MenuContributing {
     }
 
     enum Mode {
-        case image, text, pin
+        case text, pin
     }
 
     private let context: AppContext
@@ -34,7 +35,7 @@ final class CaptureModule: LigeroModule, MenuContributing {
 
     func start() {
         let shortcuts: [(KeyCombo?, Mode)] = [
-            (settings.regionShortcut, .image), (settings.textShortcut, .text), (settings.pinShortcut, .pin),
+            (settings.textShortcut, .text), (settings.pinShortcut, .pin),
         ]
         for (combo, mode) in shortcuts {
             guard let combo else { continue }
@@ -56,7 +57,6 @@ final class CaptureModule: LigeroModule, MenuContributing {
             combo.map { L("capture.menu.withShortcut", L(key), $0.description) } ?? L(key)
         }
         return [
-            ClosureMenuItem(title: title("capture.menu.region", settings.regionShortcut)) { [weak self] in self?.begin(.image) },
             ClosureMenuItem(title: title("capture.menu.text", settings.textShortcut)) { [weak self] in self?.begin(.text) },
             ClosureMenuItem(title: title("capture.menu.pin", settings.pinShortcut)) { [weak self] in self?.begin(.pin) },
         ]
@@ -95,19 +95,19 @@ final class CaptureModule: LigeroModule, MenuContributing {
             image = try await Self.screenshot(request).image
         } catch {
             Log.modules.error("Capture failed: \(error.localizedDescription, privacy: .public)")
-            NSSound.beep()
+            Self.tell(L("capture.error.title"), L("capture.error.permission"))
             return
         }
         switch mode {
-        case .image:
-            output(image)
         case .pin:
             output(image)
             pin(image, at: selection)
         case .text:
             let text = await Self.recognizeText(SendableImage(image: image))
             guard !text.isEmpty else {
-                NSSound.beep()
+                // Say so: a silent beep left the old clipboard in place and
+                // looked like the OCR had copied the wrong thing.
+                Self.tell(L("capture.noText.title"), L("capture.noText.message"))
                 return
             }
             let pb = NSPasteboard.general
@@ -115,6 +115,16 @@ final class CaptureModule: LigeroModule, MenuContributing {
             pb.setString(text, forType: .string)
             NSSound(named: NSSound.Name("Tink"))?.play()
         }
+    }
+
+    /// A short explanation when a capture can't do what was asked.
+    private static func tell(_ title: String, _ message: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.alertStyle = .informational
+        NSApp.activate()
+        alert.runModal()
     }
 
     private func output(_ image: CGImage) {

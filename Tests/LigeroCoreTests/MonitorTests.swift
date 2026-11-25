@@ -95,18 +95,21 @@ final class MonitorTests: XCTestCase {
         XCTAssertEqual(NetworkCounters.rate(from: big, to: new, seconds: 1).down, 0)
     }
 
-    func testEnergyRanking() {
-        let old = [ProcessEnergySample(pid: 1, name: "a", energy: 1_000_000_000),
-                   ProcessEnergySample(pid: 2, name: "b", energy: 0),
-                   ProcessEnergySample(pid: 3, name: "c", energy: 5_000_000_000)]
-        let new = [ProcessEnergySample(pid: 1, name: "a", energy: 3_000_000_000),
-                   ProcessEnergySample(pid: 2, name: "b", energy: 4_000_000_000),
-                   ProcessEnergySample(pid: 3, name: "c", energy: 100), // restarted
-                   ProcessEnergySample(pid: 4, name: "new", energy: 9_000_000_000)]
-        let top = EnergyRanking.top(old, new, seconds: 2)
+    func testCPURanking() {
+        let old = [ProcessCPUSample(pid: 1, name: "a", cpuNanoseconds: 1_000_000_000),
+                   ProcessCPUSample(pid: 2, name: "b", cpuNanoseconds: 0),
+                   ProcessCPUSample(pid: 3, name: "c", cpuNanoseconds: 5_000_000_000),
+                   ProcessCPUSample(pid: 5, name: "idle", cpuNanoseconds: 10)]
+        let new = [ProcessCPUSample(pid: 1, name: "a", cpuNanoseconds: 2_000_000_000),   // 0.5 core over 2 s
+                   ProcessCPUSample(pid: 2, name: "b", cpuNanoseconds: 3_000_000_000),   // 1.5 cores
+                   ProcessCPUSample(pid: 3, name: "c", cpuNanoseconds: 100),             // restarted
+                   ProcessCPUSample(pid: 4, name: "new", cpuNanoseconds: 9_000_000_000), // no previous sample
+                   ProcessCPUSample(pid: 5, name: "idle", cpuNanoseconds: 1_000_010)]   // < 0.5 %: noise
+        let top = CPURanking.top(old, new, seconds: 2)
         XCTAssertEqual(top.map(\.name), ["b", "a"])
-        XCTAssertEqual(top[0].watts, 2, accuracy: 1e-9)
-        XCTAssertEqual(EnergyRanking.top(old, new, seconds: 2, limit: 1).count, 1)
+        XCTAssertEqual(top[0].cores, 1.5, accuracy: 1e-9)
+        XCTAssertEqual(top[1].cores, 0.5, accuracy: 1e-9)
+        XCTAssertEqual(CPURanking.top(old, new, seconds: 2, limit: 1).count, 1)
     }
 
     func testSettings() {

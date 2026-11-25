@@ -1,16 +1,14 @@
 import Foundation
 
-/// Settings of the Capture module (SPEC §4.9).
+/// Settings of the Capture module (SPEC §4.9). A plain region screenshot
+/// was removed in 0.4.1: macOS already has one (⇧⌘4).
 public struct CaptureSettings: ModuleSettings {
-    public var regionShortcut: KeyCombo?
     public var textShortcut: KeyCombo?
     public var pinShortcut: KeyCombo?
     public var copyToClipboard: Bool
     public var saveToDesktop: Bool
 
-    public init(regionShortcut: KeyCombo?, textShortcut: KeyCombo?, pinShortcut: KeyCombo?,
-                copyToClipboard: Bool, saveToDesktop: Bool) {
-        self.regionShortcut = regionShortcut
+    public init(textShortcut: KeyCombo?, pinShortcut: KeyCombo?, copyToClipboard: Bool, saveToDesktop: Bool) {
         self.textShortcut = textShortcut
         self.pinShortcut = pinShortcut
         self.copyToClipboard = copyToClipboard
@@ -18,19 +16,17 @@ public struct CaptureSettings: ModuleSettings {
     }
 
     public static let `default` = CaptureSettings(
-        regionShortcut: KeyCombo(keyCode: 0x14, modifiers: [.control, .option, .shift]), // ⌃⌥⇧3
         textShortcut: KeyCombo(keyCode: 0x15, modifiers: [.control, .option, .shift]),   // ⌃⌥⇧4
         pinShortcut: KeyCombo(keyCode: 0x17, modifiers: [.control, .option, .shift]),    // ⌃⌥⇧5
         copyToClipboard: true,
         saveToDesktop: false
     )
 
-    enum CodingKeys: String, CodingKey { case regionShortcut, textShortcut, pinShortcut, copyToClipboard, saveToDesktop }
+    enum CodingKeys: String, CodingKey { case textShortcut, pinShortcut, copyToClipboard, saveToDesktop }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         let d = Self.default
-        regionShortcut = c.contains(.regionShortcut) ? c.value(.regionShortcut, or: nil) : d.regionShortcut
         textShortcut = c.contains(.textShortcut) ? c.value(.textShortcut, or: nil) : d.textShortcut
         pinShortcut = c.contains(.pinShortcut) ? c.value(.pinShortcut, or: nil) : d.pinShortcut
         copyToClipboard = c.value(.copyToClipboard, or: d.copyToClipboard)
@@ -39,7 +35,6 @@ public struct CaptureSettings: ModuleSettings {
 
     public func encode(to encoder: Encoder) throws {
         var c = encoder.container(keyedBy: CodingKeys.self)
-        try c.encode(regionShortcut, forKey: .regionShortcut)
         try c.encode(textShortcut, forKey: .textShortcut)
         try c.encode(pinShortcut, forKey: .pinShortcut)
         try c.encode(copyToClipboard, forKey: .copyToClipboard)

@@ -175,16 +175,15 @@
 "uninstall.another" = "Desinstalar otra app";
 
 /* Capture / Captura */
-"module.capture.title" = "Capture — capturas y texto";
-"module.capture.summary" = "Captura una región al portapapeles, copia el texto que contiene (OCR) o déjala fijada en pantalla. Solo a demanda.";
-"capture.menu.region" = "Capturar región";
+"module.capture.title" = "Capture — texto y capturas fijadas";
+"module.capture.summary" = "Copia el texto de una región de la pantalla (OCR) o déjala fijada encima de todo. Solo a demanda.";
 "capture.menu.text" = "Copiar texto de una región";
 "capture.menu.pin" = "Capturar y fijar";
 "capture.menu.withShortcut" = "%1$@ (%2$@)";
 "capture.fileName" = "Captura %@";
 "settings.tab.capture" = "Captura";
 "capture.settings.shortcuts" = "Atajos";
-"capture.settings.output" = "Imágenes capturadas";
+"capture.settings.output" = "Capturas fijadas";
 "capture.settings.clipboard" = "Copiar al portapapeles";
 "capture.settings.desktop" = "Guardar un PNG en el Escritorio";
 "capture.settings.hint" = "Arrastra para elegir la región; Esc o clic derecho cancela. El reconocimiento de texto funciona sin conexión, en español e inglés. Una captura fijada se cierra con Esc o doble clic.";
@@ -208,16 +207,14 @@
 "monitor.battery.charging" = "cargando";
 "monitor.battery.full" = "cargada";
 "monitor.battery.plugged" = "enchufado";
-"monitor.battery.discharging" = "con batería";
+"monitor.battery.discharging" = "descargando";
 "monitor.power" = "Potencia";
 "monitor.remaining" = "Tiempo restante";
 "monitor.health" = "Salud";
 "monitor.cycles" = "Ciclos";
-"monitor.noBattery" = "Sin batería";
-"monitor.topEnergy" = "Más energía ahora";
+"monitor.topCPU" = "Apps que más CPU usan ahora";
 "monitor.measuring" = "Midiendo…";
 "monitor.wattsValue" = "%.1f W";
-"monitor.wattsPrecise" = "%.2f W";
 "monitor.percentValue" = "%ld %%";
 "monitor.countValue" = "%ld";
 "monitor.none" = "–";
@@ -349,3 +346,7 @@
 "awake.settings.noApps" = "Ninguna app elegida.";
 "awake.settings.remove" = "Quitar";
 "awake.settings.appsHint" = "Añádelas desde el menú: Despierto → Mientras esté abierta.";
+"capture.error.title" = "No se pudo capturar la pantalla";
+"capture.error.permission" = "Comprueba que Conde All In One tiene el permiso de Grabación de pantalla (Ajustes del Sistema → Privacidad y seguridad). Si acabas de darlo, sal de la app y vuelve a abrirla.";
+"capture.noText.title" = "No se ha encontrado texto";
+"capture.noText.message" = "La zona no tiene texto legible. El portapapeles no ha cambiado.";

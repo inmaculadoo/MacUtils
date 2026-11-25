@@ -125,7 +125,8 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 
 ### Monitor (activado por defecto)
 - [ ] *(0.4.0)* Fila GPU: uso en % y memoria en uso; sube al reproducir un vídeo o mover ventanas.
-- [x] Menú → «Monitor»: CPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Más energía ahora». Los valores se actualizan cada segundo mientras está abierto.
+- [x] Menú → «Monitor»: CPU, GPU, memoria, presión, red, batería (%, estado, W, tiempo, salud, ciclos) y «Apps que más CPU usan ahora». Los valores se actualizan cada segundo mientras está abierto.
+- [x] *(0.4.1)* El panel se ve entero desde que se abre (no se corta por arriba al llegar los datos), la potencia sale sin signo y la lista de apps tiene valores reales.
 - [x] Con el submenú cerrado, `top` muestra 0,0 % de CPU (no sigue midiendo).
 - [x] Comprueba que los valores cuadran aproximadamente con Monitor de Actividad e Información del sistema → Energía. *(%, W, ciclos y salud frente a `pmset`/`ioreg`; un proceso al 100 % sale con ~6 W)*
 - [x] Ajustes → Monitor → «Mostrar CPU y RAM en la barra»: aparece el texto y se actualiza cada ~10 s. Al desactivarlo, desaparece.
@@ -150,9 +151,9 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Batería: la zona del notch la vigila el sistema (tracking area), no la app.
 
 ### Capture (desactivado por defecto; necesita Grabación de pantalla)
-- [x] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan.
-- [x] Con «Guardar un PNG en el Escritorio»: aparece «Captura <fecha>.png».
-- [x] ⌃⌥⇧4 sobre texto en español y en inglés: el texto queda en el portapapeles en orden de lectura.
+- [x] ⌃⌥⇧4: oscurece la pantalla, arrastras una región con texto en español o inglés y el texto queda en el portapapeles en orden de lectura. Esc o clic derecho cancelan.
+- [ ] *(0.4.1)* ⌃⌥⇧4 sobre una zona sin texto: sale «No se ha encontrado texto» y el portapapeles no cambia.
+- [ ] Con «Guardar un PNG en el Escritorio», ⌃⌥⇧5 también guarda «Captura <fecha>.png».
 - [ ] ⌃⌥⇧5: la captura queda flotando; se mueve arrastrando y se cierra con Esc o doble clic. *(aparece en su sitio y se cierra con clic + Esc y con doble clic; falta moverla arrastrando)*
 - [ ] Con dos pantallas, captura una región de la externa.
 - [ ] Tras capturar, la app que tenías delante sigue activa.

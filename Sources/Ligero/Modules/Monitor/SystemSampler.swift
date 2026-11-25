@@ -86,14 +86,21 @@ enum SystemSampler {
         return result
     }
 
-    /// Energy of every process we can read (`proc_pid_rusage`). Uses
-    /// `ri_energy_nj`: `ri_billed_energy` stays at 0 on recent macOS.
-    static func energy() -> [ProcessEnergySample] {
+    /// Mach time → nanoseconds (125/3 on Apple Silicon).
+    private static let timebase: (numer: UInt64, denom: UInt64) = {
+        var tb = mach_timebase_info_data_t()
+        mach_timebase_info(&tb)
+        return (UInt64(tb.numer), UInt64(max(tb.denom, 1)))
+    }()
+
+    /// CPU time of every process we can read (`proc_pid_rusage`). The energy
+    /// counters there stay at ~0 for nearly every process on macOS 27.
+    static func processes() -> [ProcessCPUSample] {
         let capacity = 4096
         var pids = [pid_t](repeating: 0, count: capacity)
         let n = pids.withUnsafeMutableBytes { proc_listallpids($0.baseAddress, Int32($0.count)) }
         guard n > 0 else { return [] }
-        var samples: [ProcessEnergySample] = []
+        var samples: [ProcessCPUSample] = []
         samples.reserveCapacity(Int(n))
         var nameBuffer = [CChar](repeating: 0, count: 256)
         for pid in pids.prefix(Int(n)) where pid > 0 {
@@ -106,7 +113,9 @@ enum SystemSampler {
             guard ok == 0 else { continue }
             let len = proc_name(pid, &nameBuffer, UInt32(nameBuffer.count))
             let name = len > 0 ? nameBuffer.withUnsafeBufferPointer { String(cString: $0.baseAddress!) } : String(pid)
-            samples.append(ProcessEnergySample(pid: pid, name: name, energy: info.ri_energy_nj))
+            let ticks = info.ri_user_time &+ info.ri_system_time
+            let ns = ticks.multipliedReportingOverflow(by: timebase.numer).partialValue / timebase.denom
+            samples.append(ProcessCPUSample(pid: pid, name: name, cpuNanoseconds: ns))
         }
         return samples
     }

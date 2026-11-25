@@ -14,7 +14,6 @@ struct CaptureSettingsView: View {
     var body: some View {
         Form {
             Section(L("capture.settings.shortcuts")) {
-                row("capture.menu.region", id: "capture.region", combo: settings.regionShortcut) { c in update { $0.regionShortcut = c } }
                 row("capture.menu.text", id: "capture.text", combo: settings.textShortcut) { c in update { $0.textShortcut = c } }
                 row("capture.menu.pin", id: "capture.pin", combo: settings.pinShortcut) { c in update { $0.pinShortcut = c } }
             }

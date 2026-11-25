@@ -52,7 +52,7 @@ final class MonitorModel: ObservableObject {
     @Published var battery: BatteryInfo?
     @Published var down: Double?
     @Published var up: Double?
-    @Published var topEnergy: [EnergyUser] = []
+    @Published var topCPU: [CPUUser] = []
 }
 
 /// Builds the Monitor submenu and samples while it is open.
@@ -62,7 +62,7 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
     private var timer: Timer?
     private var lastCPU: [CPUTicks] = []
     private var lastNet: [String: NetworkCounters] = [:]
-    private var lastEnergy: [ProcessEnergySample] = []
+    private var lastProcesses: [ProcessCPUSample] = []
     private var lastTime: Date?
 
     func makeMenuItem() -> NSMenuItem {
@@ -103,7 +103,7 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
         timer = nil
         lastCPU = []
         lastNet = [:]
-        lastEnergy = []
+        lastProcesses = []
         lastTime = nil
     }
 
@@ -112,13 +112,13 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
         let dt = lastTime.map { now.timeIntervalSince($0) } ?? 0
         let cpu = SystemSampler.cpuTicks()
         let net = SystemSampler.network()
-        let energy = SystemSampler.energy()
+        let processes = SystemSampler.processes()
         if !lastCPU.isEmpty { model.cpu = CPUUsage.between(lastCPU, cpu).total }
         if dt > 0 {
             let rate = NetworkCounters.rate(from: lastNet, to: net, seconds: dt)
             model.down = rate.down
             model.up = rate.up
-            model.topEnergy = EnergyRanking.top(lastEnergy, energy, seconds: dt).map { user in
+            model.topCPU = CPURanking.top(lastProcesses, processes, seconds: dt).map { user in
                 var u = user
                 if let app = NSRunningApplication(processIdentifier: user.pid), let name = app.localizedName { u.name = name }
                 return u
@@ -129,7 +129,7 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
         model.battery = SystemSampler.battery()
         lastCPU = cpu
         lastNet = net
-        lastEnergy = energy
+        lastProcesses = processes
         lastTime = now
     }
 }
@@ -137,37 +137,40 @@ final class MonitorPanelController: NSObject, NSMenuDelegate {
 struct MonitorView: View {
     @ObservedObject var model: MonitorModel
 
+    /// Rows in the "top apps" list. Always this many, so the panel has the
+    /// same height from the first frame (the menu sizes it once, when it
+    /// opens; content that grows later was clipped at the top).
+    static let topRows = 5
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             row(L("monitor.cpu"), model.cpu.map { percent($0) })
             row(L("monitor.gpu"), model.gpu.map { g in
                 g.memoryInUse.map { L("monitor.gpuValue", percent(g.utilization), bytes($0)) } ?? percent(g.utilization)
             })
-            if let m = model.memory {
-                row(L("monitor.memory"), L("monitor.memoryValue", bytes(m.used), bytes(m.total)))
-                row(L("monitor.pressure"), L(pressureKey(m.pressure)))
-            }
+            row(L("monitor.memory"), model.memory.map { L("monitor.memoryValue", bytes($0.used), bytes($0.total)) })
+            row(L("monitor.pressure"), model.memory.map { L(pressureKey($0.pressure)) })
             row(L("monitor.network"), model.down.map { d in L("monitor.networkValue", rate(d), rate(model.up ?? 0)) })
             Divider()
-            if let b = model.battery {
-                row(L("monitor.battery"), L("monitor.batteryValue", b.percent, batteryState(b)))
-                if let w = b.watts { row(L("monitor.power"), L("monitor.wattsValue", w)) }
-                if let m = b.minutesRemaining { row(L("monitor.remaining"), BatteryInfo.hoursMinutes(m)) }
-                if let h = b.health { row(L("monitor.health"), L("monitor.percentValue", h)) }
-                if let c = b.cycleCount { row(L("monitor.cycles"), L("monitor.countValue", c)) }
-            } else {
-                Text(L("monitor.noBattery")).foregroundStyle(.secondary)
-            }
+            let b = model.battery
+            row(L("monitor.battery"), b.map { L("monitor.batteryValue", $0.percent, batteryState($0)) })
+            row(L("monitor.power"), b?.watts.map { L("monitor.wattsValue", abs($0)) })
+            row(L("monitor.remaining"), b?.minutesRemaining.map { BatteryInfo.hoursMinutes($0) })
+            row(L("monitor.health"), b?.health.map { L("monitor.percentValue", $0) })
+            row(L("monitor.cycles"), b?.cycleCount.map { L("monitor.countValue", $0) })
             Divider()
-            Text(L("monitor.topEnergy")).font(.caption.weight(.semibold))
-            if model.topEnergy.isEmpty {
-                Text(L("monitor.measuring")).font(.caption).foregroundStyle(.secondary)
-            }
-            ForEach(model.topEnergy, id: \.pid) { u in
+            Text(L("monitor.topCPU")).font(.caption.weight(.semibold))
+            ForEach(0..<Self.topRows, id: \.self) { i in
                 HStack {
-                    Text(u.name).lineLimit(1)
-                    Spacer()
-                    Text(L("monitor.wattsPrecise", u.watts)).monospacedDigit().foregroundStyle(.secondary)
+                    if i < model.topCPU.count {
+                        let u = model.topCPU[i]
+                        Text(u.name).lineLimit(1)
+                        Spacer()
+                        Text(L("monitor.percentValue", Int((u.cores * 100).rounded()))).monospacedDigit().foregroundStyle(.secondary)
+                    } else {
+                        Text(i == 0 ? L("monitor.measuring") : " ").foregroundStyle(.secondary)
+                        Spacer()
+                    }
                 }
                 .font(.caption)
             }

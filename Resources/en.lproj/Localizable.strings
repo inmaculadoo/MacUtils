@@ -175,16 +175,15 @@
 "uninstall.another" = "Uninstall Another App";
 
 /* Capture / Captura */
-"module.capture.title" = "Capture — screenshots and text";
-"module.capture.summary" = "Capture a region to the clipboard, copy the text in it (OCR) or pin it on screen. Only on demand.";
-"capture.menu.region" = "Capture Region";
+"module.capture.title" = "Capture — text and pinned captures";
+"module.capture.summary" = "Copy the text in a region of the screen (OCR) or pin it on top of everything. Only on demand.";
 "capture.menu.text" = "Copy Text from Region";
 "capture.menu.pin" = "Capture and Pin";
 "capture.menu.withShortcut" = "%1$@ (%2$@)";
 "capture.fileName" = "Screenshot %@";
 "settings.tab.capture" = "Capture";
 "capture.settings.shortcuts" = "Shortcuts";
-"capture.settings.output" = "Captured images";
+"capture.settings.output" = "Pinned captures";
 "capture.settings.clipboard" = "Copy to the clipboard";
 "capture.settings.desktop" = "Save a PNG on the Desktop";
 "capture.settings.hint" = "Drag to select a region; Esc or a right click cancels. Text recognition works offline, in Spanish and English. A pinned capture closes with Esc or a double click.";
@@ -208,16 +207,14 @@
 "monitor.battery.charging" = "charging";
 "monitor.battery.full" = "charged";
 "monitor.battery.plugged" = "plugged in";
-"monitor.battery.discharging" = "on battery";
+"monitor.battery.discharging" = "discharging";
 "monitor.power" = "Power";
 "monitor.remaining" = "Time remaining";
 "monitor.health" = "Health";
 "monitor.cycles" = "Cycles";
-"monitor.noBattery" = "No battery";
-"monitor.topEnergy" = "Using most energy";
+"monitor.topCPU" = "Apps using the most CPU now";
 "monitor.measuring" = "Measuring…";
 "monitor.wattsValue" = "%.1f W";
-"monitor.wattsPrecise" = "%.2f W";
 "monitor.percentValue" = "%ld %%";
 "monitor.countValue" = "%ld";
 "monitor.none" = "–";
@@ -349,3 +346,7 @@
 "awake.settings.noApps" = "No apps chosen.";
 "awake.settings.remove" = "Remove";
 "awake.settings.appsHint" = "Add them from the menu: Awake → While Open.";
+"capture.error.title" = "The screen could not be captured";
+"capture.error.permission" = "Check that Conde All In One has the Screen Recording permission (System Settings → Privacy & Security). If you just granted it, quit the app and open it again.";
+"capture.noText.title" = "No text found";
+"capture.noText.message" = "The region has no readable text. The clipboard was not changed.";
