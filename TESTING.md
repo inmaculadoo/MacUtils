@@ -55,6 +55,9 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido el 2
 | Audio | todo al 100 % (0 taps) **y** con una app al 50 % sonando | | | |
 | Ribbon | modo apagado **y** modo encendido sin tocar nada | 0,00 % (apagado) | 0,03/s (apagado) | 12 MB · *encendido: pendiente* |
 | **Todos los estables a la vez** | en reposo | 0,00 % | 0,02/s | 42 MB (con Ajustes abiertos, ver Downloads) |
+| **Los 12 módulos, 20 min** *(25-11, 0.3.5)* | en reposo, batería | 0,007 % de media (3 de 599 muestras > 0; máx. 3,4 %) | 0,011/s | 49 MB (24 MB sin abrir Ajustes) |
+
+> **25-11, 20 min con los 12 módulos activos (0.3.5, a batería):** energía del proceso (`proc_pid_rusage`, `ri_energy_nj`) 30 mJ en 1241 s, es decir **≈ 0,02 mW de media**: nada medible en la autonomía. CPU total 98 ms en 20 min. Despertares: 13 del paquete en reposo + 27 de interrupción en todo el rato (≈ 0,03/s). La RAM sube a 49 MB solo porque Downloads abre Ajustes para pedir la vista previa: la ventana se cierra pero esos ~25 MB no vuelven al sistema (con los otros 11 módulos y sin abrir Ajustes: 24 MB). Pendiente: que la ventana de Ajustes devuelva esa memoria al cerrarse.
 
 ---
 
