@@ -36,11 +36,11 @@
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string>Ligero sorts finished downloads into folders by type. It never deletes files.</string>
+	<string>Conde All In One sorts finished downloads into folders by type. It never deletes files.</string>
 	<key>NSDesktopFolderUsageDescription</key>
-	<string>Ligero saves screenshots to the Desktop when you ask it to.</string>
+	<string>Conde All In One saves screenshots to the Desktop when you ask it to.</string>
 	<key>NSAudioCaptureUsageDescription</key>
-	<string>Ligero changes the volume and output of individual apps. Audio is processed live and never recorded.</string>
+	<string>Conde All In One changes the volume and output of individual apps. Audio is processed live and never recorded.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

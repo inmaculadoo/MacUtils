@@ -1,6 +1,6 @@
-# Ligero
+# Conde All In One
 
-Utilidad personal de barra de menús para macOS. Ver `SPEC.md`.
+Utilidad de barra de menús para macOS que reúne en una sola app el encaje de ventanas, el scroll del ratón, el orden de Descargas, una bandeja de arrastre, un desinstalador, capturas con OCR, un monitor del sistema, mantener el Mac despierto y módulos experimentales (selector de ventanas, vistas previas del Dock, volumen por app y ventanas en tira). La prioridad es la batería: sin polling, solo eventos del sistema. El diseño está en `SPEC.md` y los cambios en `CHANGELOG.md`.
 
 ## Primera vez en el Mac (una sola vez)
 1. Instala Xcode desde la App Store, ábrelo una vez y acepta la licencia.

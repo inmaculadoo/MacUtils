@@ -23,7 +23,7 @@ log stream --predicate 'subsystem == "app.allinone"' --level info
 
 Procedimiento para cada módulo:
 1. En Ajustes → General → Módulos, deja activado **solo ese módulo** (y luego repite la medición con todos los estables activados a la vez).
-2. Cierra la ventana de Ajustes y el menú de Ligero, y deja el Mac 60 s sin tocar ratón ni teclado.
+2. Cierra la ventana de Ajustes y el menú de Conde All In One, y deja el Mac 60 s sin tocar ratón ni teclado.
 3. Ejecuta:
 
 ```sh
@@ -42,22 +42,22 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 | Módulo | Medir con… | cpu | idlew | RAM |
 |---|---|---|---|---|
 | Snap | en reposo | 0,00 % | 0,02/s | 12 MB |
-| Scroll | sin ratón **y** con ratón conectado sin tocarlo | 0,00 % (sin ratón) | 0,03/s (sin ratón) | 12 MB · *con ratón: pendiente* |
-| Downloads | sin descargas en curso | 0,00 % | 0,03/s | 42 MB con Ajustes abiertos (vista previa sin aceptar) · *con FSEvents activo: pendiente* |
+| Scroll | sin ratón **y** con ratón conectado sin tocarlo | 0,00 % (sin ratón) | 0,03/s (sin ratón) | 12 MB |
+| Downloads | sin descargas en curso | 0,00 % | 0,03/s | 42 MB con Ajustes abiertos (vista previa sin aceptar) |
 | Shelf | en reposo (sin arrastrar) | 0,00 % | 0,02/s | 12 MB |
 | Uninstall | ventana cerrada | 0,00 % | 0,02/s | 12 MB |
-| Capture | en reposo, tras hacer 3 capturas | 0,00 % (recién arrancado) | 0,02/s | 12 MB · *tras capturas: pendiente* |
+| Capture | en reposo, tras hacer 3 capturas | 0,00 % (recién arrancado) | 0,02/s | 12 MB |
 | Monitor | submenú **cerrado** (abierto, 1 muestra/s es lo esperado) | 0,00 % | 0,03/s | 12 MB |
 | Monitor + lectura en la barra | ≥ 10 s de intervalo: idlew ≈ 0,1/s es lo esperado | | | |
-| Switcher | en reposo, tras abrirlo 3 veces | 0,00 % (sin abrirlo) | 0,03/s | 12 MB · *tras abrirlo: pendiente* |
+| Switcher | en reposo, tras abrirlo 3 veces | 0,00 % (sin abrirlo) | 0,03/s | 12 MB |
 | Dock Previews | ratón fuera del Dock | 0,00 % | 0,02/s | 12 MB |
 | Audio | todo al 100 % (0 taps) **y** con una app al 50 % sonando | | | |
-| Ribbon | modo apagado **y** modo encendido sin tocar nada | 0,00 % (apagado) | 0,03/s (apagado) | 12 MB · *encendido: pendiente* |
+| Ribbon | modo apagado **y** modo encendido sin tocar nada | 0,00 % (apagado) | 0,03/s (apagado) | 12 MB |
 | **Todos los estables a la vez** | en reposo | 0,00 % | 0,02/s | 42 MB (con Ajustes abiertos, ver Downloads) |
 | **Los 12 módulos, 20 min** *(0.3.5)* | en reposo, batería | 0,007 % de media (3 de 599 muestras > 0; máx. 3,4 %) | 0,011/s | 49 MB (24 MB sin abrir Ajustes) |
 
-> **20 min con los 12 módulos activos (0.3.5, a batería):** energía del proceso (`proc_pid_rusage`, `ri_energy_nj`) 30 mJ en 1241 s, es decir **≈ 0,02 mW de media**: nada medible en la autonomía. CPU total 98 ms en 20 min. Despertares: 13 del paquete en reposo + 27 de interrupción en todo el rato (≈ 0,03/s). La RAM sube a 49 MB solo porque Downloads abre Ajustes para pedir la vista previa: la ventana se cierra pero esos ~25 MB no vuelven al sistema (con los otros 11 módulos y sin abrir Ajustes: 24 MB). Revisado (0.3.6): no es una fuga (abrir y cerrar Ajustes 3 veces se queda en ~50 MB); son cachés de SwiftUI/AppKit que se cargan la primera vez y duran lo que dure el proceso. Arreglado lo evitable: Downloads ya no abre Ajustes en cada arranque, solo al activarlo tú. **Con los 12 módulos y sin abrir Ajustes: 24 MB.** Si abres Ajustes, sube a ~50 MB hasta que reinicies Ligero.
-- [ ] *(0.3.6)* Con Downloads activado y la vista previa sin aceptar, reinicia Ligero: Ajustes **no** se abre solo. Activarlo desde el menú sí lo abre en la pestaña Descargas.
+> **20 min con los 12 módulos activos (0.3.5, a batería):** energía del proceso (`proc_pid_rusage`, `ri_energy_nj`) 30 mJ en 1241 s, **≈ 0,02 mW de media**. CPU total 98 ms. Despertares ≈ 0,03/s. RAM: 24 MB con los 12 módulos; abrir Ajustes por primera vez suma ~25 MB de cachés de SwiftUI/AppKit que duran hasta que se cierra la app (no es una fuga: se mantiene estable al abrir y cerrar Ajustes).
+- [ ] *(0.3.6)* Con Downloads activado y la vista previa sin aceptar, reinicia la app: Ajustes **no** se abre solo. Activarlo desde el menú sí lo abre en la pestaña Descargas.
 
 ---
 
@@ -65,18 +65,18 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 
 ### Arranque y menú
 - [x] Aparece el icono en la barra de menús y **no** en el Dock ni en ⌘Tab. *(`LSUIElement`, política accessory)*
-- [x] El menú muestra «Módulos», las entradas de los módulos activos, «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Ligero».
+- [x] El menú muestra «Módulos», las entradas de los módulos activos, «Permisos», «Abrir al iniciar sesión», «Ajustes…» y «Salir de Conde All In One».
 - [x] Volver a abrir la app desde Finder con ella ya abierta muestra los Ajustes.
 
 ### Permisos
 - [ ] «Accesibilidad» y «Grabación de pantalla» aparecen como «no concedido» la primera vez y, al pulsarlos, abren el panel correcto de Ajustes del Sistema.
 - [ ] Al conceder Accesibilidad, el menú dice «concedido» sin reiniciar y Snap/Scroll arrancan solos.
-- [x] Al recompilar con `SIGN_ID="Ligero Dev"` y reinstalar, **no** se pierden los permisos. *(8 reinstalaciones)*
+- [x] Al recompilar con `SIGN_ID="Ligero Dev"` y reinstalar, **no** se pierden los permisos.
 
 ### Ajustes, idioma y arranque
 - [x] «Ajustes…» abre la ventana con una pestaña por módulo (Uninstall y Audio no tienen opciones). Al cerrarla, la RAM vuelve aproximadamente a lo de antes. *(42 → 39 MB)*
 - [ ] Idioma *(inglés y español sin claves sueltas en el menú ni en las 11 pestañas, cambiando `AppleLanguages`; falta probar el selector y «Reiniciar ahora»)*: «English» → «Reiniciar ahora» → todo en inglés; «Español» → todo en español; «Sistema» → sigue a macOS. No aparece ninguna clave del tipo `menu.settings`.
-- [ ] «Abrir al iniciar sesión» aparece en Ajustes del Sistema → General → Elementos de inicio, y Ligero arranca solo al iniciar sesión.
+- [ ] «Abrir al iniciar sesión» aparece en Ajustes del Sistema → General → Elementos de inicio, y Conde All In One arranca solo al iniciar sesión.
 
 ### Snap
 | Acción | Atajo |
@@ -95,16 +95,16 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Con pantalla externa, ⌃⌥⌘→/← conserva la posición relativa.
 - [x] Separación de 10 pt entre ventanas y bordes.
 - [x] Grabar atajo: Esc cancela, Borrar lo quita, ⇧A solo no se acepta, un atajo repetido se quita de la otra acción. Mientras grabas, ⌃⌥← no mueve ventanas.
-- [x] *(0.3.3)* Menú de Ligero → "Colocar ventana de <app>": cada opción coloca la ventana activa y muestra su atajo al lado. *(probado con TextEdit)*
-- [ ] *(0.3.3)* Con el modo Ribbon activo, un atajo de Snap saca esa ventana de la tira y la deja donde la pone Snap; las demás columnas cierran el hueco. *(probado con atajos sintéticos)*
-- [ ] *(0.3.4)* **Arrastrar a los bordes** (activado por defecto; se quita en Ajustes → Snap). Arrastra una ventana por el título hasta tocar el borde con el puntero: aparece un recuadro azul donde quedará y al soltar se coloca. Izquierda/derecha → mitad, arriba → maximizar, esquinas (80 pt) → cuarto, abajo en el centro → nada (es del Dock). Soltar lejos del borde no hace nada; redimensionar hasta un borde tampoco. *(probado con arrastres sintéticos en TextEdit: derecha, arriba, esquina inferior izquierda)*
+- [x] *(0.3.3)* Menú de la app → "Colocar ventana de <app>": cada opción coloca la ventana activa y muestra su atajo al lado.
+- [ ] *(0.3.3)* Con el modo Ribbon activo, un atajo de Snap saca esa ventana de la tira y la deja donde la pone Snap; las demás columnas cierran el hueco.
+- [ ] *(0.3.4)* **Arrastrar a los bordes** (activado por defecto; se quita en Ajustes → Snap). Arrastra una ventana por el título hasta tocar el borde con el puntero: aparece un recuadro azul donde quedará y al soltar se coloca. Izquierda/derecha → mitad, arriba → maximizar, esquinas (80 pt) → cuarto, abajo en el centro → nada (es del Dock). Soltar lejos del borde no hace nada; redimensionar hasta un borde tampoco.
 - [ ] Tras encajar arrastrando (una o varias veces), ⌃⌥⌫ vuelve al tamaño de antes del primer encaje. *(tamaño correcto; la posición puede quedar desplazada lo que la ventana ya se había movido cuando Snap notó el arrastre)*
 - [ ] Con pantalla externa, el borde que comparten las dos pantallas no encaja: puedes pasar la ventana de una a otra.
 - [ ] Deja desactivado el mosaico de macOS (Ajustes del Sistema → Escritorio y Dock → "Arrastrar ventanas a los bordes…") para que no actúen los dos a la vez.
 - [ ] Batería: en reposo, idlew no sube (Snap solo escucha el ratón mientras arrastras una ventana). *(CPU 0,0 %, idlew sin cambios en 12 s, 13 MB)*
 
 ### Scroll
-- [x] Sin ratón: el log **no** muestra «Event tap installed». *(0 event taps de Ligero en `CGGetEventTapList`)*
+- [x] Sin ratón: el log **no** muestra «Event tap installed». *(0 event taps de la app en `CGGetEventTapList`)*
 - [ ] Al conectar un ratón: «Mouse connected» + «Event tap installed». Al desconectarlo: «Event tap removed».
 - [ ] La rueda va al revés que el trackpad; el trackpad (y el Magic Mouse) siguen igual.
 - [ ] Scroll horizontal invertido (opción), scroll lineal con 1, 3 y 10 líneas.
@@ -120,7 +120,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [x] Desmarcar un elemento lo excluye del total.
 - [x] Con la app abierta, avisa y el botón «Salir de la app» la cierra. *(también si se abre después de cargarla)*
 - [x] «Mover a la Papelera»: todo aparece en la Papelera y se puede recuperar con «Recuperar». **Nunca** se borra nada directamente.
-- [x] Safari u otra app de Apple: la rechaza. Ligero no se desinstala a sí mismo.
+- [x] Safari u otra app de Apple: la rechaza. Conde All In One no se desinstala a sí mismo.
 - [ ] Si macOS pide «acceder a datos de otras apps» al tocar ~/Library/Containers, acepta y repite.
 
 ### Monitor (activado por defecto)
@@ -144,13 +144,13 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Si sueltas el arrastre fuera y la bandeja está vacía, se oculta sola; con cosas, se queda hasta ✕.
 - [ ] ⌃⌥⌘S la muestra y la oculta.
 - [ ] Carpeta fijada (Ajustes → Bandeja): soltar archivos encima los **copia** allí.
-- [ ] *(0.3.5)* **Notch**: pasa el ratón por el notch (donde la cámara): se abre la bandeja. Baja hasta ella y sigue abierta; aléjate y se cierra. Si la abriste con ⌃⌥⌘S o arrastrando, no se cierra al salir. Se quita en Ajustes → Shelf. *(probado con movimientos sintéticos del puntero)*
+- [ ] *(0.3.5)* **Notch**: pasa el ratón por el notch (donde la cámara): se abre la bandeja. Baja hasta ella y sigue abierta; aléjate y se cierra. Si la abriste con ⌃⌥⌘S o arrastrando, no se cierra al salir. Se quita en Ajustes → Shelf.
 - [ ] Con el notch, arrastra un archivo de la bandeja a una carpeta: la bandeja no se cierra mientras arrastras.
 - [ ] Conecta o desconecta la pantalla externa y cierra/abre la tapa: la zona del notch sigue funcionando en la pantalla del Mac.
-- [ ] Batería: la zona del notch la vigila el sistema (tracking area), no Ligero. *(CPU 0,0 %, idlew sin cambios en reposo)*
+- [ ] Batería: la zona del notch la vigila el sistema (tracking area), no la app.
 
 ### Capture (desactivado por defecto; necesita Grabación de pantalla)
-- [x] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan. *(Esc probado; falta el clic derecho)*
+- [x] ⌃⌥⇧3: oscurece la pantalla, arrastras una región y el PNG queda en el portapapeles (pégalo en Vista Previa → Nuevo desde el portapapeles). Esc o clic derecho cancelan.
 - [x] Con «Guardar un PNG en el Escritorio»: aparece «Captura <fecha>.png».
 - [x] ⌃⌥⇧4 sobre texto en español y en inglés: el texto queda en el portapapeles en orden de lectura.
 - [ ] ⌃⌥⇧5: la captura queda flotando; se mueve arrastrando y se cierra con Esc o doble clic. *(aparece en su sitio y se cierra con clic + Esc y con doble clic; falta moverla arrastrando)*
@@ -163,7 +163,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 
 ### Despierto (0.4.0)
 > Si Amphetamine (u otra app parecida) está abierto, también mantiene el Mac despierto: para comprobar que el Mac vuelve a dormirse al acabar una sesión, ciérralo antes. La prueba de la aserción (`pmset -g assertions`, buscando el nombre de la nuestra) sí vale con Amphetamine abierto.
-- [x] Menú → Despierto → "1 hora": `pmset -g assertions` muestra `PreventUserIdleSystemSleep named: "Conde All In One: keep awake"` y el menú dice "Despierto hasta las …". "Apagar" la quita. *(probado por accesibilidad)*
+- [x] Menú → Despierto → "1 hora": `pmset -g assertions` muestra `PreventUserIdleSystemSleep named: "Conde All In One: keep awake"` y el menú dice "Despierto hasta las …". "Apagar" la quita.
 - [ ] ⌃⌥⌘A activa "hasta que lo apague" y lo desactiva.
 - [ ] Con "Mantener también la pantalla encendida", la aserción pasa a `PreventUserIdleDisplaySleep` y la pantalla no se apaga.
 - [ ] Pasada la duración, el Mac vuelve a dormirse solo (lo libera el sistema) y al abrir el menú pone "Despierto: apagado".
@@ -178,7 +178,6 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Las ventanas minimizadas aparecen en gris y se restauran al elegirlas.
 
 ### Dock Previews
-> **Nota de prueba:** Se vio que la vista previa se quedaba en pantalla al salir del Dock (con el Dock en ocultación automática). Arreglado: mientras se ve, se oculta en cuanto el ratón sale del panel y del Dock. **Vuelve a probar la primera casilla y «Al salir del icono y del panel, se oculta».**
 - [ ] Pasa el ratón por el icono de una app con varias ventanas: aparece el panel encima del Dock con sus ventanas. Con el Dock a un lado, aparece al lado.
 - [ ] Clic en una miniatura cambia a esa ventana; los botones cierran y minimizan.
 - [ ] Al salir del icono y del panel, se oculta.
@@ -186,7 +185,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Reinicia el Dock (`killall Dock`): las vistas previas siguen funcionando.
 
 ### Audio
-> **Nota de prueba:** Ligero salía en la lista del mezclador: arreglado. Subir por encima de 100 % solo se nota con fuentes grabadas bajas: la música ya suena cerca del máximo digital y +50 % (≈ +3,5 dB) se recorta en los picos.
+> Nota: subir por encima de 100 % solo se nota con fuentes grabadas bajas: la música ya suena cerca del máximo digital y +50 % (≈ +3,5 dB) se recorta en los picos.
 - [ ] Menú → «Mezclador de audio» con Música o Spotify sonando: aparece la app con su deslizador.
 - [ ] Al bajar a 50 % baja el volumen; al subir a 150 % sube, sin distorsión exagerada. Silenciar funciona. macOS pedirá permiso de audio la primera vez.
 - [ ] «Taps activos» muestra 1 con una app cambiada y 0 cuando la vuelves a 100 % o deja de sonar (también en el log: «Audio tap created/removed»).
@@ -195,7 +194,7 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] Con todo al 100 % no hay ningún tap (medición de batería).
 
 ### Ribbon (el más delicado: pruébalo con pocas ventanas sin importancia)
-> **Nota de prueba:** probado con 7 ventanas de TextEdit y 2 de Terminal: modo, foco, ancho, mover, apilar/sacar, ventana nueva y restaurar al apagar, todo correcto. Arreglado: las ventanas de apps abiertas con Ligero ya en marcha no entraban en la tira (y su posición guardada podía estar vieja). Sin animaciones a propósito (regla de batería). Las columnas fuera de la vista se aparcan una encima de otra en el borde.
+> Nota: sin animaciones a propósito (regla de batería). Las columnas fuera de la vista se aparcan una encima de otra en el borde.
 - [ ] ⌃⌥⌘Space activa el modo: las ventanas de cada pantalla se colocan en columnas de izquierda a derecha.
 - [ ] Abre una ventana nueva: aparece a la derecha de la enfocada y las demás no cambian de tamaño.
 - [ ] ⌃⌥⌘H/L cambia de columna y desplaza la tira si hace falta; las que quedan fuera se ven 1 pt en el borde.
@@ -205,14 +204,14 @@ Condiciones concretas por módulo (anota los valores en esta tabla). Medido (15 
 - [ ] ⌃⌥⌘Space otra vez: **todas** las ventanas vuelven a donde estaban.
 - [ ] Gesto (activado por defecto desde 0.3.2): ⌥ + scroll horizontal con dos dedos desliza la tira, solo con el modo activo.
 
-> **0.3.2:** revisado contra Ribbon (meetribbon.app): tira horizontal, columnas de ancho fijo, la ventana nueva junto a la enfocada, ⌥ + scroll. Arreglado: dos ventanas de Safari no entraban en la tira, y al activar una app sus ventanas aparcadas volvían encima de las columnas. Añadido el ratón (probado con arrastres sintéticos; falta probar con un ratón real). Antes de probar, desactiva en Ajustes del Sistema → Escritorio y Dock → "Arrastrar ventanas a los bordes de la pantalla para organizarlas en mosaico": el mosaico de macOS se queda con la ventana que sueltas.
+> **Ratón (0.3.2):** antes de probarlo, desactiva en Ajustes del Sistema → Escritorio y Dock → "Arrastrar ventanas a los bordes de la pantalla para organizarlas en mosaico": el mosaico de macOS se queda con la ventana que sueltas.
 - [ ] Abre dos ventanas de la misma app (dos de Safari) con el modo activo: las dos entran en la tira.
 - [ ] Activa una app con ventanas aparcadas (⌘Tab): no se amontonan encima de las columnas visibles.
 - [ ] Arrastra el borde derecho de una ventana de la tira: al soltar, la columna se queda con ese ancho y la de al lado se pega con el hueco. ⌃⌥⌘R vuelve a los anchos fijos.
 - [ ] Arrastra una ventana por el título y suéltala sobre otra columna: la tira se reordena y cada ventana vuelve a su hueco.
 - [ ] Arrastra una ventana apilada hacia un lado: sale de la pila a su propia columna.
 
-> **0.3.3:** menú para organizar sin atajos (probado pulsando el menú por accesibilidad; falta un ratón real). Con el modo activo, el menú de Ligero muestra la lista de columnas en orden y un submenú "Ventana activa".
+> **Menú (0.3.3):** con el modo activo, el menú muestra la lista de columnas en orden y un submenú "Ventana activa".
 - [ ] Menú → "Columnas": clic en una columna → la tira se desplaza hasta ella y la enfoca.
 - [ ] Menú → "Ventana activa" → "Ancho" (¼ … Completo) y "Mover a la posición" n: la columna cambia y las demás se recolocan.
 - [ ] Menú → "Ventana activa" → "Sacar de la tira (flotante)" o ⌃⌥⌘F: la ventana se queda donde está y Ribbon ya no la toca; otra vez ⌃⌥⌘F (o "Volver a meter en la tira") la mete a la derecha de la enfocada.

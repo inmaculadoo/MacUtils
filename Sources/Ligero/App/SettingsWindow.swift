@@ -272,7 +272,7 @@ struct PermissionRow: View {
     }
 }
 
-/// Small "Experimental" capsule shown next to Block B modules.
+/// Small "Experimental" capsule shown next to experimental modules.
 struct ExperimentalBadge: View {
     var body: some View {
         Text(L("settings.experimental"))

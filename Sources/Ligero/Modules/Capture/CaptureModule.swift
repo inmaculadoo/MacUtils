@@ -5,7 +5,7 @@ import Vision
 
 /// Region capture → PNG, region → OCR text, and floating pins (SPEC §4.9).
 /// Works only on demand: idle it only holds Carbon hotkeys. Captures use
-/// `SCScreenshotManager` one-shot; there is never an `SCStream` (rule 3).
+/// `SCScreenshotManager` one-shot; there is never an `SCStream`.
 @MainActor
 final class CaptureModule: LigeroModule, MenuContributing {
     static let id = "capture"

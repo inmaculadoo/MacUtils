@@ -1,6 +1,6 @@
-# Ligero — SPEC
+# Conde All In One — SPEC
 
-App de barra de menús para macOS, de uso personal, que reúne en una sola app las funciones de Rectangle, AltTab/DockDoor, Ice, SoundSource, Mac Mouse Fix, FileOS (Drop Shelf + orden de Descargas), AppCleaner, Shottr/TextSniper, Stats y Ribbon.
+App de barra de menús para macOS que reúne en una sola app las funciones de Rectangle, AltTab/DockDoor, Ice, SoundSource, Mac Mouse Fix, FileOS (Drop Shelf + orden de Descargas), AppCleaner, Shottr/TextSniper, Stats y Ribbon.
 
 **Objetivo número uno: batería.** Si una función no se puede hacer sin gastar batería en reposo, se hace a demanda o no se hace.
 
@@ -46,7 +46,7 @@ Un módulo que no cumpla este presupuesto no se fusiona en `main`.
 4. **La UI se crea bajo demanda.** El menú de la barra es un `NSMenu`, más barato que un popover SwiftUI. La ventana de ajustes (SwiftUI) se crea al abrirse y se libera al cerrarse. Los paneles (switcher, shelf) se crean una vez y se ocultan, nunca se destruyen y recrean en bucle.
 5. **Cero red y cero dependencias de terceros.** Nada de Sparkle, analíticas ni SPM externos. Solo frameworks de Apple.
 6. **Capturas solo a demanda.** ScreenCaptureKit se usa en modo one-shot (`SCScreenshotManager`). Prohibido mantener un `SCStream` abierto.
-7. **Bilingüe (es + en) desde el primer commit.** No hay ni un texto visible escrito a mano en el código. Todo pasa por `String(localized:bundle: .module)` / `LocalizedStringKey`, con `Resources/es.lproj/Localizable.strings` y `Resources/en.lproj/Localizable.strings` (`defaultLocalization: "en"` en `Package.swift`). Se usan `.strings` clásicos y no `.xcstrings`, para que compile igual con `swift build` y con `bundle.sh` sin depender de Xcode. Por defecto, el idioma sigue al sistema. En Ajustes hay un selector "Sistema / Español / English" que escribe `AppleLanguages` para la app y pide reiniciarla. Coste en ejecución: 0.
+7. **Bilingüe (es + en) desde el primer commit.** No hay ni un texto visible escrito a mano en el código. Todo pasa por `L(...)` (`Bundle.main.localizedString`), con `Resources/es.lproj/Localizable.strings` y `Resources/en.lproj/Localizable.strings` (`defaultLocalization: "en"` en `Package.swift`). Se usan `.strings` clásicos y no `.xcstrings`, para que compile igual con `swift build` y con `bundle.sh` sin depender de Xcode. Por defecto, el idioma sigue al sistema. En Ajustes hay un selector "Sistema / Español / English" que escribe `AppleLanguages` para la app y pide reiniciarla. Coste en ejecución: 0.
 8. **Lógica pura separada.** El target `LigeroCore` no importa AppKit. Contiene la matemática de layouts, el motor de reglas de Descargas, el parser de ajustes, etc. Tiene tests con `swift test` que corren también en Linux.
 
 ## 3. Estructura
@@ -130,7 +130,7 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
   - CPU con `host_processor_info`, GPU con IOKit (`IOAccelerator` → `PerformanceStatistics`), memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
   - **Solo muestrea mientras el panel está abierto** (cada 1 s; es la única excepción al "no timers").
   - Lectura en la barra de menús: opcional y desactivada por defecto. Si se activa, cada ≥ 10 s con `tolerance` del 50 %.
-  - Temperaturas por SMC: desactivadas por defecto.
+  - Temperaturas por SMC: no implementadas (ver CHANGELOG).
 
 ### 4.11 Audio — volumen y salida por app (tipo SoundSource)
 - Mezclador: un deslizador por app que esté sonando, de 0 a 150 %, más silenciar.
@@ -145,7 +145,7 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Por pantalla, las ventanas forman una fila de columnas. Cada columna tiene ancho fijo (¼, ⅓, ½, ⅔, ¾, completo).
 - Una ventana nueva se abre a la derecha de la enfocada, y las demás no cambian de tamaño.
 - Atajos: enfocar columna izquierda o derecha, mover columna, cambiar ancho cíclicamente, apilar en la columna de la izquierda, enviar a la siguiente pantalla.
-- Gesto opcional: ⌥ + scroll horizontal de dos dedos desliza la tira. Usa el tap del módulo Scroll **solo si Ribbon está activo**.
+- Gesto opcional: ⌥ + scroll horizontal de dos dedos desliza la tira. Usa su propio event tap, que existe **solo mientras el modo Ribbon está activo**.
 - Mecanismo:
   - Modelo de la tira (columnas, anchos, desplazamiento) en `LigeroCore` con tests.
   - Al desplazar, se recolocan con AX solo las ventanas cuya posición cambia. Las que quedan fuera se aparcan en el borde, como AeroSpace, dejando 1 px visible, porque macOS no deja sacar ventanas del todo de la pantalla.

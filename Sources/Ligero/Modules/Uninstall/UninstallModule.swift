@@ -6,7 +6,7 @@ import UniformTypeIdentifiers
 /// AppCleaner-style uninstaller (SPEC §4.8). Works only on demand: the
 /// module registers nothing; it adds a menu entry that opens a window, and
 /// the window is released when it closes. Everything goes to the Trash with
-/// `FileManager.trashItem`, never `rm` (CLAUDE.md rule 7).
+/// `FileManager.trashItem`, never `rm`.
 @MainActor
 final class UninstallModule: LigeroModule, MenuContributing {
     static let id = "uninstall"

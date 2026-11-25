@@ -96,7 +96,7 @@
 /* Infrastructure / Infraestructura */
 "menu.module.experimental" = "%@ (experimental)";
 "settings.experimental" = "Experimental";
-"settings.experimental.help" = "Depende de comportamientos de macOS que solo se pueden comprobar en un Mac real. Desactivado por defecto.";
+"settings.experimental.help" = "Depende de comportamientos de macOS que pueden cambiar entre versiones. Desactivado por defecto.";
 "module.downloads.title" = "Descargas — orden automático";
 "module.downloads.summary" = "Mueve las descargas terminadas a carpetas por tipo. Nunca borra nada y cada movimiento se puede deshacer.";
 "downloads.folder.images" = "Imágenes";
@@ -224,7 +224,7 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Abre Monitor en el menú de Conde All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas (ver CHANGELOG).";
+"monitor.settings.panelHint" = "Abre Monitor en el menú de Conde All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas.";
 "monitor.settings.menuBar" = "Barra de menús";
 "monitor.settings.menuBarReading" = "Mostrar CPU y RAM en la barra de menús";
 "monitor.settings.interval" = "Actualizar cada %ld s";
@@ -236,7 +236,7 @@
 "switcher.noMatches" = "Ninguna ventana coincide";
 "switcher.hint" = "Escribe para buscar · ⌘W cerrar · ⌘M minimizar · ⌘Q salir de la app · Esc cancelar";
 "settings.tab.switcher" = "Switcher";
-"switcher.settings.experimentalHint" = "Depende del comportamiento de Accesibilidad, que hay que comprobar en el Mac.";
+"switcher.settings.experimentalHint" = "Depende del comportamiento de Accesibilidad, que puede cambiar entre versiones de macOS.";
 "switcher.settings.shortcuts" = "Atajos";
 "switcher.settings.open" = "Abrir / siguiente ventana";
 "switcher.settings.reverse" = "Ventana anterior";
@@ -296,7 +296,7 @@
 "ribbon.width.threeQuarters" = "¾";
 "ribbon.width.full" = "Completo";
 "settings.tab.ribbon" = "Ribbon";
-"ribbon.settings.experimentalHint" = "El módulo más difícil, a nivel de prototipo. Mueve ventanas de verdad: pruébalo primero con unas pocas sin importancia.";
+"ribbon.settings.experimentalHint" = "Experimental: mueve ventanas de verdad. Pruébalo primero con unas pocas sin importancia.";
 "ribbon.settings.shortcuts" = "Atajos";
 "ribbon.settings.layout" = "Disposición";
 "ribbon.settings.defaultWidth" = "Ancho de las columnas nuevas";

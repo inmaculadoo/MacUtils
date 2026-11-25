@@ -1,6 +1,6 @@
 /// Minimal parser for classic `Localizable.strings` files
 /// (`"key" = "value";` with `/* */` and `//` comments). Used by the tests that
-/// keep es.lproj and en.lproj in sync (CLAUDE.md, rule 9).
+/// keep es.lproj and en.lproj in sync.
 public enum StringsFile {
     public struct ParseError: Error, Equatable, CustomStringConvertible {
         public let line: Int

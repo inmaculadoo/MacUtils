@@ -146,7 +146,7 @@ final class ProcessTap {
         }
 
         let box = self.gain
-        // REAL-TIME: no allocation, no locks, no Swift concurrency (rule 8).
+        // REAL-TIME: no allocation, no locks, no Swift concurrency.
         // Only pointer arithmetic over the buffers CoreAudio hands us.
         let block: AudioDeviceIOBlock = { _, inputData, _, outputData, _ in
             let g = AudioDSP.gain(box.bits.load(ordering: .relaxed))

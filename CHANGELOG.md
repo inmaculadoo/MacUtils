@@ -11,8 +11,6 @@
   Accessibility, Screen Recording and Audio permissions must be granted again;
   settings can be carried over with `defaults export <old id> - | defaults
   import app.allinone -`.
-- The repository no longer contains personal details (owner, device, local
-  paths, session notes).
 
 ### Added
 - **Awake** module (SPEC §4.13, like Amphetamine): keep the Mac awake for
@@ -110,7 +108,7 @@
   re-tiling it. Turn off System Settings → Desktop & Dock → "Drag windows to
   screen edges to tile" while using Ribbon.
 
-## [0.3.1] — First run on the Mac (Apple Silicon, macOS 27.2, Xcode 27.2)
+## [0.3.1] — Fixes from hardware validation (macOS 27.2, Xcode 27.2)
 
 ### Fixed
 - **Snap**: windows with a minimum size (Safari ~574 pt, Discord 940×500) ended
@@ -159,7 +157,7 @@
 - The first value of the optional menu bar CPU reading is 0 % until the second
   sample (one interval later).
 
-## [0.3.0] — Fases 2–6: el resto del SPEC
+## [0.3.0] — Phases 2–6: the rest of the SPEC
 
 ### Added — stable (Block A)
 - **Downloads** (§4.3): FSEvents on ~/Downloads (2 s latency, top level only),

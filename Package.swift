@@ -33,7 +33,7 @@ products.append(.executable(name: "Ligero", targets: ["Ligero"]))
 let package = Package(
     name: "Ligero",
     // Localized strings live in Resources/<lang>.lproj and are copied into
-    // Ligero.app/Contents/Resources by scripts/bundle.sh (see SPEC §2.7).
+    // "Conde All In One.app"/Contents/Resources by scripts/bundle.sh (see SPEC §2.7).
     defaultLocalization: "en",
     platforms: [.macOS(.v15)],
     products: products,

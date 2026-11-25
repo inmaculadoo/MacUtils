@@ -8,7 +8,7 @@ import LigeroCore
 ///
 /// Cost model: IOHIDManager only reports devices being plugged in or removed.
 /// The CGEventTap exists only while an external mouse is connected and is
-/// removed as soon as the last one goes away (CLAUDE.md rule 5).
+/// removed as soon as the last one goes away.
 @MainActor
 final class ScrollModule: LigeroModule {
     static let id = "scroll"

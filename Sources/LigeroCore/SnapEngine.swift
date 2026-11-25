@@ -193,7 +193,7 @@ public enum SnapEngine {
 }
 
 /// Remembers the frame a window had before Ligero first snapped it, so that
-/// `.restore` can put it back (SPEC §4.1, "restaurar el tamaño anterior").
+/// `.restore` can put it back (SPEC §4.1, "restore the previous size").
 public struct RestoreHistory<Key: Hashable> {
     struct Entry {
         var original: LRect

@@ -1,4 +1,4 @@
-# CLAUDE.md — Ligero
+# CLAUDE.md — Conde All In One
 
 Lee `SPEC.md` antes de tocar nada. Esto es un resumen de las reglas que no se negocian, más el contexto de trabajo.
 

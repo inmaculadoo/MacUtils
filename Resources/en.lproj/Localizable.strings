@@ -96,7 +96,7 @@
 /* Infrastructure / Infraestructura */
 "menu.module.experimental" = "%@ (experimental)";
 "settings.experimental" = "Experimental";
-"settings.experimental.help" = "Depends on macOS behaviour that could only be checked on a real Mac. Off by default.";
+"settings.experimental.help" = "Relies on macOS behaviour that may change between releases. Off by default.";
 "module.downloads.title" = "Downloads — automatic sorting";
 "module.downloads.summary" = "Moves finished downloads into folders by type. Never deletes anything; every move can be undone.";
 "downloads.folder.images" = "Images";
@@ -224,7 +224,7 @@
 "monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
 "settings.tab.monitor" = "Monitor";
 "monitor.settings.panel" = "Panel";
-"monitor.settings.panelHint" = "Open Monitor in the Conde All In One menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown (see CHANGELOG).";
+"monitor.settings.panelHint" = "Open Monitor in the Conde All In One menu. It samples once per second only while it is open and stops as soon as the menu closes. Temperatures are not shown.";
 "monitor.settings.menuBar" = "Menu bar";
 "monitor.settings.menuBarReading" = "Show CPU and RAM in the menu bar";
 "monitor.settings.interval" = "Update every %ld s";
@@ -236,7 +236,7 @@
 "switcher.noMatches" = "No windows match";
 "switcher.hint" = "Type to search · ⌘W close · ⌘M minimize · ⌘Q quit app · Esc cancel";
 "settings.tab.switcher" = "Switcher";
-"switcher.settings.experimentalHint" = "Depends on Accessibility behaviour that must be checked on the Mac.";
+"switcher.settings.experimentalHint" = "Relies on Accessibility behaviour that may change between macOS releases.";
 "switcher.settings.shortcuts" = "Shortcuts";
 "switcher.settings.open" = "Open / next window";
 "switcher.settings.reverse" = "Previous window";
@@ -296,7 +296,7 @@
 "ribbon.width.threeQuarters" = "¾";
 "ribbon.width.full" = "Full";
 "settings.tab.ribbon" = "Ribbon";
-"ribbon.settings.experimentalHint" = "The hardest module: prototype quality. It moves real windows; test it with a few unimportant ones first.";
+"ribbon.settings.experimentalHint" = "Experimental: it moves real windows. Try it with a few unimportant ones first.";
 "ribbon.settings.shortcuts" = "Shortcuts";
 "ribbon.settings.layout" = "Layout";
 "ribbon.settings.defaultWidth" = "Width of new columns";

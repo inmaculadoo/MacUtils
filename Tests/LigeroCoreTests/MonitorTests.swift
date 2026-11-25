@@ -119,7 +119,7 @@ final class MonitorTests: XCTestCase {
 
 final class GPUStatsTests: XCTestCase {
     func testParsesAppleSiliconStatistics() {
-        // As read from an M5 (ioreg -c IOAccelerator).
+        // Sample of ioreg -c IOAccelerator output on Apple Silicon.
         let d: [String: Any] = ["Device Utilization %": 20, "Renderer Utilization %": 20,
                                 "Tiler Utilization %": 10, "In use system memory": 591_462_400]
         XCTAssertEqual(GPUStats.parse(d), GPUStats(utilization: 0.2, memoryInUse: 591_462_400))
