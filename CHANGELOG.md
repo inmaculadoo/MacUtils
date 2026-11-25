@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.4.1] — Monitor and Capture fixes
+
+### Fixed
+- **Monitor**: the panel was clipped at the top once data arrived (the menu
+  sizes a custom view once, when it opens). Every row now always exists, with
+  "–" until there is a value, so the height never changes.
+- **Monitor**: "Top energy now" showed ~0 W for everything: on macOS 27 the
+  per-process energy counters (`ri_energy_nj`) stay at ~0 for almost every
+  process. The list now ranks apps by CPU time (`CPURanking`, with tests) and
+  shows % CPU. Power is shown without the minus sign while discharging.
+- **Capture**: when the OCR found no text, or the capture failed (Screen
+  Recording just granted, before relaunching), it only beeped and left the
+  old clipboard, which looked like a wrong copy. It now says so in an alert.
+
+### Removed
+- **Capture**: the plain region screenshot (⌃⌥⇧3); macOS already has one.
+  Text (⌃⌥⇧4) and pinned captures (⌃⌥⇧5) stay.
+
 ## [0.4.0] — Conde All In One
 
 ### Changed
