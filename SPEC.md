@@ -1,10 +1,10 @@
-# Ligero — SPEC
+# Conde All In One — SPEC
 
-App de barra de menús para macOS, de uso personal, que reúne en una sola app las funciones de Rectangle, AltTab/DockDoor, Ice, SoundSource, Mac Mouse Fix, FileOS (Drop Shelf + orden de Descargas), AppCleaner, Shottr/TextSniper, Stats y Ribbon.
+App de barra de menús para macOS que reúne en una sola app las funciones de Rectangle, AltTab/DockDoor, Ice, SoundSource, Mac Mouse Fix, FileOS (Drop Shelf + orden de Descargas), AppCleaner, Shottr/TextSniper, Stats y Ribbon.
 
 **Objetivo número uno: batería.** Si una función no se puede hacer sin gastar batería en reposo, se hace a demanda o no se hace.
 
-- Mac objetivo: Apple Silicon (sin ventilador, Apple Silicon), macOS 26 Tahoe.
+- Mac objetivo: un Mac con Apple Silicon sin ventilador, macOS 26 Tahoe.
 - Mínimo de despliegue: macOS 15.
 - Solo arm64. Sin App Store y sin sandbox (Accesibilidad y las taps de audio lo exigen).
 
@@ -46,7 +46,7 @@ Un módulo que no cumpla este presupuesto no se fusiona en `main`.
 4. **La UI se crea bajo demanda.** El menú de la barra es un `NSMenu`, más barato que un popover SwiftUI. La ventana de ajustes (SwiftUI) se crea al abrirse y se libera al cerrarse. Los paneles (switcher, shelf) se crean una vez y se ocultan, nunca se destruyen y recrean en bucle.
 5. **Cero red y cero dependencias de terceros.** Nada de Sparkle, analíticas ni SPM externos. Solo frameworks de Apple.
 6. **Capturas solo a demanda.** ScreenCaptureKit se usa en modo one-shot (`SCScreenshotManager`). Prohibido mantener un `SCStream` abierto.
-7. **Bilingüe (es + en) desde el primer commit.** No hay ni un texto visible escrito a mano en el código. Todo pasa por `String(localized:bundle: .module)` / `LocalizedStringKey`, con `Resources/es.lproj/Localizable.strings` y `Resources/en.lproj/Localizable.strings` (`defaultLocalization: "en"` en `Package.swift`). Se usan `.strings` clásicos y no `.xcstrings`, para que compile igual con `swift build` y con `bundle.sh` sin depender de Xcode. Por defecto, el idioma sigue al sistema. En Ajustes hay un selector "Sistema / Español / English" que escribe `AppleLanguages` para la app y pide reiniciarla. Coste en ejecución: 0.
+7. **Bilingüe (es + en) desde el primer commit.** No hay ni un texto visible escrito a mano en el código. Todo pasa por `L(...)` (`Bundle.main.localizedString`), con `Resources/es.lproj/Localizable.strings` y `Resources/en.lproj/Localizable.strings` (`defaultLocalization: "en"` en `Package.swift`). Se usan `.strings` clásicos y no `.xcstrings`, para que compile igual con `swift build` y con `bundle.sh` sin depender de Xcode. Por defecto, el idioma sigue al sistema. En Ajustes hay un selector "Sistema / Español / English" que escribe `AppleLanguages` para la app y pide reiniciarla. Coste en ejecución: 0.
 8. **Lógica pura separada.** El target `LigeroCore` no importa AppKit. Contiene la matemática de layouts, el motor de reglas de Descargas, el parser de ajustes, etc. Tiene tests con `swift test` que corren también en Linux.
 
 ## 3. Estructura
@@ -58,7 +58,7 @@ Sources/Ligero/
   App/                     # AppDelegate, StatusItem, ModuleRegistry, Settings, Permissions, HotKeys, LoginItem
   Modules/<Modulo>/        # una carpeta por módulo
 Resources/Info.plist       # LSUIElement = YES
-scripts/bundle.sh          # swift build -c release → Ligero.app + codesign
+scripts/bundle.sh          # swift build -c release → "Conde All In One.app" + codesign
 .github/workflows/build.yml
 ```
 
@@ -109,12 +109,8 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Mecanismo: `AXObserver` sobre el proceso Dock con `kAXSelectedChildrenChangedNotification`. Es como lo hace DockDoor: sin polling del ratón.
 - Reutiliza la caché de miniaturas del Switcher.
 
-### 4.7 MenuBar — ordenar y ocultar iconos (tipo Ice)
-- Un separador que oculta los iconos que quedan a su izquierda. Se muestran con clic o atajo.
-- Sección "siempre oculto".
-- Mecanismo: un `NSStatusItem` separador cuya `length` se amplía para empujar los iconos fuera de la pantalla (como Ice).
-- **Riesgo**: Tahoe cambió la barra de menús. Hay que validarlo en el Mac real antes de pulirlo.
-- Coste: 0.
+### 4.7 MenuBar — retirado
+- Se quitó en la 0.4.0: en macOS 27 el sistema limita la longitud del separador (5002 pt) y lo coloca fuera de su sitio, así que no oculta los iconos. Alternativa nativa: Ajustes del Sistema → Barra de menús.
 
 ### 4.8 Uninstall — desinstalador completo (tipo AppCleaner)
 - Se arrastra una `.app` al menú o a la ventana. Busca restos por bundle ID en `~/Library/{Application Support, Caches, Preferences, Containers, Group Containers, Saved Application State, LaunchAgents, Logs, HTTPStorages, WebKit, Cookies}`.
@@ -122,19 +118,19 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Solo funciona a demanda.
 
 ### 4.9 Capture — captura + OCR (tipo Shottr/TextSniper)
-- Atajo de captura de región: superposición de selección → PNG al portapapeles o al Escritorio.
-- Atajo de texto: región → OCR con Vision (`VNRecognizeTextRequest`, idiomas es y en) → texto al portapapeles.
-- Ventana flotante "pin" opcional con la captura.
+- Atajo de texto: superposición de selección → OCR con Vision (`VNRecognizeTextRequest`, idiomas es y en) → texto al portapapeles. Si no hay texto o no se puede capturar, lo dice con un aviso.
+- Atajo de captura fijada: la región queda en una ventana flotante (y, si se quiere, en el portapapeles o el Escritorio).
+- Sin captura de región simple: macOS ya la tiene (⇧⌘4).
 - Anotaciones: fuera de la v1.
 - Solo funciona a demanda.
 
 ### 4.10 Monitor — sistema
-- Desde el menú: CPU, RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más energía gastan.
+- Desde el menú: CPU, GPU (uso y memoria en uso), RAM (presión de memoria), batería (ciclos, salud, vatios, tiempo restante), red (subida y bajada) y apps que más CPU usan ahora (los contadores de energía por proceso valen ~0 en macOS 27).
 - Mecanismo:
-  - CPU con `host_processor_info`, memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
+  - CPU con `host_processor_info`, GPU con IOKit (`IOAccelerator` → `PerformanceStatistics`), memoria con `host_statistics64`, batería con IOKit (`AppleSmartBattery`).
   - **Solo muestrea mientras el panel está abierto** (cada 1 s; es la única excepción al "no timers").
   - Lectura en la barra de menús: opcional y desactivada por defecto. Si se activa, cada ≥ 10 s con `tolerance` del 50 %.
-  - Temperaturas por SMC: desactivadas por defecto.
+  - Temperaturas por SMC: no implementadas (ver CHANGELOG).
 
 ### 4.11 Audio — volumen y salida por app (tipo SoundSource)
 - Mezclador: un deslizador por app que esté sonando, de 0 a 150 %, más silenciar.
@@ -149,7 +145,7 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Por pantalla, las ventanas forman una fila de columnas. Cada columna tiene ancho fijo (¼, ⅓, ½, ⅔, ¾, completo).
 - Una ventana nueva se abre a la derecha de la enfocada, y las demás no cambian de tamaño.
 - Atajos: enfocar columna izquierda o derecha, mover columna, cambiar ancho cíclicamente, apilar en la columna de la izquierda, enviar a la siguiente pantalla.
-- Gesto opcional: ⌥ + scroll horizontal de dos dedos desliza la tira. Usa el tap del módulo Scroll **solo si Ribbon está activo**.
+- Gesto opcional: ⌥ + scroll horizontal de dos dedos desliza la tira. Usa su propio event tap, que existe **solo mientras el modo Ribbon está activo**.
 - Mecanismo:
   - Modelo de la tira (columnas, anchos, desplazamiento) en `LigeroCore` con tests.
   - Al desplazar, se recolocan con AX solo las ventanas cuya posición cambia. Las que quedan fuera se aparcan en el borde, como AeroSpace, dejando 1 px visible, porque macOS no deja sacar ventanas del todo de la pantalla.
@@ -159,17 +155,25 @@ El orden sigue el plan de fases (§5). Cada módulo indica su mecanismo y su cos
 - Excluir apps (lista) y ventanas flotantes (paneles, diálogos, `AXSubrole` ≠ `AXStandardWindow`).
 - **Es el módulo más difícil.** Va el último y se prototipa antes de pulirlo.
 
+### 4.13 Despierto — evitar que el Mac se duerma (tipo Amphetamine)
+- Desde el menú: 30 min, 1 h, 2 h, 5 h o hasta apagarlo; atajo ⌃⌥⌘A para "hasta apagarlo".
+- Mientras una o varias apps elegidas estén abiertas.
+- Opción de mantener también la pantalla encendida (desactivada por defecto: es lo que más batería ahorra).
+- Mecanismo: aserciones de IOKit (`IOPMAssertionCreateWithProperties`). Una sesión con duración entrega el tiempo al sistema (`kIOPMAssertionTimeoutKey` + `TimeoutActionRelease`), así que la app no usa ningún timer. Las apps se siguen con las notificaciones de NSWorkspace de abrir/cerrar app, solo si hay alguna elegida.
+- Fuera de alcance: disparadores por uso de CPU, red o descargas (exigirían muestrear) y el modo tapa cerrada sin pantalla externa (necesita privilegios).
+- Coste en reposo: 0.
+
 ## 5. Fases
 
 | Fase | Contenido | Dónde |
 |---|---|---|
 | 0 | Esqueleto: SPM, `bundle.sh`, CI, StatusItem + NSMenu, ModuleRegistry, Settings, HotKeys (Carbon), Permissions (Accesibilidad / Grabación de pantalla, con explicación y enlace a Ajustes), LoginItem. `LigeroCore` con tests. | Nube |
-| 1 | Snap + Scroll | Nube (código) → casa (probar) |
-| 2 | Downloads + Shelf | Nube → casa |
-| 3 | Switcher + Dock Previews | Nube → casa |
-| 4 | MenuBar + Uninstall + Capture | Nube → casa |
-| 5 | Monitor + Audio | Nube → casa |
-| 6 | Ribbon | Prototipo en nube, iteración sobre todo en casa |
+| 1 | Snap + Scroll | Nube (código) → Mac de pruebas (probar) |
+| 2 | Downloads + Shelf | Nube → Mac de pruebas |
+| 3 | Switcher + Dock Previews | Nube → Mac de pruebas |
+| 4 | MenuBar + Uninstall + Capture | Nube → Mac de pruebas |
+| 5 | Monitor + Audio | Nube → Mac de pruebas |
+| 6 | Ribbon | Prototipo en nube, iteración sobre todo en el Mac de pruebas |
 
 Cada fase termina con CI en verde, tests de `LigeroCore` en verde, una entrada en `CHANGELOG.md` y una lista de "qué probar en el Mac" (`TESTING.md`).
 
@@ -181,8 +185,8 @@ Cada fase termina con CI en verde, tests de `LigeroCore` en verde, una entrada e
 | Grabación de pantalla | Miniaturas de Switcher y Dock, Capture |
 | Audio (el sistema lo pide al crear el tap) | Audio |
 
-macOS ata los permisos a la firma del código. En casa hay que firmar **siempre** con el mismo certificado autofirmado (ver `README.md`), o los permisos se pierden en cada compilación.
+macOS ata los permisos a la firma del código. En el Mac de pruebas hay que firmar **siempre** con el mismo certificado autofirmado (ver `README.md`), o los permisos se pierden en cada compilación.
 
 ## 7. Fuera de alcance
-- Lanzador ⌘K, mantener despierto (el usuario ya usa Amphetamine) y portapapeles (Tahoe ya trae historial en Spotlight).
+- Lanzador ⌘K y portapapeles (Tahoe ya trae historial en Spotlight).
 - Sincronización, cuentas, red y actualizaciones automáticas.

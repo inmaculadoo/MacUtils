@@ -12,10 +12,10 @@ concurrency:
 jobs:
   core-tests-linux:
     runs-on: ubuntu-latest
+    # Official Swift image: does not depend on the runner's Ubuntu version.
+    container: swift:6.2-noble
     steps:
       - uses: actions/checkout@v4
-      - uses: swift-actions/setup-swift@v2
-        if: hashFiles('Package.swift') != ''
       - name: Test LigeroCore
         if: hashFiles('Package.swift') != ''
         run: swift test --filter LigeroCoreTests
@@ -43,6 +43,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: hashFiles('Package.swift') != ''
         with:
-          name: Ligero-app
-          path: build/Ligero.app
+          name: AllInOne-app
+          path: build/Conde All In One.app
           retention-days: 7

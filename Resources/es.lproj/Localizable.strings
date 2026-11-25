@@ -1,0 +1,352 @@
+/* Conde All In One — español. Cada clave debe existir también en en.lproj (lo comprueba LocalizationTests). */
+
+"app.name" = "Conde All In One";
+
+/* Menú de la barra */
+"menu.modules" = "Módulos";
+"menu.modules.none" = "Todavía no hay módulos";
+"menu.module.needsPermission" = "%@ (falta permiso)";
+"menu.permissions" = "Permisos";
+"menu.permission.row" = "%1$@: %2$@";
+"menu.launchAtLogin" = "Abrir al iniciar sesión";
+"menu.settings" = "Ajustes…";
+"menu.quit" = "Salir de Conde All In One";
+
+/* Permisos */
+"permission.accessibility.title" = "Accesibilidad";
+"permission.accessibility.explanation" = "Permite a Conde All In One mover y redimensionar ventanas y cambiar cómo hace scroll el ratón. Conde All In One nunca lee lo que escribes.";
+"permission.screenRecording.title" = "Grabación de pantalla";
+"permission.screenRecording.explanation" = "Permite a Conde All In One hacer capturas puntuales para las vistas previas de ventanas y las capturas. Nunca graba vídeo.";
+"permission.status.granted" = "concedido";
+"permission.status.missing" = "no concedido";
+"permission.alert.title" = "Conde All In One necesita el permiso de %@";
+"permission.alert.neededBy" = "Lo necesita: %@. Activa Conde All In One en la lista de Ajustes del Sistema. Si no aparece, añádelo con el botón +.";
+"permission.alert.open" = "Abrir Ajustes del Sistema";
+"permission.alert.later" = "Ahora no";
+
+/* Ventana de ajustes */
+"settings.window.title" = "Ajustes de Conde All In One";
+"settings.tab.general" = "General";
+"settings.language" = "Idioma";
+"settings.language.system" = "Sistema";
+"settings.language.es" = "Español";
+"settings.language.en" = "English";
+"settings.language.restartHint" = "El nuevo idioma se aplica al reiniciar Conde All In One.";
+"settings.language.restartNow" = "Reiniciar ahora";
+"settings.startup" = "Arranque";
+"settings.launchAtLogin" = "Abrir Conde All In One al iniciar sesión";
+"settings.launchAtLogin.needsApproval" = "macOS pide que lo permitas en Elementos de inicio.";
+"settings.openSystemSettings" = "Abrir Ajustes del Sistema";
+"settings.modules" = "Módulos";
+"settings.permissions" = "Permisos";
+
+/* Acciones de Snap */
+"snap.action.leftHalf" = "Mitad izquierda";
+"snap.action.rightHalf" = "Mitad derecha";
+"snap.action.topHalf" = "Mitad superior";
+"snap.action.bottomHalf" = "Mitad inferior";
+"snap.action.topLeft" = "Cuarto superior izquierdo";
+"snap.action.topRight" = "Cuarto superior derecho";
+"snap.action.bottomLeft" = "Cuarto inferior izquierdo";
+"snap.action.bottomRight" = "Cuarto inferior derecho";
+"snap.action.firstThird" = "Primer tercio";
+"snap.action.centerThird" = "Tercio central";
+"snap.action.lastThird" = "Último tercio";
+"snap.action.firstTwoThirds" = "Dos primeros tercios";
+"snap.action.lastTwoThirds" = "Dos últimos tercios";
+"snap.action.maximize" = "Maximizar";
+"snap.action.maximizeHeight" = "Maximizar altura";
+"snap.action.center" = "Centrar";
+"snap.action.nextDisplay" = "Pantalla siguiente";
+"snap.action.previousDisplay" = "Pantalla anterior";
+"snap.action.restore" = "Restaurar tamaño anterior";
+
+/* Módulos */
+"module.snap.title" = "Snap — encaje de ventanas";
+"module.snap.summary" = "Atajos para mitades, tercios, cuartos, maximizar, centrar y mover ventanas entre pantallas.";
+"module.scroll.title" = "Scroll — ratón";
+"module.scroll.summary" = "Dirección de la rueda del ratón independiente del trackpad, scroll lineal y botones laterales como Atrás/Adelante.";
+
+/* Ajustes de Snap */
+"settings.tab.snap" = "Snap";
+"settings.snap.shortcuts" = "Atajos";
+"settings.snap.shortcutsHint" = "Haz clic en un atajo y pulsa la nueva combinación. Esc cancela y Borrar lo quita.";
+"settings.snap.resetShortcuts" = "Restaurar atajos por defecto";
+"settings.snap.behaviour" = "Comportamiento";
+"settings.snap.cycleHalves" = "Repetir el atajo de una mitad cambia entre ½ → ⅔ → ⅓";
+"settings.snap.gap" = "Separación entre ventanas";
+"settings.snap.gapValue" = "%ld pt";
+"settings.shortcut.recording" = "Pulsa las teclas…";
+"settings.shortcut.none" = "Ninguno";
+
+/* Ajustes de Scroll */
+"settings.tab.scroll" = "Scroll";
+"settings.scroll.direction" = "Dirección";
+"settings.scroll.invertVertical" = "Invertir la rueda vertical del ratón";
+"settings.scroll.invertHorizontal" = "Invertir el scroll horizontal del ratón";
+"settings.scroll.directionHint" = "Solo afecta a ratones con rueda. El trackpad y el Magic Mouse siguen el ajuste de desplazamiento natural del sistema.";
+"settings.scroll.speed" = "Velocidad";
+"settings.scroll.linear" = "Scroll lineal (sin aceleración)";
+"settings.scroll.linesPerTick" = "Líneas por paso de rueda: %ld";
+"settings.scroll.buttons" = "Botones";
+"settings.scroll.sideButtons" = "Botones laterales como Atrás / Adelante (⌘[ / ⌘])";
+"settings.scroll.swapSideButtons" = "Intercambiar Atrás y Adelante";
+"settings.scroll.costHint" = "Sin ratón externo conectado, este módulo no hace nada. Con ratón, solo mira los eventos de scroll y de los botones laterales.";
+
+/* Infrastructure / Infraestructura */
+"menu.module.experimental" = "%@ (experimental)";
+"settings.experimental" = "Experimental";
+"settings.experimental.help" = "Depende de comportamientos de macOS que pueden cambiar entre versiones. Desactivado por defecto.";
+"module.downloads.title" = "Descargas — orden automático";
+"module.downloads.summary" = "Mueve las descargas terminadas a carpetas por tipo. Nunca borra nada y cada movimiento se puede deshacer.";
+"downloads.folder.images" = "Imágenes";
+"downloads.folder.documents" = "Documentos";
+"downloads.folder.pdfs" = "PDFs";
+"downloads.folder.video" = "Vídeo";
+"downloads.folder.audio" = "Audio";
+"downloads.folder.archives" = "Comprimidos";
+"downloads.folder.installers" = "Instaladores";
+"downloads.folder.code" = "Código";
+"downloads.category.images" = "Imágenes";
+"downloads.category.documents" = "Documentos";
+"downloads.category.pdfs" = "PDFs";
+"downloads.category.video" = "Vídeo";
+"downloads.category.audio" = "Audio";
+"downloads.category.archives" = "Comprimidos (zip, rar…)";
+"downloads.category.installers" = "Instaladores (dmg, pkg)";
+"downloads.category.code" = "Código";
+"downloads.menu.sortNow" = "Ordenar Descargas ahora";
+"downloads.menu.preview" = "Descargas: ver vista previa…";
+"downloads.menu.history" = "Deshacer un movimiento";
+"downloads.menu.historyEmpty" = "Nada que deshacer";
+"downloads.menu.undoEntry" = "%1$@ → %2$@ (%3$@)";
+"settings.tab.downloads" = "Descargas";
+"downloads.settings.preview" = "Vista previa";
+"downloads.settings.previewHint" = "Esto es lo que haría el orden automático con lo que hay ahora en Descargas. No se mueve nada hasta que lo actives.";
+"downloads.settings.previewEmpty" = "Ahora mismo no hay nada que ordenar.";
+"downloads.settings.previewRow" = "%1$@ → %2$@";
+"downloads.settings.refreshPreview" = "Actualizar vista previa";
+"downloads.settings.accept" = "Activar orden automático";
+"downloads.settings.active" = "Orden automático activado";
+"downloads.settings.categories" = "Categorías y carpetas";
+"downloads.settings.folderName" = "Nombre de carpeta";
+"downloads.settings.neverDeletes" = "Los archivos solo se mueven, nunca se borran. Las descargas a medias se ignoran hasta que su tamaño lleva 2 segundos sin cambiar.";
+"module.shelf.title" = "Shelf — bandeja de arrastre";
+"module.shelf.summary" = "Una bandeja bajo el notch que aparece al arrastrar archivos, texto o enlaces.";
+"shelf.menu.show" = "Mostrar bandeja";
+"shelf.menu.showWithShortcut" = "Mostrar bandeja (%@)";
+"shelf.title" = "Bandeja";
+"shelf.clear" = "Vaciar";
+"shelf.close" = "Ocultar";
+"shelf.remove" = "Quitar de la bandeja";
+"shelf.dropHere" = "Suelta aquí archivos, texto o enlaces";
+"shelf.pinnedHelp" = "Suelta archivos aquí para copiarlos a %@";
+"settings.tab.shelf" = "Bandeja";
+"shelf.settings.behaviour" = "Comportamiento";
+"shelf.settings.showOnDrag" = "Mostrar la bandeja al arrastrar archivos, texto o enlaces";
+"shelf.settings.shortcut" = "Atajo para mostrarla u ocultarla";
+"shelf.settings.pinned" = "Carpetas fijadas";
+"shelf.settings.pinnedEmpty" = "Las carpetas fijadas aparecen en la bandeja como destino: lo que sueltes en ellas se copia allí.";
+"shelf.settings.unpin" = "Quitar";
+"shelf.settings.addFolder" = "Añadir carpeta…";
+"shelf.settings.addFolderPrompt" = "Fijar";
+
+/* Uninstall / Desinstalar */
+"module.uninstall.title" = "Uninstall — desinstalar apps del todo";
+"module.uninstall.summary" = "Arrastra una app para encontrar los restos que deja en tu Biblioteca. Todo va a la Papelera.";
+"uninstall.menu.open" = "Desinstalar una app…";
+"uninstall.window.title" = "Desinstalar una app";
+"uninstall.choosePrompt" = "Elegir";
+"uninstall.choose" = "Elegir una app…";
+"uninstall.dropHint" = "Arrastra una app aquí";
+"uninstall.scanning" = "Buscando restos…";
+"uninstall.error.notApp" = "Eso no es una app.";
+"uninstall.error.system" = "Las apps de Apple y del sistema no se pueden desinstalar.";
+"uninstall.error.noBundleID" = "Esta app no tiene identificador de paquete, así que sus restos no se pueden buscar con seguridad.";
+"uninstall.error.self" = "Conde All In One no puede desinstalarse a sí mismo. Sal de la app y arrástrala a la Papelera.";
+"uninstall.running" = "La app está abierta";
+"uninstall.quit" = "Salir de la app";
+"uninstall.reveal" = "Mostrar en el Finder";
+"uninstall.total" = "Seleccionado: %@";
+"uninstall.cancel" = "Cancelar";
+"uninstall.moveToTrash" = "Mover a la Papelera";
+"uninstall.done" = "%ld elementos movidos a la Papelera. Puedes recuperarlos desde la Papelera.";
+"uninstall.doneFailed" = "%ld elementos no se pudieron mover (mira el log).";
+"uninstall.another" = "Desinstalar otra app";
+
+/* Capture / Captura */
+"module.capture.title" = "Capture — texto y capturas fijadas";
+"module.capture.summary" = "Copia el texto de una región de la pantalla (OCR) o déjala fijada encima de todo. Solo a demanda.";
+"capture.menu.text" = "Copiar texto de una región";
+"capture.menu.pin" = "Capturar y fijar";
+"capture.menu.withShortcut" = "%1$@ (%2$@)";
+"capture.fileName" = "Captura %@";
+"settings.tab.capture" = "Captura";
+"capture.settings.shortcuts" = "Atajos";
+"capture.settings.output" = "Capturas fijadas";
+"capture.settings.clipboard" = "Copiar al portapapeles";
+"capture.settings.desktop" = "Guardar un PNG en el Escritorio";
+"capture.settings.hint" = "Arrastra para elegir la región; Esc o clic derecho cancela. El reconocimiento de texto funciona sin conexión, en español e inglés. Una captura fijada se cierra con Esc o doble clic.";
+
+/* Monitor */
+"module.monitor.title" = "Monitor — sistema";
+"module.monitor.summary" = "CPU, memoria, batería, red y las apps que más energía gastan, en el menú. Solo mide mientras lo miras.";
+"monitor.menu.title" = "Monitor";
+"monitor.cpu" = "CPU";
+"monitor.memory" = "Memoria";
+"monitor.memoryValue" = "%1$@ de %2$@";
+"monitor.pressure" = "Presión de memoria";
+"monitor.pressure.normal" = "Normal";
+"monitor.pressure.warning" = "Alta";
+"monitor.pressure.critical" = "Crítica";
+"monitor.network" = "Red";
+"monitor.networkValue" = "↓ %1$@  ↑ %2$@";
+"monitor.rateValue" = "%@/s";
+"monitor.battery" = "Batería";
+"monitor.batteryValue" = "%1$ld %% (%2$@)";
+"monitor.battery.charging" = "cargando";
+"monitor.battery.full" = "cargada";
+"monitor.battery.plugged" = "enchufado";
+"monitor.battery.discharging" = "descargando";
+"monitor.power" = "Potencia";
+"monitor.remaining" = "Tiempo restante";
+"monitor.health" = "Salud";
+"monitor.cycles" = "Ciclos";
+"monitor.topCPU" = "Apps que más CPU usan ahora";
+"monitor.measuring" = "Midiendo…";
+"monitor.wattsValue" = "%.1f W";
+"monitor.percentValue" = "%ld %%";
+"monitor.countValue" = "%ld";
+"monitor.none" = "–";
+"monitor.menuBarValue" = "CPU %1$ld%% · RAM %2$ld%%";
+"settings.tab.monitor" = "Monitor";
+"monitor.settings.panel" = "Panel";
+"monitor.settings.panelHint" = "Abre Monitor en el menú de Conde All In One. Mide una vez por segundo solo mientras está abierto y se detiene en cuanto se cierra el menú. No muestra temperaturas.";
+"monitor.settings.menuBar" = "Barra de menús";
+"monitor.settings.menuBarReading" = "Mostrar CPU y RAM en la barra de menús";
+"monitor.settings.interval" = "Actualizar cada %ld s";
+"monitor.settings.menuBarHint" = "Es la única opción de Conde All In One que se despierta periódicamente. Está desactivada por defecto; cuanto mayor el intervalo, menos batería gasta.";
+
+/* Switcher (experimental) */
+"module.switcher.title" = "Switcher — ventanas con vista previa";
+"module.switcher.summary" = "⌥Tab muestra todas las ventanas del Space actual con miniatura. Escribe para buscar.";
+"switcher.noMatches" = "Ninguna ventana coincide";
+"switcher.hint" = "Escribe para buscar · ⌘W cerrar · ⌘M minimizar · ⌘Q salir de la app · Esc cancelar";
+"settings.tab.switcher" = "Switcher";
+"switcher.settings.experimentalHint" = "Depende del comportamiento de Accesibilidad, que puede cambiar entre versiones de macOS.";
+"switcher.settings.shortcuts" = "Atajos";
+"switcher.settings.open" = "Abrir / siguiente ventana";
+"switcher.settings.reverse" = "Ventana anterior";
+"switcher.settings.thumbnails" = "Miniaturas";
+"switcher.settings.showThumbnails" = "Mostrar miniaturas de las ventanas";
+"switcher.settings.thumbnailsHint" = "Necesita Grabación de pantalla. Las miniaturas se toman una vez al abrir el switcher y se guardan hasta que la ventana cambia. Sin el permiso se muestran los iconos de las apps.";
+
+/* Dock Previews (experimental) */
+"module.dock.title" = "Dock Previews — vistas previas del Dock";
+"module.dock.summary" = "Pasa el ratón por un icono del Dock para ver sus ventanas; haz clic en una para ir a ella.";
+"dock.minimize" = "Minimizar";
+"dock.close" = "Cerrar";
+"dock.click.none" = "Nada (lo normal en macOS)";
+"dock.click.minimize" = "Minimizar sus ventanas";
+"dock.click.hide" = "Ocultar la app";
+"settings.tab.dock" = "Dock";
+"dock.settings.experimentalHint" = "Depende de cómo el Dock informa del icono bajo el ratón, que puede cambiar entre versiones de macOS.";
+"dock.settings.previews" = "Vistas previas";
+"dock.settings.showPreviews" = "Mostrar vistas previas al pasar por un icono";
+"dock.settings.click" = "Clic en la app activa";
+"dock.settings.clickAction" = "Al hacer clic en el icono de la app que está delante";
+"dock.settings.clickHint" = "Cualquier opción distinta de «Nada» vigila los clics del ratón con un event tap mientras está activa.";
+
+
+/* Audio (experimental) */
+"module.audio.title" = "Audio — volumen por app";
+"module.audio.summary" = "Un deslizador por app de 0 a 150 %, silenciar y una salida de audio distinta por app.";
+"audio.menu.title" = "Mezclador de audio";
+"audio.menu.outputFor" = "Salida de %@";
+"audio.menu.systemOutput" = "Salida del sistema";
+"audio.menu.costNote" = "Taps activos: %ld. Cada tap gasta algo de CPU mientras esa app suena; las apps al 100 %% por la salida del sistema no tienen ninguno.";
+"audio.nothingPlaying" = "Ninguna app está reproduciendo audio";
+"audio.percent" = "%ld %%";
+"audio.mute" = "Silenciar";
+
+/* Ribbon (experimental) */
+"module.ribbon.title" = "Ribbon — ventanas en tira";
+"module.ribbon.summary" = "Se activa con un atajo: las ventanas se vuelven columnas de ancho fijo que se desplazan en horizontal. Al desactivarlo, cada ventana vuelve a su sitio.";
+"ribbon.menu.turnOn" = "Activar modo Ribbon";
+"ribbon.menu.turnOff" = "Desactivar modo Ribbon";
+"ribbon.action.toggleMode" = "Activar / desactivar el modo";
+"ribbon.action.focusLeft" = "Enfocar columna izquierda";
+"ribbon.action.focusRight" = "Enfocar columna derecha";
+"ribbon.action.focusUp" = "Enfocar ventana de arriba (pila)";
+"ribbon.action.focusDown" = "Enfocar ventana de abajo (pila)";
+"ribbon.action.moveLeft" = "Mover columna a la izquierda";
+"ribbon.action.moveRight" = "Mover columna a la derecha";
+"ribbon.action.cycleWidth" = "Siguiente ancho de columna";
+"ribbon.action.cycleWidthBack" = "Ancho de columna anterior";
+"ribbon.action.stackLeft" = "Apilar en la columna de la izquierda";
+"ribbon.action.expel" = "Sacar de la pila";
+"ribbon.action.sendToNextScreen" = "Enviar a la siguiente pantalla";
+"ribbon.width.quarter" = "¼";
+"ribbon.width.third" = "⅓";
+"ribbon.width.half" = "½";
+"ribbon.width.twoThirds" = "⅔";
+"ribbon.width.threeQuarters" = "¾";
+"ribbon.width.full" = "Completo";
+"settings.tab.ribbon" = "Ribbon";
+"ribbon.settings.experimentalHint" = "Experimental: mueve ventanas de verdad. Pruébalo primero con unas pocas sin importancia.";
+"ribbon.settings.shortcuts" = "Atajos";
+"ribbon.settings.layout" = "Disposición";
+"ribbon.settings.defaultWidth" = "Ancho de las columnas nuevas";
+"ribbon.settings.gap" = "Separación entre columnas";
+"ribbon.settings.gesture" = "⌥ + scroll horizontal de dos dedos desliza la tira (usa un event tap mientras el modo está activo)";
+"ribbon.settings.excluded" = "Apps que nunca se colocan";
+"ribbon.settings.excludedEmpty" = "Los diálogos, paneles y demás ventanas no estándar nunca se tocan.";
+"ribbon.settings.addExcluded" = "Añadir app…";
+
+/* Window menus (0.3.3) */
+"snap.menu.place" = "Colocar ventana de %@";
+"snap.menu.noWindow" = "Colocar ventana (no hay ventana activa)";
+"ribbon.action.toggleFloat" = "Sacar de la tira / volver a meterla";
+"ribbon.menu.columns" = "Columnas (clic para ir)";
+"ribbon.menu.column" = "%1$ld. %2$@";
+"ribbon.menu.stacked" = "     ↳ %@";
+"ribbon.menu.window" = "Ventana activa";
+"ribbon.menu.width" = "Ancho";
+"ribbon.menu.position" = "Mover a la posición";
+"ribbon.menu.float" = "Sacar de la tira (flotante)";
+"ribbon.menu.unfloat" = "Volver a meter en la tira";
+"ribbon.menu.slot" = "%ld";
+"ribbon.menu.windowName" = "%1$@ — %2$@";
+"settings.snap.dragToEdges" = "Arrastrar una ventana a un borde o esquina de la pantalla la encaja ahí";
+"settings.snap.dragToEdgesHint" = "Izquierda o derecha: mitad. Arriba: maximizar. Esquinas: cuarto. Solo vigila el ratón mientras arrastras una ventana. Desactiva el mosaico de macOS (Ajustes del Sistema → Escritorio y Dock) para que no se pisen.";
+"shelf.settings.showOnNotchHover" = "Mostrar la bandeja al pasar el ratón por el notch (se cierra al salir)";
+
+"monitor.gpu" = "GPU";
+"monitor.gpuValue" = "%1$@ · %2$@ en uso";
+
+/* Awake */
+"module.awake.title" = "Despierto — evitar que el Mac se duerma";
+"module.awake.summary" = "Mantiene el Mac despierto un rato, hasta que lo apagues o mientras una app esté abierta. No gasta nada mientras no lo usas.";
+"settings.tab.awake" = "Despierto";
+"awake.menu.off" = "Despierto: apagado";
+"awake.menu.until" = "Despierto hasta las %@";
+"awake.menu.indefinitely" = "Despierto hasta que lo apague";
+"awake.menu.whileApps" = "Despierto mientras esté abierto: %@";
+"awake.menu.turnOff" = "Apagar";
+"awake.duration.minutes30" = "30 minutos";
+"awake.duration.hour1" = "1 hora";
+"awake.duration.hours2" = "2 horas";
+"awake.duration.hours5" = "5 horas";
+"awake.duration.indefinitely" = "Hasta que lo apague";
+"awake.menu.keepDisplayOn" = "Mantener también la pantalla encendida";
+"awake.menu.whileOpen" = "Mientras esté abierta";
+"awake.settings.behaviour" = "Comportamiento";
+"awake.settings.displayHint" = "Desactivado, el Mac no se duerme pero la pantalla se apaga como siempre, que es lo que más batería ahorra.";
+"awake.settings.shortcut" = "Atajo para «Hasta que lo apague»";
+"awake.settings.noApps" = "Ninguna app elegida.";
+"awake.settings.remove" = "Quitar";
+"awake.settings.appsHint" = "Añádelas desde el menú: Despierto → Mientras esté abierta.";
+"capture.error.title" = "No se pudo capturar la pantalla";
+"capture.error.permission" = "Comprueba que Conde All In One tiene el permiso de Grabación de pantalla (Ajustes del Sistema → Privacidad y seguridad). Si acabas de darlo, sal de la app y vuelve a abrirla.";
+"capture.noText.title" = "No se ha encontrado texto";
+"capture.noText.message" = "La zona no tiene texto legible. El portapapeles no ha cambiado.";

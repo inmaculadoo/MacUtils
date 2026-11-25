@@ -1,4 +1,4 @@
-# CLAUDE.md — Ligero
+# CLAUDE.md — Conde All In One
 
 Lee `SPEC.md` antes de tocar nada. Esto es un resumen de las reglas que no se negocian, más el contexto de trabajo.
 
@@ -13,7 +13,7 @@ Lee `SPEC.md` antes de tocar nada. Esto es un resumen de las reglas que no se ne
   - `swift test` solo para `LigeroCore`. Si no hay toolchain de Swift, instálala (swift.org, release de Linux).
   - La compilación real de la app se verifica con el workflow de GitHub Actions en macOS. Tras cada push, comprueba el resultado del run (`gh run watch` / `gh run view --log-failed` si `gh` está disponible). Si falla, arréglalo antes de seguir.
   - Los minutos de macOS en Actions son caros: no hagas pushes por cada línea. Agrupa los cambios y haz push al cerrar cada sub-paso.
-- **En casa (Mac)**: `scripts/bundle.sh`, firmado con el certificado "Ligero Dev", copiar a `/Applications` y probar con `TESTING.md`.
+- **En el Mac de pruebas**: `scripts/bundle.sh`, firmado con el certificado "Ligero Dev", copiar a `/Applications` y probar con `TESTING.md`.
 
 ## Reglas duras (ver SPEC §2)
 1. Prohibido el polling: nada de `Timer`, `DispatchSourceTimer` ni `while` esperando. Solo eventos (AXObserver, NSWorkspace, FSEvents, IOHIDManager, Carbon hotkeys). Única excepción: el Monitor con el panel abierto.

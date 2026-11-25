@@ -1,0 +1,7 @@
+
+/* Usage descriptions shown by macOS / Textos de permisos que muestra macOS */
+"NSDownloadsFolderUsageDescription" = "Conde All In One ordena las descargas terminadas en carpetas por tipo. Nunca borra archivos.";
+"NSDesktopFolderUsageDescription" = "Conde All In One guarda capturas en el Escritorio cuando se lo pides.";
+
+/* Audio */
+"NSAudioCaptureUsageDescription" = "Conde All In One cambia el volumen y la salida de cada app. El audio se procesa en directo y nunca se graba.";
